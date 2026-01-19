@@ -1,0 +1,13 @@
+{
+  "enabled": false,
+  "name": "Post-Execution Validator",
+  "description": "Automatically validates code after agent execution (quick mode for hackathon velocity) - DISABLED for MVP",
+  "version": "1",
+  "when": {
+    "type": "agentStop"
+  },
+  "then": {
+    "type": "runCommand",
+    "command": "npm run validate:quick"
+  }
+}

@@ -1,0 +1,226 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Antigravity OS API Schema",
+  "description": "Structured validation schemas for all API endpoints and data structures",
+  "definitions": {
+    "TaskStatus": {
+      "type": "string",
+      "enum": ["not_started", "queued", "in_progress", "completed"],
+      "description": "Valid task execution states"
+    },
+    "Task": {
+      "type": "object",
+      "required": ["id", "description", "status", "isOptional", "parentId", "children", "requirementRefs", "propertyRefs"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^\\d+(\\.\\d+)*$",
+          "description": "Task identifier (e.g., '1.2', '2.3.1')"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Task description"
+        },
+        "status": {
+          "$ref": "#/definitions/TaskStatus"
+        },
+        "isOptional": {
+          "type": "boolean",
+          "description": "Whether task is optional (marked with *)"
+        },
+        "parentId": {
+          "type": ["string", "null"],
+          "pattern": "^\\d+(\\.\\d+)*$",
+          "description": "Parent task ID, null for top-level tasks"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Task"
+          },
+          "description": "Child tasks (sub-tasks)"
+        },
+        "requirementRefs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^\\d+(\\.\\d+)?$"
+          },
+          "description": "Referenced requirement IDs"
+        },
+        "propertyRefs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^Property \\d+$"
+          },
+          "description": "Referenced property names"
+        }
+      }
+    },
+    "Requirement": {
+      "type": "object",
+      "required": ["id", "userStory", "acceptanceCriteria"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^\\d+(\\.\\d+)?$",
+          "description": "Requirement identifier"
+        },
+        "userStory": {
+          "type": "string",
+          "minLength": 1,
+          "description": "User story text"
+        },
+        "acceptanceCriteria": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "description": "List of acceptance criteria"
+        }
+      }
+    },
+    "Property": {
+      "type": "object",
+      "required": ["number", "title", "statement", "requirementRefs"],
+      "properties": {
+        "number": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Property number"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Property title"
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The 'for all' statement describing the property"
+        },
+        "requirementRefs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^\\d+(\\.\\d+)?$"
+          },
+          "minItems": 1,
+          "description": "Requirements this property validates"
+        }
+      }
+    },
+    "ParsedSpec": {
+      "type": "object",
+      "required": ["featureName", "requirements", "properties", "tasks"],
+      "properties": {
+        "featureName": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$",
+          "description": "Feature name in kebab-case"
+        },
+        "requirements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Requirement"
+          },
+          "description": "All requirements from requirements.md"
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Property"
+          },
+          "description": "All correctness properties from design.md"
+        },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Task"
+          },
+          "description": "All tasks from tasks.md"
+        }
+      }
+    },
+    "ExecutionRequest": {
+      "type": "object",
+      "required": ["specPath"],
+      "properties": {
+        "specPath": {
+          "type": "string",
+          "pattern": "^\\.kiro/specs/[a-z0-9-]+$",
+          "description": "Path to spec directory"
+        },
+        "skipOptional": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to skip optional tasks"
+        }
+      }
+    },
+    "ExecutionStatus": {
+      "type": "object",
+      "required": ["currentTask", "completedCount", "totalCount", "isRunning", "progress"],
+      "properties": {
+        "currentTask": {
+          "oneOf": [
+            { "$ref": "#/definitions/Task" },
+            { "type": "null" }
+          ],
+          "description": "Currently executing task"
+        },
+        "completedCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of completed tasks"
+        },
+        "totalCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of tasks"
+        },
+        "isRunning": {
+          "type": "boolean",
+          "description": "Whether execution is currently running"
+        },
+        "progress": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Completion percentage (0-100)"
+        }
+      }
+    },
+    "ErrorContext": {
+      "type": "object",
+      "required": ["taskId", "errorMessage", "stackTrace", "timestamp"],
+      "properties": {
+        "taskId": {
+          "type": "string",
+          "description": "ID of failed task"
+        },
+        "errorMessage": {
+          "type": "string",
+          "description": "Error message"
+        },
+        "stackTrace": {
+          "type": "string",
+          "description": "Full stack trace"
+        },
+        "failedTest": {
+          "type": ["string", "null"],
+          "description": "Name of failed test, if applicable"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When error occurred"
+        }
+      }
+    }
+  }
+}

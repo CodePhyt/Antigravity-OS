@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "name": "Context Steerer",
+  "description": "Ensures agent always cross-references steering files and follows A.N.T. architecture before responding",
+  "version": "1",
+  "when": {
+    "type": "promptSubmit"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Before responding, cross-reference all files in /.kiro/steering/ to ensure your response adheres to our A.N.T. architecture, global rules, and checkpoint protocols. Validate against memory graph and decision rationales."
+  }
+}
