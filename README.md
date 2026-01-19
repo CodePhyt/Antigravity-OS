@@ -238,6 +238,46 @@ fc.assert(
 
 **Current Projection**: 85/100 (core complete, enhancements in progress)
 
+## 🧠 System Evolution
+
+Antigravity OS features a **self-learning architecture** that continuously improves through experience.
+
+### Learning Engine: Insight Graph
+
+The system maintains a **living knowledge base** at `docs/memory/insight-graph.md` that:
+
+- **Captures Patterns**: Records successful and failed approaches
+- **Prevents Repetition**: Blocks known anti-patterns before execution
+- **Accelerates Development**: Applies proven solutions to similar problems
+- **Evolves Rules**: Updates global development standards based on outcomes
+
+### How It Works
+
+1. **Every Task Execution** → Logged with context and outcome
+2. **Every Error** → Analyzed and pattern extracted
+3. **Every Correction** → Success rate tracked
+4. **Every 3 Cycles** → Self-refinement analysis performed
+
+### Evolution Metrics
+
+The system tracks:
+- **Pattern Effectiveness**: Success rate per approach
+- **Time Savings**: Efficiency gains from learned patterns
+- **Rule Violations**: Identifies rules needing refinement
+- **Self-Correction Rate**: Ralph-Loop success percentage
+
+### Memory-First Development
+
+Following **Rule 1** (Memory-First Development), the agent:
+- ✅ Reads `insight-graph.md` before starting any task
+- ✅ Searches for similar past problems
+- ✅ Applies proven solutions first
+- ✅ Updates memory with new learnings
+
+**Result**: The system gets smarter with every execution, building institutional knowledge that persists across sessions.
+
+---
+
 ## 🤝 Contributing
 
 This is a hackathon project demonstrating autonomous spec-driven development. The system is designed to be self-improving through the Ralph-Loop protocol.

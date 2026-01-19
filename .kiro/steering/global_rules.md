@@ -20,6 +20,38 @@ This document defines system-wide development standards that apply to all featur
 
 ---
 
+## Rule 1.5: Selective Context Loading (Cole Medin Top 5% Standard)
+
+**Mandate**: Agents MUST load only essential context per task. Read files selectively, not exhaustively.
+
+**Rationale**: Prevents context bloat, maintains focus, reduces token usage, increases execution speed.
+
+**Protocol**:
+1. **Task Analysis**: Identify minimum required files for current task
+2. **Targeted Reading**: Read only relevant sections (use line ranges)
+3. **Progressive Loading**: Load additional context only when needed
+4. **Context Pruning**: Discard irrelevant context after task completion
+
+**Essential Context Priority**:
+- **Always Load**: Current task description, related requirements
+- **Load When Needed**: Design properties, dependency files, test files
+- **Load Sparingly**: Full specs, historical logs, unrelated components
+
+**Enforcement**:
+- Track context loading per task
+- Log excessive context loading as violation
+- Optimize context loading in evolution cycles
+
+**Examples**:
+- ✅ **Good**: Read only task 5.2 section from tasks.md
+- ❌ **Bad**: Read entire tasks.md for single task
+- ✅ **Good**: Read specific function from source file
+- ❌ **Bad**: Read entire source file for single function check
+
+**Exceptions**: Initial system setup, comprehensive audits, debugging complex issues.
+
+---
+
 ## Rule 2: Schema-First Data Structures (Golden Quadrant B)
 
 **Mandate**: All data structures MUST have a corresponding JSON Schema in `/docs/schemas/` before implementation.
