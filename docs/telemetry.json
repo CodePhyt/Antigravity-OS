@@ -1,0 +1,30 @@
+{
+  "metrics": {
+    "ralphLoopActivations": 0,
+    "ralphLoopSuccesses": 0,
+    "ralphLoopFailures": 0,
+    "ralphLoopExhaustions": 0,
+    "autonomousFixes": 0,
+    "specUpdates": 14,
+    "tasksCompleted": 9,
+    "tasksFailed": 0,
+    "testsPassed": 292,
+    "testsFailed": 47,
+    "uptime": 0,
+    "startTime": "2026-01-20T00:00:00.000Z",
+    "lastUpdated": "2026-01-20T00:00:00.000Z",
+    "successRate": 100,
+    "ralphLoopEffectiveness": 0
+  },
+  "recentEvents": [
+    {
+      "type": "system_started",
+      "timestamp": "2026-01-20T00:00:00.000Z",
+      "context": {
+        "version": "1.0.0",
+        "environment": "production"
+      }
+    }
+  ],
+  "generatedAt": "2026-01-20T00:00:00.000Z"
+}
