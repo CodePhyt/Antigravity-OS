@@ -11,6 +11,16 @@ import { createTestRunner, type TestRunner } from '@/services/test-runner';
 import type { ErrorContext, Task } from '@/types/spec';
 
 /**
+ * Model routing strategy
+ */
+export type ModelRoutingStrategy = 'cloud' | 'local' | 'hybrid';
+
+/**
+ * Task type for model routing
+ */
+export type TaskType = 'generation' | 'validation' | 'review' | 'parsing';
+
+/**
  * Orchestrator configuration
  */
 export interface OrchestratorConfig {
@@ -22,6 +32,15 @@ export interface OrchestratorConfig {
 
   /** Whether to run tests automatically (default: true) */
   autoRunTests?: boolean;
+
+  /** Model routing strategy (default: 'hybrid') */
+  modelRouting?: ModelRoutingStrategy;
+
+  /** Whether to use Docker sandboxing (default: true if available) */
+  useSandboxing?: boolean;
+
+  /** Whether to use n8n workflows (default: true if available) */
+  useN8nWorkflows?: boolean;
 }
 
 /**
@@ -59,6 +78,9 @@ export class Orchestrator {
     this.config = {
       maxRalphLoopAttempts: 3,
       autoRunTests: true,
+      modelRouting: 'hybrid',
+      useSandboxing: true,
+      useN8nWorkflows: true,
       ...config,
     };
 
@@ -68,6 +90,76 @@ export class Orchestrator {
       maxAttempts: this.config.maxRalphLoopAttempts,
     });
     this.testRunner = createTestRunner();
+  }
+
+  /**
+   * Route task to appropriate model (cloud or local)
+   * 
+   * Hybrid Routing Strategy:
+   * - Cloud LLM: Code generation, interactive development, real-time parsing
+   * - Local LLM: Code auditing, batch validation, property test generation
+   * 
+   * @param taskType - Type of task to route
+   * @returns 'cloud' or 'local'
+   */
+  private routeToModel(taskType: TaskType): 'cloud' | 'local' {
+    if (this.config.modelRouting === 'cloud') {
+      return 'cloud';
+    }
+    
+    if (this.config.modelRouting === 'local') {
+      return 'local';
+    }
+    
+    // Hybrid routing (default)
+    switch (taskType) {
+      case 'generation':
+        return 'cloud'; // Fast, interactive code generation
+      case 'parsing':
+        return 'cloud'; // Real-time spec parsing
+      case 'validation':
+        return 'local'; // Heavy auditing, zero cost
+      case 'review':
+        return 'local'; // Batch code review, zero cost
+      default:
+        return 'cloud';
+    }
+  }
+
+  /**
+   * Check if local LLM (Ollama) is available
+   * 
+   * @returns Whether Ollama is available
+   */
+  private async isLocalLLMAvailable(): Promise<boolean> {
+    try {
+      // Check if Ollama is running on default port
+      const response = await fetch('http://localhost:11434/api/tags', {
+        method: 'GET',
+        signal: AbortSignal.timeout(2000), // 2 second timeout
+      });
+      return response.ok;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Get model routing configuration
+   * 
+   * @returns Current routing strategy
+   */
+  getModelRouting(): ModelRoutingStrategy {
+    return this.config.modelRouting || 'hybrid';
+  }
+
+  /**
+   * Update model routing strategy
+   * 
+   * @param strategy - New routing strategy
+   */
+  setModelRouting(strategy: ModelRoutingStrategy): void {
+    this.config.modelRouting = strategy;
   }
 
   /**

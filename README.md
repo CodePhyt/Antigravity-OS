@@ -49,13 +49,36 @@ Antigravity OS is an autonomous development engine that:
 ┌─────────────────────────────────────────┐
 │     NAVIGATION LAYER (Orchestrator)     │
 │  TaskManager → RalphLoop → Execution    │
+│  + Hybrid Model Routing (Cloud/Local)   │
 └─────────────────────────────────────────┘
               ↓
 ┌─────────────────────────────────────────┐
 │     TOOLS LAYER (Services)              │
 │  Parser → TestRunner → FileSystem       │
+│  + Docker Sandboxing                    │
+│  + n8n External Integration             │
+│  + TelemetryManager                     │
 └─────────────────────────────────────────┘
 ```
+
+### Infrastructure Orchestration
+
+**Hybrid Model Routing**:
+- **Cloud LLM** (70%): Code generation, interactive development, real-time parsing
+- **Local LLM** (30%): Code auditing, batch validation, property test generation
+- **Auto-Detection**: Automatically detects Ollama availability and routes accordingly
+
+**Docker Sandboxing**:
+- Isolated execution environment for untrusted code
+- Resource limits (memory, CPU, timeout)
+- Network isolation for security
+- Automatic cleanup after execution
+
+**n8n External Integration**:
+- Deep Research Agent (complex error analysis)
+- Spec Validation Agent (pre-execution validation)
+- Multi-Agent Code Review (post-completion review)
+- Continuous Learning Agent (pattern extraction)
 
 ## 🚀 Quick Start
 
