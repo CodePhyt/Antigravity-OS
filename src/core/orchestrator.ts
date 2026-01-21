@@ -93,60 +93,8 @@ export class Orchestrator {
   }
 
   /**
-   * Route task to appropriate model (cloud or local)
-   * 
-   * Hybrid Routing Strategy:
-   * - Cloud LLM: Code generation, interactive development, real-time parsing
-   * - Local LLM: Code auditing, batch validation, property test generation
-   * 
-   * @param taskType - Type of task to route
-   * @returns 'cloud' or 'local'
-   */
-  private routeToModel(taskType: TaskType): 'cloud' | 'local' {
-    if (this.config.modelRouting === 'cloud') {
-      return 'cloud';
-    }
-    
-    if (this.config.modelRouting === 'local') {
-      return 'local';
-    }
-    
-    // Hybrid routing (default)
-    switch (taskType) {
-      case 'generation':
-        return 'cloud'; // Fast, interactive code generation
-      case 'parsing':
-        return 'cloud'; // Real-time spec parsing
-      case 'validation':
-        return 'local'; // Heavy auditing, zero cost
-      case 'review':
-        return 'local'; // Batch code review, zero cost
-      default:
-        return 'cloud';
-    }
-  }
-
-  /**
-   * Check if local LLM (Ollama) is available
-   * 
-   * @returns Whether Ollama is available
-   */
-  private async isLocalLLMAvailable(): Promise<boolean> {
-    try {
-      // Check if Ollama is running on default port
-      const response = await fetch('http://localhost:11434/api/tags', {
-        method: 'GET',
-        signal: AbortSignal.timeout(2000), // 2 second timeout
-      });
-      return response.ok;
-    } catch {
-      return false;
-    }
-  }
-
-  /**
    * Get model routing configuration
-   * 
+   *
    * @returns Current routing strategy
    */
   getModelRouting(): ModelRoutingStrategy {
@@ -155,7 +103,7 @@ export class Orchestrator {
 
   /**
    * Update model routing strategy
-   * 
+   *
    * @param strategy - New routing strategy
    */
   setModelRouting(strategy: ModelRoutingStrategy): void {
@@ -248,7 +196,9 @@ export class Orchestrator {
 
           if (ralphLoopResult.success) {
             // Correction applied successfully - task will be retried
-            console.log(`Ralph-Loop corrected task ${nextTask.id} (attempt ${ralphLoopResult.attemptNumber})`);
+            console.log(
+              `Ralph-Loop corrected task ${nextTask.id} (attempt ${ralphLoopResult.attemptNumber})`
+            );
             // Continue to next iteration - the reset task will be selected again
           } else if (ralphLoopResult.exhausted) {
             // Max attempts exhausted - halt execution
@@ -261,7 +211,9 @@ export class Orchestrator {
             };
           } else {
             // Correction failed but not exhausted - continue trying
-            console.log(`Ralph-Loop attempt ${ralphLoopResult.attemptNumber} failed: ${ralphLoopResult.error}`);
+            console.log(
+              `Ralph-Loop attempt ${ralphLoopResult.attemptNumber} failed: ${ralphLoopResult.error}`
+            );
           }
         }
       }
@@ -316,7 +268,7 @@ export class Orchestrator {
           const error: ErrorContext = {
             taskId: task.id,
             errorMessage: `${testResult.failedTests} test(s) failed`,
-            stackTrace: testResult.failures.map(f => f.stackTrace).join('\n'),
+            stackTrace: testResult.failures.map((f) => f.stackTrace).join('\n'),
             failedTest: testResult.failures[0]?.testName || null,
             timestamp: new Date(),
           };

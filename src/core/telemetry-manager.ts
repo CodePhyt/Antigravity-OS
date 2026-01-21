@@ -1,12 +1,11 @@
 /**
  * Telemetry Manager
  * Tracks system metrics, Ralph-Loop performance, and autonomous fixes
- * 
+ *
  * This module provides real-time telemetry for system reliability monitoring.
  */
 
 import { promises as fs } from 'fs';
-import { join } from 'path';
 
 /**
  * Telemetry event types
@@ -29,13 +28,13 @@ export type TelemetryEventType =
 export interface TelemetryEvent {
   /** Event type */
   type: TelemetryEventType;
-  
+
   /** Timestamp */
   timestamp: Date;
-  
+
   /** Task ID (if applicable) */
   taskId?: string;
-  
+
   /** Additional context */
   context?: Record<string, unknown>;
 }
@@ -46,46 +45,46 @@ export interface TelemetryEvent {
 export interface TelemetryMetrics {
   /** Total Ralph-Loop activations */
   ralphLoopActivations: number;
-  
+
   /** Successful Ralph-Loop corrections */
   ralphLoopSuccesses: number;
-  
+
   /** Failed Ralph-Loop corrections */
   ralphLoopFailures: number;
-  
+
   /** Ralph-Loop exhaustions (3 attempts failed) */
   ralphLoopExhaustions: number;
-  
+
   /** Total autonomous fixes */
   autonomousFixes: number;
-  
+
   /** Total spec updates */
   specUpdates: number;
-  
+
   /** Total tasks completed */
   tasksCompleted: number;
-  
+
   /** Total tasks failed */
   tasksFailed: number;
-  
+
   /** Total tests passed */
   testsPassed: number;
-  
+
   /** Total tests failed */
   testsFailed: number;
-  
+
   /** System uptime (milliseconds) */
   uptime: number;
-  
+
   /** System start time */
   startTime: Date;
-  
+
   /** Last updated */
   lastUpdated: Date;
-  
+
   /** Success rate (percentage) */
   successRate: number;
-  
+
   /** Ralph-Loop effectiveness (percentage) */
   ralphLoopEffectiveness: number;
 }
@@ -103,7 +102,7 @@ export class TelemetryManager {
   constructor(telemetryPath: string = 'docs/telemetry.json', maxEvents: number = 1000) {
     this.telemetryPath = telemetryPath;
     this.maxEvents = maxEvents;
-    
+
     // Initialize metrics
     this.metrics = {
       ralphLoopActivations: 0,
@@ -127,7 +126,11 @@ export class TelemetryManager {
   /**
    * Record a telemetry event
    */
-  async recordEvent(type: TelemetryEventType, taskId?: string, context?: Record<string, unknown>): Promise<void> {
+  async recordEvent(
+    type: TelemetryEventType,
+    taskId?: string,
+    context?: Record<string, unknown>
+  ): Promise<void> {
     const event: TelemetryEvent = {
       type,
       timestamp: new Date(),
@@ -197,15 +200,13 @@ export class TelemetryManager {
 
     // Calculate success rate
     const totalTasks = this.metrics.tasksCompleted + this.metrics.tasksFailed;
-    this.metrics.successRate = totalTasks > 0 
-      ? (this.metrics.tasksCompleted / totalTasks) * 100 
-      : 0;
+    this.metrics.successRate =
+      totalTasks > 0 ? (this.metrics.tasksCompleted / totalTasks) * 100 : 0;
 
     // Calculate Ralph-Loop effectiveness
     const totalRalphLoop = this.metrics.ralphLoopSuccesses + this.metrics.ralphLoopFailures;
-    this.metrics.ralphLoopEffectiveness = totalRalphLoop > 0
-      ? (this.metrics.ralphLoopSuccesses / totalRalphLoop) * 100
-      : 0;
+    this.metrics.ralphLoopEffectiveness =
+      totalRalphLoop > 0 ? (this.metrics.ralphLoopSuccesses / totalRalphLoop) * 100 : 0;
   }
 
   /**
@@ -226,7 +227,7 @@ export class TelemetryManager {
    * Get events by type
    */
   getEventsByType(type: TelemetryEventType): TelemetryEvent[] {
-    return this.events.filter(e => e.type === type);
+    return this.events.filter((e) => e.type === type);
   }
 
   /**
@@ -260,7 +261,7 @@ export class TelemetryManager {
         // Restore dates
         data.metrics.startTime = new Date(data.metrics.startTime);
         data.metrics.lastUpdated = new Date(data.metrics.lastUpdated);
-        
+
         this.metrics = data.metrics;
       }
 
@@ -309,7 +310,7 @@ export class TelemetryManager {
    */
   generateReport(): string {
     const m = this.metrics;
-    
+
     return `
 # Telemetry Report
 

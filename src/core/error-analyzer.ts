@@ -1,12 +1,12 @@
 /**
  * Error Analyzer Component
  * Classifies errors and determines correction strategies for Ralph-Loop
- * 
+ *
  * This component analyzes error context to:
  * 1. Classify error types (test_failure, compilation_error, runtime_error, etc.)
  * 2. Extract root cause from error context
  * 3. Determine which spec file needs updating
- * 
+ *
  * Requirements: 5.1, 5.2
  */
 
@@ -149,30 +149,30 @@ const ERROR_PATTERNS: ErrorPattern[] = [
 
 /**
  * Error Analyzer analyzes error context and determines correction strategy
- * 
+ *
  * Responsibilities:
  * - Classify error types based on error message and stack trace
  * - Extract root cause from error context
  * - Determine which spec file needs updating
  * - Provide confidence level in analysis
  * - Extract relevant context for correction
- * 
+ *
  * **Validates: Requirements 5.1, 5.2**
  */
 export class ErrorAnalyzer {
   /**
    * Analyzes an error context and determines correction strategy
-   * 
+   *
    * Algorithm:
    * 1. Classify error type by matching patterns in error message and stack trace
    * 2. Extract root cause based on error type
    * 3. Determine target spec file based on error type and context
    * 4. Calculate confidence level
    * 5. Extract additional context for correction
-   * 
+   *
    * @param error - Error context from failed task
    * @returns Error analysis with correction strategy
-   * 
+   *
    * **Validates: Requirements 5.1, 5.2**
    */
   analyze(error: ErrorContext): ErrorAnalysis {
@@ -202,16 +202,16 @@ export class ErrorAnalyzer {
 
   /**
    * Classifies the error type based on error message and stack trace
-   * 
+   *
    * Algorithm:
    * 1. Check error message and stack trace against known patterns
    * 2. Accumulate confidence scores for each error type
    * 3. Return error type with highest confidence
    * 4. Default to 'unknown_error' if no patterns match
-   * 
+   *
    * @param error - Error context
    * @returns Classified error type
-   * 
+   *
    * **Validates: Requirement 5.1**
    */
   private classifyError(error: ErrorContext): ErrorType {
@@ -251,18 +251,18 @@ export class ErrorAnalyzer {
 
   /**
    * Extracts the root cause description from error context
-   * 
+   *
    * Algorithm:
    * 1. Based on error type, extract relevant information
    * 2. For test failures: extract assertion details
    * 3. For compilation errors: extract type/syntax issues
    * 4. For runtime errors: extract the specific error
    * 5. Format as human-readable description
-   * 
+   *
    * @param error - Error context
    * @param errorType - Classified error type
    * @returns Root cause description
-   * 
+   *
    * **Validates: Requirement 5.1**
    */
   private extractRootCause(error: ErrorContext, errorType: ErrorType): string {
@@ -304,9 +304,7 @@ export class ErrorAnalyzer {
 
     if (isPropertyTest) {
       // Try to extract counterexample details (prioritize this)
-      const counterexampleMatch = error.errorMessage.match(
-        /counterexample:\s*(.+?)(?:\n|$)/i
-      );
+      const counterexampleMatch = error.errorMessage.match(/counterexample:\s*(.+?)(?:\n|$)/i);
 
       if (counterexampleMatch && counterexampleMatch[1]) {
         return `Property test "${testName}" found counterexample:${counterexampleMatch[1]}`;
@@ -433,18 +431,18 @@ export class ErrorAnalyzer {
   private extractGenericRootCause(error: ErrorContext): string {
     // Get the first line of the error message
     const firstLine = error.errorMessage.split('\n')[0] || 'Unknown error occurred';
-    
+
     // Truncate if too long (keep first 200 characters)
     if (firstLine.length > 200) {
       return firstLine.substring(0, 200) + '...';
     }
-    
+
     return firstLine;
   }
 
   /**
    * Determines which spec file should be updated based on error type
-   * 
+   *
    * Decision Logic:
    * - test_failure → design.md (property may be too strict)
    * - compilation_error → design.md (design may be incomplete)
@@ -453,11 +451,11 @@ export class ErrorAnalyzer {
    * - invalid_spec → requirements.md or design.md (spec issue)
    * - timeout_error → tasks.md (implementation optimization needed)
    * - unknown_error → tasks.md (add clarification)
-   * 
+   *
    * @param error - Error context
    * @param errorType - Classified error type
    * @returns Target spec file for correction
-   * 
+   *
    * **Validates: Requirement 5.2**
    */
   private determineTargetFile(error: ErrorContext, errorType: ErrorType): TargetSpecFile {
@@ -504,14 +502,14 @@ export class ErrorAnalyzer {
 
   /**
    * Calculates confidence level in the error analysis
-   * 
+   *
    * Confidence factors:
    * - Pattern match strength (0-50)
    * - Presence of failed test name (+20)
    * - Clear error message (+10)
    * - Stack trace available (+10)
    * - Property/requirement references (+10)
-   * 
+   *
    * @param error - Error context
    * @param errorType - Classified error type
    * @returns Confidence level (0-100)
@@ -549,15 +547,12 @@ export class ErrorAnalyzer {
 
   /**
    * Extracts additional context for correction
-   * 
+   *
    * @param error - Error context
    * @param errorType - Classified error type
    * @returns Additional context object
    */
-  private extractContext(
-    error: ErrorContext,
-    errorType: ErrorType
-  ): ErrorAnalysis['context'] {
+  private extractContext(error: ErrorContext, errorType: ErrorType): ErrorAnalysis['context'] {
     const context: ErrorAnalysis['context'] = {};
 
     // Extract error location from stack trace
@@ -586,12 +581,12 @@ export class ErrorAnalyzer {
 
   /**
    * Generates a correction suggestion based on error type
-   * 
+   *
    * @param error - Error context
    * @param errorType - Classified error type
    * @returns Suggestion for correction
    */
-  private generateSuggestion(error: ErrorContext, errorType: ErrorType): string {
+  private generateSuggestion(_error: ErrorContext, errorType: ErrorType): string {
     switch (errorType) {
       case 'test_failure':
         return 'Review the property definition in design.md. The property may be too strict or the implementation may need adjustment.';
@@ -620,7 +615,7 @@ export class ErrorAnalyzer {
 
 /**
  * Creates an error analyzer instance
- * 
+ *
  * @returns ErrorAnalyzer instance
  */
 export function createErrorAnalyzer(): ErrorAnalyzer {

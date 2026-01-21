@@ -4,7 +4,7 @@
   "description": "The Autonomous Spec-to-Production Engine",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3001",
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --ext .ts,.tsx",
@@ -19,9 +19,14 @@
     "validate:quick": "powershell -ExecutionPolicy Bypass -File scripts/validate-quick.ps1"
   },
   "dependencies": {
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.27.5",
+    "lucide-react": "^0.562.0",
     "next": "^14.2.0",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
+    "tailwind-merge": "^3.4.0",
+    "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.0"
   },
   "devDependencies": {
@@ -31,12 +36,15 @@
     "@typescript-eslint/eslint-plugin": "^7.13.0",
     "@typescript-eslint/parser": "^7.13.0",
     "@vitest/coverage-v8": "^1.6.0",
+    "autoprefixer": "^10.4.23",
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.2.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",
     "fast-check": "^3.19.0",
+    "postcss": "^8.5.6",
     "prettier": "^3.3.0",
+    "tailwindcss": "^3.4.1",
     "typescript": "^5.4.5",
     "vitest": "^1.6.0"
   },

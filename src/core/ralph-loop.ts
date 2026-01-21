@@ -102,9 +102,9 @@ export class RalphLoop {
       });
 
       // Step 3: Apply correction (Requirement 5.3)
-      await this.correctionApplier.applyCorrection(plan, { 
+      await this.correctionApplier.applyCorrection(plan, {
         specPath: this.specPath,
-        createBackup: true 
+        createBackup: true,
       });
 
       // Step 4: Reset task status (Requirement 5.4)
@@ -120,7 +120,7 @@ export class RalphLoop {
       // Mark as exhausted if this was the final allowed attempt
       // attemptNumber is 1-based, so attemptNumber === maxAttempts means this was the last try
       const exhausted = attemptNumber >= this.maxAttempts;
-      
+
       return {
         success: false,
         plan: null,
@@ -176,9 +176,6 @@ export class RalphLoop {
  * @param config - Ralph-Loop configuration
  * @returns Ralph-Loop instance
  */
-export function createRalphLoop(
-  taskManager: TaskManager,
-  config: RalphLoopConfig
-): RalphLoop {
+export function createRalphLoop(taskManager: TaskManager, config: RalphLoopConfig): RalphLoop {
   return new RalphLoop(taskManager, config);
 }

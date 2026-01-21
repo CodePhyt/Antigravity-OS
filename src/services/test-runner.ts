@@ -1,7 +1,7 @@
 /**
  * Test Runner Service
  * Executes Vitest tests and parses results
- * 
+ *
  * This service spawns Vitest as a child process, captures output,
  * and parses the JSON results to extract test outcomes and failures.
  */
@@ -64,11 +64,11 @@ export class TestRunner {
 
   /**
    * Run tests for specified test files
-   * 
+   *
    * @param testFiles - Array of test file paths to execute
    * @returns Promise resolving to test results
    * @throws Error if test process fails to spawn or times out
-   * 
+   *
    * Requirements: 4.1, 4.2
    */
   async runTests(testFiles: string[]): Promise<TestResult> {
@@ -88,7 +88,7 @@ export class TestRunner {
     try {
       const output = await this.executeVitest(testFiles);
       const result = this.parseTestOutput(output);
-      
+
       return {
         ...result,
         duration: Date.now() - startTime,
@@ -96,19 +96,21 @@ export class TestRunner {
     } catch (error) {
       // If Vitest execution fails, return a failure result
       const errorMessage = error instanceof Error ? error.message : String(error);
-      
+
       return {
         success: false,
         totalTests: 0,
         passedTests: 0,
         failedTests: 1,
-        failures: [{
-          testName: 'Test Execution',
-          errorMessage,
-          stackTrace: error instanceof Error && error.stack ? error.stack : '',
-          propertyRef: null,
-          requirementRef: null,
-        }],
+        failures: [
+          {
+            testName: 'Test Execution',
+            errorMessage,
+            stackTrace: error instanceof Error && error.stack ? error.stack : '',
+            propertyRef: null,
+            requirementRef: null,
+          },
+        ],
         duration: Date.now() - startTime,
       };
     }
@@ -116,11 +118,11 @@ export class TestRunner {
 
   /**
    * Execute Vitest as a child process
-   * 
+   *
    * @param testFiles - Test files to execute
    * @returns Promise resolving to stdout output
    * @throws Error if process fails or times out
-   * 
+   *
    * Requirements: 4.1, 4.2
    */
   private executeVitest(testFiles: string[]): Promise<string> {
@@ -184,17 +186,17 @@ export class TestRunner {
 
   /**
    * Parse Vitest JSON output to extract test results
-   * 
+   *
    * @param output - Raw stdout from Vitest
    * @returns Parsed test result
-   * 
+   *
    * Requirements: 4.5, 4.7
    */
   parseTestOutput(output: string): Omit<TestResult, 'duration'> {
     try {
       // Extract JSON from output (Vitest may include non-JSON lines)
       const jsonMatch = this.extractJsonFromOutput(output);
-      
+
       if (!jsonMatch) {
         // If no JSON found, try to parse the entire output
         return this.parseVerboseOutput(output);
@@ -203,20 +205,17 @@ export class TestRunner {
       const json: VitestJsonOutput = JSON.parse(jsonMatch);
 
       const failures: TestFailure[] = [];
-      
+
       // Extract failures from test results
       if (json.testResults) {
         for (const testFile of json.testResults) {
           if (testFile.assertionResults) {
             for (const assertion of testFile.assertionResults) {
               if (assertion.status === 'failed') {
-                const fullTestName = [
-                  ...assertion.ancestorTitles,
-                  assertion.title,
-                ].join(' > ');
+                const fullTestName = [...assertion.ancestorTitles, assertion.title].join(' > ');
 
                 const failureMessage = assertion.failureMessages?.join('\n') ?? 'Test failed';
-                
+
                 failures.push({
                   testName: fullTestName,
                   errorMessage: this.extractErrorMessage(failureMessage),
@@ -244,20 +243,22 @@ export class TestRunner {
         totalTests: 0,
         passedTests: 0,
         failedTests: 1,
-        failures: [{
-          testName: 'Output Parsing',
-          errorMessage: `Failed to parse test output: ${error instanceof Error ? error.message : String(error)}`,
-          stackTrace: '',
-          propertyRef: null,
-          requirementRef: null,
-        }],
+        failures: [
+          {
+            testName: 'Output Parsing',
+            errorMessage: `Failed to parse test output: ${error instanceof Error ? error.message : String(error)}`,
+            stackTrace: '',
+            propertyRef: null,
+            requirementRef: null,
+          },
+        ],
       };
     }
   }
 
   /**
    * Extract JSON from Vitest output which may contain non-JSON lines
-   * 
+   *
    * @param output - Raw Vitest output
    * @returns JSON string or null if not found
    */
@@ -265,24 +266,24 @@ export class TestRunner {
     // Look for JSON object in output
     const jsonStart = output.indexOf('{');
     const jsonEnd = output.lastIndexOf('}');
-    
+
     if (jsonStart !== -1 && jsonEnd !== -1 && jsonEnd > jsonStart) {
       return output.substring(jsonStart, jsonEnd + 1);
     }
-    
+
     return null;
   }
 
   /**
    * Parse verbose output when JSON is not available
    * This is a fallback parser for non-JSON output
-   * 
+   *
    * @param output - Raw Vitest output
    * @returns Parsed test result
    */
   private parseVerboseOutput(output: string): Omit<TestResult, 'duration'> {
     const lines = output.split('\n');
-    
+
     let totalTests = 0;
     let passedTests = 0;
     let failedTests = 0;
@@ -293,7 +294,7 @@ export class TestRunner {
       if (line.includes('passed') || line.includes('failed')) {
         const passedMatch = line.match(/(\d+)\s+passed/);
         const failedMatch = line.match(/(\d+)\s+failed/);
-        
+
         if (passedMatch && passedMatch[1]) {
           passedTests = parseInt(passedMatch[1], 10);
         }
@@ -312,13 +313,15 @@ export class TestRunner {
         totalTests: 0,
         passedTests: 0,
         failedTests: 1,
-        failures: [{
-          testName: 'Output Parsing',
-          errorMessage: 'Failed to parse test output - no valid test results found',
-          stackTrace: '',
-          propertyRef: null,
-          requirementRef: null,
-        }],
+        failures: [
+          {
+            testName: 'Output Parsing',
+            errorMessage: 'Failed to parse test output - no valid test results found',
+            stackTrace: '',
+            propertyRef: null,
+            requirementRef: null,
+          },
+        ],
       };
     }
 
@@ -333,43 +336,43 @@ export class TestRunner {
 
   /**
    * Extract error message from failure output
-   * 
+   *
    * @param failureMessage - Raw failure message
    * @returns Cleaned error message
    */
   private extractErrorMessage(failureMessage: string): string {
     // Extract the first line or the assertion error
     const lines = failureMessage.split('\n');
-    
+
     for (const line of lines) {
       const trimmed = line.trim();
       if (trimmed && !trimmed.startsWith('at ') && !trimmed.startsWith('Error:')) {
         return trimmed;
       }
     }
-    
+
     return failureMessage.split('\n')[0] || 'Test failed';
   }
 
   /**
    * Extract stack trace from failure output
-   * 
+   *
    * @param failureMessage - Raw failure message
    * @returns Stack trace
    */
   private extractStackTrace(failureMessage: string): string {
     const lines = failureMessage.split('\n');
-    const stackLines = lines.filter(line => line.trim().startsWith('at '));
+    const stackLines = lines.filter((line) => line.trim().startsWith('at '));
     return stackLines.join('\n');
   }
 
   /**
    * Extract property reference from test comments or failure message
    * Looks for patterns like "Property 5:" or "Property 5"
-   * 
+   *
    * @param text - Test failure message or output
    * @returns Property reference or null
-   * 
+   *
    * Requirements: 4.7
    */
   private extractPropertyRef(text: string): string | null {
@@ -380,10 +383,10 @@ export class TestRunner {
   /**
    * Extract requirement reference from test comments or failure message
    * Looks for patterns like "Requirements 1.2" or "Requirement 3.4"
-   * 
+   *
    * @param text - Test failure message or output
    * @returns Requirement reference or null
-   * 
+   *
    * Requirements: 4.7
    */
   private extractRequirementRef(text: string): string | null {
@@ -394,10 +397,10 @@ export class TestRunner {
   /**
    * Validate property-based test configuration
    * Verifies that property tests have minimum 100 iterations configured
-   * 
+   *
    * @param testFiles - Array of test file paths to validate
    * @returns Validation result with any issues found
-   * 
+   *
    * Requirements: 4.6, 4.7
    */
   async validatePropertyTests(testFiles: string[]): Promise<PropertyTestValidation> {
@@ -439,7 +442,7 @@ export class TestRunner {
 
   /**
    * Check if a test file contains property-based tests
-   * 
+   *
    * @param content - Test file content
    * @returns True if file contains property tests
    */
@@ -454,11 +457,11 @@ export class TestRunner {
 
   /**
    * Validate that property tests have minimum 100 iterations
-   * 
+   *
    * @param content - Test file content
    * @param testFile - Test file path
    * @returns Array of validation issues
-   * 
+   *
    * Requirements: 4.6
    */
   private validateIterationCount(content: string, testFile: string): PropertyTestIssue[] {
@@ -468,7 +471,7 @@ export class TestRunner {
     // Look for fc.assert calls with numRuns configuration
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
-      
+
       if (!line) continue;
 
       // Check if this line contains fc.assert
@@ -520,11 +523,11 @@ export class TestRunner {
 
   /**
    * Validate that property tests have proper property tags
-   * 
+   *
    * @param content - Test file content
    * @param testFile - Test file path
    * @returns Array of validation issues
-   * 
+   *
    * Requirements: 4.7
    */
   private validatePropertyTags(content: string, testFile: string): PropertyTestIssue[] {
@@ -534,7 +537,7 @@ export class TestRunner {
     // Look for fc.assert calls and check for property tags
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
-      
+
       if (!line) continue;
 
       // Check if this line contains fc.assert
@@ -558,7 +561,8 @@ export class TestRunner {
           issues.push({
             file: testFile,
             issue: 'missing_property_tag',
-            message: 'Property test missing property tag comment (e.g., // Feature: spec-orchestrator, Property 20: ...)',
+            message:
+              'Property test missing property tag comment (e.g., // Feature: spec-orchestrator, Property 20: ...)',
             line: i + 1,
           });
         }
@@ -571,11 +575,11 @@ export class TestRunner {
   /**
    * Extract property information from test failure
    * Links test failures to design properties
-   * 
+   *
    * @param failure - Test failure details
    * @param testFileContent - Content of the test file (optional)
    * @returns Enhanced failure with property information
-   * 
+   *
    * Requirements: 4.7
    */
   async enrichFailureWithPropertyInfo(
@@ -629,7 +633,11 @@ export interface PropertyTestIssue {
   file: string;
 
   /** Type of issue */
-  issue: 'missing_iteration_count' | 'insufficient_iterations' | 'missing_property_tag' | 'file_read_error';
+  issue:
+    | 'missing_iteration_count'
+    | 'insufficient_iterations'
+    | 'missing_property_tag'
+    | 'file_read_error';
 
   /** Description of the issue */
   message: string;
@@ -652,11 +660,11 @@ export interface EnrichedTestFailure extends TestFailure {
 /**
  * Identify test files corresponding to source code files
  * Maps code files to their test files based on naming conventions
- * 
+ *
  * @param codeFiles - Array of source code file paths
  * @param testDirectory - Root directory for test files (default: 'tests')
  * @returns Map of code file to array of corresponding test files
- * 
+ *
  * Requirements: 4.1
  */
 export async function identifyTestFiles(
@@ -665,17 +673,17 @@ export async function identifyTestFiles(
 ): Promise<Map<string, string[]>> {
   const fs = await import('fs/promises');
   const path = await import('path');
-  
+
   const testFileMap = new Map<string, string[]>();
 
   for (const codeFile of codeFiles) {
     const testFiles: string[] = [];
-    
+
     // Extract file information
     const parsedPath = path.parse(codeFile);
     const fileName = parsedPath.name;
     const fileExt = parsedPath.ext;
-    
+
     // Skip non-code files
     if (!['.ts', '.tsx', '.js', '.jsx'].includes(fileExt)) {
       continue;
@@ -701,11 +709,11 @@ export async function identifyTestFiles(
       try {
         // Check if test directory exists
         await fs.access(testDir);
-        
+
         // Check each possible test file name
         for (const testName of possibleTestNames) {
           const testFilePath = path.join(testDir, testName);
-          
+
           try {
             await fs.access(testFilePath);
             testFiles.push(testFilePath);
@@ -723,7 +731,7 @@ export async function identifyTestFiles(
     if (sameDir) {
       for (const testName of possibleTestNames) {
         const testFilePath = path.join(sameDir, testName);
-        
+
         try {
           await fs.access(testFilePath);
           testFiles.push(testFilePath);
@@ -735,7 +743,7 @@ export async function identifyTestFiles(
 
     // Remove duplicates
     const uniqueTestFiles = [...new Set(testFiles)];
-    
+
     if (uniqueTestFiles.length > 0) {
       testFileMap.set(codeFile, uniqueTestFiles);
     }
@@ -747,11 +755,11 @@ export async function identifyTestFiles(
 /**
  * Identify affected test files based on changed code files
  * This function determines which tests need to be run when specific code files change
- * 
+ *
  * @param changedFiles - Array of changed source code file paths
  * @param testDirectory - Root directory for test files (default: 'tests')
  * @returns Array of unique test file paths that should be executed
- * 
+ *
  * Requirements: 4.1
  */
 export async function identifyAffectedTests(
@@ -759,10 +767,10 @@ export async function identifyAffectedTests(
   testDirectory: string = 'tests'
 ): Promise<string[]> {
   const testFileMap = await identifyTestFiles(changedFiles, testDirectory);
-  
+
   // Collect all test files from the map
   const affectedTests = new Set<string>();
-  
+
   for (const testFiles of testFileMap.values()) {
     for (const testFile of testFiles) {
       affectedTests.add(testFile);
@@ -775,14 +783,14 @@ export async function identifyAffectedTests(
 /**
  * Find all test files in a directory recursively
  * Useful for running all tests or discovering test files
- * 
+ *
  * @param testDirectory - Root directory to search for test files
  * @returns Array of all test file paths found
  */
 export async function findAllTestFiles(testDirectory: string = 'tests'): Promise<string[]> {
   const fs = await import('fs/promises');
   const path = await import('path');
-  
+
   const testFiles: string[] = [];
 
   async function searchDirectory(dir: string): Promise<void> {
@@ -823,7 +831,7 @@ export async function findAllTestFiles(testDirectory: string = 'tests'): Promise
 
 /**
  * Create a test runner instance with default configuration
- * 
+ *
  * @param config - Optional configuration
  * @returns TestRunner instance
  */

@@ -15,10 +15,10 @@ import { DefaultSpecParser } from '@/services/spec-parser';
 export interface DependencyNode {
   /** Task ID */
   taskId: string;
-  
+
   /** IDs of tasks that must be completed before this task */
   prerequisites: string[];
-  
+
   /** IDs of tasks that depend on this task */
   dependents: string[];
 }
@@ -260,27 +260,27 @@ export class TaskManager {
 
   /**
    * Builds a dependency graph from task document order.
-   * 
+   *
    * Algorithm:
    * 1. Flatten task tree to get all tasks in document order
    * 2. For each task, identify prerequisites based on:
    *    - Parent-child relationships (children must complete before parent)
    *    - Document order (earlier tasks are implicit prerequisites)
    * 3. Build bidirectional dependency graph (prerequisites and dependents)
-   * 
+   *
    * Document order creates implicit dependencies: tasks appearing earlier
    * in the document are prerequisites for tasks appearing later.
-   * 
+   *
    * @param tasks - Root task list from spec
-   * 
+   *
    * **Validates: Requirement 9.1**
    */
   private buildDependencyGraph(tasks: Task[]): void {
     this.dependencyGraph.clear();
-    
+
     // Get all tasks in document order (depth-first traversal)
     const allTasks = this.flattenTasks(tasks);
-    
+
     // Initialize nodes for all tasks
     for (const task of allTasks) {
       this.dependencyGraph.set(task.id, {
@@ -289,26 +289,28 @@ export class TaskManager {
         dependents: [],
       });
     }
-    
+
     // Build dependencies based on document order and parent-child relationships
     for (let i = 0; i < allTasks.length; i++) {
       const task = allTasks[i];
+      if (!task) continue;
+
       const node = this.dependencyGraph.get(task.id)!;
-      
+
       // Add parent-child dependencies
       if (task.parentId) {
         // Child depends on all previous siblings being completed
-        const parent = allTasks.find(t => t.id === task.parentId);
+        const parent = allTasks.find((t) => t.id === task.parentId);
         if (parent) {
           const siblings = parent.children;
-          const taskIndex = siblings.findIndex(s => s.id === task.id);
-          
+          const taskIndex = siblings.findIndex((s) => s.id === task.id);
+
           // Add previous non-optional siblings as prerequisites
           for (let j = 0; j < taskIndex; j++) {
             const sibling = siblings[j];
-            if (!sibling.isOptional) {
+            if (sibling && !sibling.isOptional) {
               node.prerequisites.push(sibling.id);
-              
+
               // Add bidirectional link
               const siblingNode = this.dependencyGraph.get(sibling.id);
               if (siblingNode) {
@@ -318,28 +320,30 @@ export class TaskManager {
           }
         }
       }
-      
+
       // Add document order dependencies (implicit prerequisites)
       // Tasks appearing earlier in document order are prerequisites
       // Only add direct predecessor to avoid redundant dependencies
       if (i > 0) {
         const previousTask = allTasks[i - 1];
-        
+
         // Only add as prerequisite if:
         // 1. Previous task is not optional
         // 2. Previous task is not a parent of current task (already handled)
         // 3. Previous task is not a sibling (already handled above)
-        if (!previousTask.isOptional && 
-            previousTask.id !== task.parentId &&
-            previousTask.parentId !== task.parentId) {
-          
+        if (
+          previousTask &&
+          !previousTask.isOptional &&
+          previousTask.id !== task.parentId &&
+          previousTask.parentId !== task.parentId
+        ) {
           // Check if this is a parent-child relationship
-          const isParentChild = task.parentId === previousTask.id || 
-                                previousTask.parentId === task.id;
-          
+          const isParentChild =
+            task.parentId === previousTask.id || previousTask.parentId === task.id;
+
           if (!isParentChild && !node.prerequisites.includes(previousTask.id)) {
             node.prerequisites.push(previousTask.id);
-            
+
             // Add bidirectional link
             const prevNode = this.dependencyGraph.get(previousTask.id);
             if (prevNode && !prevNode.dependents.includes(task.id)) {
@@ -353,7 +357,7 @@ export class TaskManager {
 
   /**
    * Gets the dependency graph node for a task.
-   * 
+   *
    * @param taskId - Task ID
    * @returns Dependency node or null if not found
    */
@@ -363,10 +367,10 @@ export class TaskManager {
 
   /**
    * Gets all prerequisite task IDs for a given task.
-   * 
+   *
    * @param taskId - Task ID
    * @returns Array of prerequisite task IDs
-   * 
+   *
    * **Validates: Requirement 9.1**
    */
   getPrerequisites(taskId: string): string[] {
@@ -376,7 +380,7 @@ export class TaskManager {
 
   /**
    * Gets all dependent task IDs for a given task.
-   * 
+   *
    * @param taskId - Task ID
    * @returns Array of dependent task IDs
    */
@@ -387,25 +391,25 @@ export class TaskManager {
 
   /**
    * Checks if all prerequisites for a task are completed.
-   * 
+   *
    * Algorithm:
    * 1. Get all prerequisite task IDs from dependency graph
    * 2. Check if each prerequisite is in completed status
    * 3. Return true only if all prerequisites are completed
-   * 
+   *
    * @param taskId - Task ID to check
    * @returns true if all prerequisites are completed, false otherwise
-   * 
+   *
    * **Validates: Requirement 9.5**
    */
   arePrerequisitesCompleted(taskId: string): boolean {
     const prerequisites = this.getPrerequisites(taskId);
-    
+
     // If no prerequisites, task is ready
     if (prerequisites.length === 0) {
       return true;
     }
-    
+
     // Check if all prerequisites are completed
     for (const prereqId of prerequisites) {
       const prereqStatus = this.getTaskStatus(prereqId);
@@ -413,34 +417,34 @@ export class TaskManager {
         return false;
       }
     }
-    
+
     return true;
   }
 
   /**
    * Validates that a task can be started based on prerequisite completion.
-   * 
+   *
    * This enforces Requirement 9.5: tasks cannot execute until all
    * prerequisites are completed.
-   * 
+   *
    * @param taskId - Task ID to validate
    * @returns true if task can be started, false if prerequisites not met
    * @throws Error with details about incomplete prerequisites
-   * 
+   *
    * **Validates: Requirement 9.5**
    */
   validatePrerequisites(taskId: string): boolean {
     if (!this.arePrerequisitesCompleted(taskId)) {
       const prerequisites = this.getPrerequisites(taskId);
       const incomplete = prerequisites.filter(
-        prereqId => this.getTaskStatus(prereqId) !== 'completed'
+        (prereqId) => this.getTaskStatus(prereqId) !== 'completed'
       );
-      
+
       throw new Error(
         `Cannot start task ${taskId}: incomplete prerequisites: ${incomplete.join(', ')}`
       );
     }
-    
+
     return true;
   }
 
@@ -871,9 +875,7 @@ export class TaskManager {
 
     // Validate transition (Requirements 2.2, 2.3, 2.4)
     if (!this.isValidTransition(currentStatus, newStatus)) {
-      console.warn(
-        `Invalid status transition for task ${taskId}: ${currentStatus} → ${newStatus}`
-      );
+      console.warn(`Invalid status transition for task ${taskId}: ${currentStatus} → ${newStatus}`);
       return false;
     }
 
@@ -933,14 +935,14 @@ export class TaskManager {
   async startTask(taskId: string): Promise<boolean> {
     // Validate prerequisites before starting (Requirement 9.5)
     this.validatePrerequisites(taskId);
-    
+
     const success = await this.updateTaskStatus(taskId, 'in_progress');
-    
+
     if (success) {
       // Set as current task when starting
       await this.setCurrentTask(taskId);
     }
-    
+
     return success;
   }
 
@@ -1001,7 +1003,7 @@ export class TaskManager {
     // Enforce mutual exclusion: check if any task is currently in_progress (Requirement 3.3)
     const allTasks = this.flattenTasks(this.spec.tasks);
     const inProgressTask = allTasks.find((t) => t.status === 'in_progress');
-    
+
     if (inProgressTask) {
       // A task is already in progress, cannot select another
       return null;
@@ -1180,7 +1182,7 @@ export class TaskManager {
   ): Promise<Task | null> {
     // Complete the current task
     const completed = await this.completeTask(currentTaskId);
-    
+
     if (!completed) {
       throw new Error(`Failed to complete task: ${currentTaskId}`);
     }
@@ -1194,7 +1196,7 @@ export class TaskManager {
     if (nextTask) {
       // Queue next task automatically (Requirement 3.4)
       const queued = await this.queueTask(nextTask.id);
-      
+
       if (!queued) {
         throw new Error(`Failed to queue next task: ${nextTask.id}`);
       }
@@ -1288,11 +1290,7 @@ export class TaskManager {
    *
    * **Validates: Requirement 3.5**
    */
-  async haltOnFailure(
-    taskId: string,
-    error: Error,
-    failedTest?: string
-  ): Promise<ErrorContext> {
+  async haltOnFailure(taskId: string, error: Error, failedTest?: string): Promise<ErrorContext> {
     // Create error context with complete information (Requirement 3.5)
     const errorContext: ErrorContext = {
       taskId,
@@ -1322,7 +1320,7 @@ export class TaskManager {
     }
 
     const allTasks = this.flattenTasks(this.spec.tasks);
-    
+
     // Check if all non-optional tasks are completed
     for (const task of allTasks) {
       if (!task.isOptional && task.status !== 'completed') {
@@ -1358,7 +1356,7 @@ export class TaskManager {
     }
 
     const allTasks = this.flattenTasks(this.spec.tasks);
-    
+
     return {
       total: allTasks.length,
       notStarted: allTasks.filter((t) => t.status === 'not_started').length,

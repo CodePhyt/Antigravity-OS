@@ -1,12 +1,12 @@
 /**
  * Correction Generator Component
  * Generates spec file corrections based on error analysis
- * 
+ *
  * This component:
  * 1. Uses LLM to analyze error and suggest fix
  * 2. Generates updated spec file content
  * 3. Validates correction doesn't break other requirements
- * 
+ *
  * Requirements: 5.2, 5.3
  */
 
@@ -54,31 +54,31 @@ export interface CorrectionOptions {
 
 /**
  * Correction Generator generates spec file corrections based on error analysis
- * 
+ *
  * Responsibilities:
  * - Analyze error context and error analysis
  * - Generate appropriate corrections for spec files
  * - Validate corrections don't break other requirements
  * - Produce updated spec file content
- * 
+ *
  * **Validates: Requirements 5.2, 5.3**
  */
 export class CorrectionGenerator {
   /**
    * Generates a correction plan based on error analysis
-   * 
+   *
    * Algorithm:
    * 1. Read current spec file content
    * 2. Analyze error and determine correction strategy
    * 3. Generate updated content (using LLM in future)
    * 4. Validate correction doesn't break other requirements
    * 5. Return correction plan
-   * 
+   *
    * @param error - Error context from failed task
    * @param analysis - Error analysis from ErrorAnalyzer
    * @param options - Correction options
    * @returns Correction plan with updated content
-   * 
+   *
    * **Validates: Requirements 5.2, 5.3**
    */
   async generateCorrection(
@@ -108,9 +108,7 @@ export class CorrectionGenerator {
     );
 
     if (!validationResult.isValid) {
-      throw new Error(
-        `Correction validation failed: ${validationResult.errors.join(', ')}`
-      );
+      throw new Error(`Correction validation failed: ${validationResult.errors.join(', ')}`);
     }
 
     // Step 5: Return correction plan
@@ -126,7 +124,7 @@ export class CorrectionGenerator {
 
   /**
    * Reads the current spec file content
-   * 
+   *
    * @param specPath - Path to spec directory
    * @param targetFile - Which spec file to read
    * @returns File content as string
@@ -144,10 +142,10 @@ export class CorrectionGenerator {
 
   /**
    * Generates correction text based on error analysis
-   * 
+   *
    * This method will use LLM in the future. For now, it generates
    * rule-based corrections based on error type.
-   * 
+   *
    * @param error - Error context
    * @param analysis - Error analysis
    * @param currentContent - Current spec file content
@@ -161,7 +159,7 @@ export class CorrectionGenerator {
     // TODO: Replace with LLM-based correction generation
     // For now, use rule-based approach
 
-    const { errorType, rootCause, context } = analysis;
+    const { errorType } = analysis;
 
     switch (errorType) {
       case 'test_failure':
@@ -191,9 +189,9 @@ export class CorrectionGenerator {
    * Generates correction for test failures
    */
   private generateTestFailureCorrection(
-    error: ErrorContext,
+    _error: ErrorContext,
     analysis: ErrorAnalysis,
-    currentContent: string
+    _currentContent: string
   ): string {
     const { rootCause, context } = analysis;
 
@@ -210,9 +208,9 @@ export class CorrectionGenerator {
    * Generates correction for compilation errors
    */
   private generateCompilationErrorCorrection(
-    error: ErrorContext,
+    _error: ErrorContext,
     analysis: ErrorAnalysis,
-    currentContent: string
+    _currentContent: string
   ): string {
     const { rootCause } = analysis;
 
@@ -225,7 +223,7 @@ export class CorrectionGenerator {
   private generateRuntimeErrorCorrection(
     error: ErrorContext,
     analysis: ErrorAnalysis,
-    currentContent: string
+    _currentContent: string
   ): string {
     const { rootCause } = analysis;
 
@@ -236,9 +234,9 @@ export class CorrectionGenerator {
    * Generates correction for missing dependencies
    */
   private generateMissingDependencyCorrection(
-    error: ErrorContext,
+    _error: ErrorContext,
     analysis: ErrorAnalysis,
-    currentContent: string
+    _currentContent: string
   ): string {
     const { rootCause } = analysis;
 
@@ -253,9 +251,9 @@ export class CorrectionGenerator {
    * Generates correction for invalid spec
    */
   private generateInvalidSpecCorrection(
-    error: ErrorContext,
+    _error: ErrorContext,
     analysis: ErrorAnalysis,
-    currentContent: string
+    _currentContent: string
   ): string {
     const { rootCause } = analysis;
 
@@ -268,7 +266,7 @@ export class CorrectionGenerator {
   private generateTimeoutErrorCorrection(
     error: ErrorContext,
     analysis: ErrorAnalysis,
-    currentContent: string
+    _currentContent: string
   ): string {
     const { rootCause } = analysis;
 
@@ -281,7 +279,7 @@ export class CorrectionGenerator {
   private generateGenericCorrection(
     error: ErrorContext,
     analysis: ErrorAnalysis,
-    currentContent: string
+    _currentContent: string
   ): string {
     const { rootCause } = analysis;
 
@@ -290,16 +288,16 @@ export class CorrectionGenerator {
 
   /**
    * Generates updated spec file content with the correction applied
-   * 
+   *
    * This method performs surgical updates - it only modifies the relevant
    * section while preserving all other content.
-   * 
+   *
    * @param currentContent - Current spec file content
    * @param correction - Correction description
    * @param error - Error context
    * @param analysis - Error analysis
    * @returns Updated file content
-   * 
+   *
    * **Validates: Requirement 5.3**
    */
   private async generateUpdatedContent(
@@ -308,7 +306,7 @@ export class CorrectionGenerator {
     error: ErrorContext,
     analysis: ErrorAnalysis
   ): Promise<string> {
-    const { targetFile, errorType, context } = analysis;
+    const { targetFile } = analysis;
 
     switch (targetFile) {
       case 'design.md':
@@ -327,7 +325,7 @@ export class CorrectionGenerator {
 
   /**
    * Updates design.md with correction
-   * 
+   *
    * Strategy: Add a note to the relevant property or add a new section
    */
   private updateDesignFile(
@@ -353,14 +351,14 @@ export class CorrectionGenerator {
 
   /**
    * Updates requirements.md with correction
-   * 
+   *
    * Strategy: Add a new acceptance criterion or add a new requirement
    */
   private updateRequirementsFile(
     currentContent: string,
     correction: string,
     error: ErrorContext,
-    analysis: ErrorAnalysis
+    _analysis: ErrorAnalysis
   ): string {
     // Find the last requirement section
     const requirementPattern = /### Requirement \d+:/g;
@@ -373,17 +371,16 @@ export class CorrectionGenerator {
 
     // Add a new requirement after the last one
     const lastMatch = matches[matches.length - 1];
-    const lastRequirementNumber = parseInt(
-      lastMatch[0].match(/\d+/)?.[0] || '0',
-      10
-    );
+    if (!lastMatch) {
+      return `${currentContent}\n\n### Requirement 1: Address ${error.taskId} Error\n\n**User Story:** As a developer, I want the system to handle the error case discovered in task ${error.taskId}.\n\n#### Acceptance Criteria\n\n1. ${correction}\n`;
+    }
+
+    const lastRequirementNumber = parseInt(lastMatch[0].match(/\d+/)?.[0] || '0', 10);
     const newRequirementNumber = lastRequirementNumber + 1;
 
     // Find the end of the last requirement (next ## header or end of file)
     const lastRequirementIndex = lastMatch.index || 0;
-    const nextSectionMatch = currentContent
-      .slice(lastRequirementIndex + 1)
-      .match(/\n## /);
+    const nextSectionMatch = currentContent.slice(lastRequirementIndex + 1).match(/\n## /);
     const insertIndex = nextSectionMatch
       ? lastRequirementIndex + 1 + nextSectionMatch.index!
       : currentContent.length;
@@ -391,22 +388,20 @@ export class CorrectionGenerator {
     const newRequirement = `\n### Requirement ${newRequirementNumber}: Address ${error.taskId} Error\n\n**User Story:** As a developer, I want the system to handle the error case discovered in task ${error.taskId}.\n\n#### Acceptance Criteria\n\n1. ${correction}\n`;
 
     return (
-      currentContent.slice(0, insertIndex) +
-      newRequirement +
-      currentContent.slice(insertIndex)
+      currentContent.slice(0, insertIndex) + newRequirement + currentContent.slice(insertIndex)
     );
   }
 
   /**
    * Updates tasks.md with correction
-   * 
+   *
    * Strategy: Add a note to the failed task
    */
   private updateTasksFile(
     currentContent: string,
     correction: string,
     error: ErrorContext,
-    analysis: ErrorAnalysis
+    _analysis: ErrorAnalysis
   ): string {
     // Find the task by ID
     const taskPattern = new RegExp(
@@ -453,11 +448,7 @@ export class CorrectionGenerator {
   /**
    * Adds a note to a specific property in design.md
    */
-  private addNoteToProperty(
-    content: string,
-    propertyRef: string,
-    note: string
-  ): string {
+  private addNoteToProperty(content: string, propertyRef: string, note: string): string {
     // Find the property section
     const propertyPattern = new RegExp(
       `(\\*\\*${propertyRef}:.+?\\*\\*)([\\s\\S]+?)(?=\\n\\*\\*Property|\\n## |$)`,
@@ -474,21 +465,13 @@ export class CorrectionGenerator {
     // Add note at the end of the property section
     const propertyEnd = match.index + match[0].length;
 
-    return (
-      content.slice(0, propertyEnd) +
-      `\n\n**Note**: ${note}\n` +
-      content.slice(propertyEnd)
-    );
+    return content.slice(0, propertyEnd) + `\n\n**Note**: ${note}\n` + content.slice(propertyEnd);
   }
 
   /**
    * Adds a note to a specific section in the spec file
    */
-  private addNoteToSection(
-    content: string,
-    sectionHeader: string,
-    note: string
-  ): string {
+  private addNoteToSection(content: string, sectionHeader: string, note: string): string {
     // Find the section
     const sectionPattern = new RegExp(`(${sectionHeader})([\\s\\S]+?)(?=\\n## |$)`, 'i');
 
@@ -507,13 +490,13 @@ export class CorrectionGenerator {
 
   /**
    * Validates that the correction doesn't break other requirements
-   * 
+   *
    * Validation checks:
    * 1. Markdown syntax is valid
    * 2. All requirement references still exist
    * 3. All property references still exist
    * 4. No duplicate IDs introduced
-   * 
+   *
    * @param updatedContent - Updated spec file content
    * @param targetFile - Which spec file was updated
    * @param parsedSpec - Parsed spec for validation (optional)
@@ -538,11 +521,7 @@ export class CorrectionGenerator {
 
     // If we have parsed spec, validate references
     if (parsedSpec) {
-      const referenceErrors = this.validateReferences(
-        updatedContent,
-        targetFile,
-        parsedSpec
-      );
+      const referenceErrors = this.validateReferences(updatedContent, targetFile, parsedSpec);
       errors.push(...referenceErrors);
     }
 
@@ -590,7 +569,7 @@ export class CorrectionGenerator {
    */
   private validateReferences(
     content: string,
-    targetFile: string,
+    _targetFile: string,
     parsedSpec: ParsedSpec
   ): string[] {
     const errors: string[] = [];
@@ -601,11 +580,13 @@ export class CorrectionGenerator {
     );
 
     for (const match of requirementRefs) {
-      const refs = match[1].split(',').map((r) => r.trim());
-      for (const ref of refs) {
-        const exists = parsedSpec.requirements.some((req) => req.id === ref);
-        if (!exists) {
-          errors.push(`Referenced requirement ${ref} does not exist`);
+      if (match[1]) {
+        const refs = match[1].split(',').map((r) => r.trim());
+        for (const ref of refs) {
+          const exists = parsedSpec.requirements.some((req) => req.id === ref);
+          if (!exists) {
+            errors.push(`Referenced requirement ${ref} does not exist`);
+          }
         }
       }
     }
@@ -614,10 +595,12 @@ export class CorrectionGenerator {
     const propertyRefs = Array.from(content.matchAll(/Property\s+(\d+)/gi));
 
     for (const match of propertyRefs) {
-      const propNum = parseInt(match[1], 10);
-      const exists = parsedSpec.properties.some((prop) => prop.number === propNum);
-      if (!exists) {
-        errors.push(`Referenced property ${propNum} does not exist`);
+      if (match[1]) {
+        const propNum = parseInt(match[1], 10);
+        const exists = parsedSpec.properties.some((prop) => prop.number === propNum);
+        if (!exists) {
+          errors.push(`Referenced property ${propNum} does not exist`);
+        }
       }
     }
 
@@ -627,7 +610,7 @@ export class CorrectionGenerator {
 
 /**
  * Creates a correction generator instance
- * 
+ *
  * @returns CorrectionGenerator instance
  */
 export function createCorrectionGenerator(): CorrectionGenerator {

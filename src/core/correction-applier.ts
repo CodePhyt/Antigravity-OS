@@ -1,12 +1,12 @@
 /**
  * Correction Applier Component
  * Applies corrections to spec files using atomic file operations
- * 
+ *
  * This component:
  * 1. Applies corrections using atomic file write
  * 2. Preserves unrelated content (surgical updates)
  * 3. Validates spec syntax before commit
- * 
+ *
  * Requirements: 5.3, 8.5
  */
 
@@ -56,31 +56,31 @@ export interface CorrectionApplicationOptions {
 
 /**
  * Correction Applier applies corrections to spec files using atomic operations
- * 
+ *
  * Responsibilities:
  * - Apply corrections using atomic file write
  * - Preserve unrelated content (surgical updates)
  * - Validate spec syntax before commit
  * - Create backups before modifications
  * - Handle application failures gracefully
- * 
+ *
  * **Validates: Requirements 5.3, 8.5**
  */
 export class CorrectionApplier {
   /**
    * Applies a correction plan to the appropriate spec file
-   * 
+   *
    * Algorithm:
    * 1. Validate the correction plan
    * 2. Determine the full file path
    * 3. Validate the updated content
    * 4. Apply using atomic write with backup
    * 5. Return result with success/failure status
-   * 
+   *
    * @param correctionPlan - The correction plan to apply
    * @param options - Application options
    * @returns CorrectionApplicationResult indicating success or failure
-   * 
+   *
    * **Validates: Requirements 5.3, 8.5**
    */
   async applyCorrection(
@@ -126,16 +126,12 @@ export class CorrectionApplier {
       }
 
       // Step 4: Apply using atomic write with backup (Requirement 5.3)
-      const writeResult = await atomicWriteWithBackup(
-        filePath,
-        correctionPlan.updatedContent,
-        {
-          validate: (content) => this.validateBeforeCommit(content, correctionPlan.targetFile),
-          createDirs: true,
-          backupDir,
-          maxBackups,
-        }
-      );
+      const writeResult = await atomicWriteWithBackup(filePath, correctionPlan.updatedContent, {
+        validate: (content) => this.validateBeforeCommit(content, correctionPlan.targetFile),
+        createDirs: true,
+        backupDir,
+        maxBackups,
+      });
 
       if (!writeResult.success) {
         return {
@@ -165,13 +161,13 @@ export class CorrectionApplier {
 
   /**
    * Validates a correction plan before applying
-   * 
+   *
    * Checks:
    * - Target file is valid
    * - Updated content is not empty
    * - Correction description is present
    * - Error type is valid
-   * 
+   *
    * @param plan - Correction plan to validate
    * @returns Error message if invalid, null if valid
    */
@@ -217,17 +213,17 @@ export class CorrectionApplier {
 
   /**
    * Validates the updated content before applying
-   * 
+   *
    * Performs surgical update validation:
    * - Content is not empty
    * - Content is valid markdown
    * - Content structure is appropriate for file type
-   * 
+   *
    * @param content - Updated content to validate
    * @param targetFile - Which spec file is being updated
    * @param strict - Whether to perform strict validation
    * @returns Error message if invalid, null if valid
-   * 
+   *
    * **Validates: Requirement 8.5**
    */
   private validateUpdatedContent(
@@ -258,7 +254,7 @@ export class CorrectionApplier {
 
   /**
    * Validates file-specific structure
-   * 
+   *
    * @param content - Content to validate
    * @param targetFile - Which spec file is being validated
    * @returns Error message if invalid, null if valid
@@ -281,12 +277,12 @@ export class CorrectionApplier {
 
   /**
    * Validates requirements.md structure
-   * 
+   *
    * Requirements:
    * - Must have at least one requirement section
    * - Requirements must be numbered
    * - Must have acceptance criteria
-   * 
+   *
    * @param content - Content to validate
    * @returns Error message if invalid, null if valid
    */
@@ -306,11 +302,11 @@ export class CorrectionApplier {
 
   /**
    * Validates design.md structure
-   * 
+   *
    * Requirements:
    * - Must have at least one major section (## Header)
    * - Should have overview or architecture section
-   * 
+   *
    * @param content - Content to validate
    * @returns Error message if invalid, null if valid
    */
@@ -334,12 +330,12 @@ export class CorrectionApplier {
 
   /**
    * Validates tasks.md structure
-   * 
+   *
    * Requirements:
    * - Must have at least one task
    * - Tasks must have checkbox markers
    * - Tasks must have IDs
-   * 
+   *
    * @param content - Content to validate
    * @returns Error message if invalid, null if valid
    */
@@ -354,14 +350,14 @@ export class CorrectionApplier {
 
   /**
    * Validates content before committing the atomic write
-   * 
+   *
    * This is the final validation step before the file is written.
    * It ensures the content is safe to commit.
-   * 
+   *
    * @param content - Content to validate
    * @param targetFile - Which spec file is being written
    * @returns true if valid, false otherwise
-   * 
+   *
    * **Validates: Requirement 8.5**
    */
   private validateBeforeCommit(content: string, targetFile: string): boolean {
@@ -386,10 +382,10 @@ export class CorrectionApplier {
 
   /**
    * Verifies that a correction was successfully applied
-   * 
+   *
    * This method can be used after applying a correction to verify
    * that the file was updated correctly.
-   * 
+   *
    * @param filePath - Path to the file that was updated
    * @param expectedContent - Expected content after correction
    * @returns true if verification succeeds, false otherwise
@@ -412,7 +408,7 @@ export class CorrectionApplier {
 
 /**
  * Creates a correction applier instance
- * 
+ *
  * @returns CorrectionApplier instance
  */
 export function createCorrectionApplier(): CorrectionApplier {
