@@ -50,18 +50,21 @@ The system SHALL operate under strict 3-Layer Sovereign Architecture:
 ### Section 1.2: Layer Responsibilities
 
 **Directive Layer**:
+
 - MUST contain only natural language guidance
 - MUST NOT contain executable code
 - MUST define "what" and "why", never "how"
 - MUST be human-readable and version-controlled
 
 **Orchestration Layer**:
+
 - MUST make all AI-driven decisions
 - MUST consult Directive Layer before acting
 - MUST route to Execution Layer for deterministic operations
 - MUST NEVER perform probabilistic work when deterministic tools exist
 
 **Execution Layer**:
+
 - MUST contain only deterministic, testable scripts
 - MUST NOT make AI-driven decisions
 - MUST accept explicit inputs and return explicit outputs
@@ -74,6 +77,7 @@ The system SHALL operate under strict 3-Layer Sovereign Architecture:
 ### Section 2.1: Mandatory Security Protocols
 
 **All operations MUST**:
+
 1. **Sandbox Untrusted Code**: Use Docker containers for generated code execution
 2. **Validate All Inputs**: JSON Schema validation before processing
 3. **Atomic Operations**: Write to temp, validate, then commit
@@ -83,6 +87,7 @@ The system SHALL operate under strict 3-Layer Sovereign Architecture:
 ### Section 2.2: Prohibited Operations
 
 **The system SHALL NOT**:
+
 - Execute untrusted code outside sandboxed environments
 - Modify production files without backup
 - Accept unvalidated external inputs
@@ -92,6 +97,7 @@ The system SHALL operate under strict 3-Layer Sovereign Architecture:
 ### Section 2.3: Audit Trail Requirements
 
 **All security-sensitive operations MUST**:
+
 - Log to `.kiro/logs/security-audit.log`
 - Include timestamp, operation, user, and outcome
 - Be immutable (append-only)
@@ -104,6 +110,7 @@ The system SHALL operate under strict 3-Layer Sovereign Architecture:
 ### Section 3.1: File Modification Protocol
 
 **All file modifications MUST follow**:
+
 1. **Read**: Load current file state
 2. **Backup**: Create timestamped backup in `.tmp/backups/`
 3. **Modify**: Apply changes to temp file
@@ -115,6 +122,7 @@ The system SHALL operate under strict 3-Layer Sovereign Architecture:
 ### Section 3.2: Rollback Requirements
 
 **All operations MUST**:
+
 - Support rollback to previous state
 - Document rollback procedure in operation logs
 - Test rollback procedure before deployment
@@ -127,6 +135,7 @@ The system SHALL operate under strict 3-Layer Sovereign Architecture:
 ### Section 4.1: Mandatory Memory Consultation
 
 **Before starting ANY task, agents MUST**:
+
 1. Read `/docs/memory/insight-graph.md`
 2. Search for similar past problems
 3. Apply proven solutions first
@@ -135,6 +144,7 @@ The system SHALL operate under strict 3-Layer Sovereign Architecture:
 ### Section 4.2: Learning Protocol
 
 **After completing ANY task, agents MUST**:
+
 1. Categorize outcome (Success Path, Failed Pattern, Key Learning)
 2. Document pattern with time impact and prevention strategy
 3. Update Search Index if new category emerges
@@ -147,6 +157,7 @@ The system SHALL operate under strict 3-Layer Sovereign Architecture:
 ### Section 5.1: Enhanced B.L.A.S.T. Protocol
 
 **On execution failure, agents MUST**:
+
 1. **Build**: Execute code/tests
 2. **Log**: Capture full error context (stack trace, task ID, timestamp)
 3. **Analyze**: Check against specs and memory graph
@@ -158,6 +169,7 @@ The system SHALL operate under strict 3-Layer Sovereign Architecture:
 ### Section 5.2: Self-Healing Requirements
 
 **When a tool fails, agents MUST**:
+
 1. **Fix**: Update script in `/execution`
 2. **Test**: Verify fix with unit tests
 3. **Document**: Update corresponding SOP in `/directives`
@@ -171,6 +183,7 @@ The system SHALL operate under strict 3-Layer Sovereign Architecture:
 ### Section 6.1: Mandatory Metrics
 
 **The system MUST track**:
+
 - Task success/failure rates
 - Ralph-Loop effectiveness (attempts, success rate)
 - Self-healing events (count, resolution time)
@@ -181,6 +194,7 @@ The system SHALL operate under strict 3-Layer Sovereign Architecture:
 ### Section 6.2: Health Certification
 
 **The system MUST generate**:
+
 - `docs/telemetry.json`: Real-time metrics
 - `docs/SYSTEM_HEALTH_CERTIFICATE.json`: Periodic health report
 - `docs/memory/annealing_audit.md`: Self-healing event log
@@ -192,6 +206,7 @@ The system SHALL operate under strict 3-Layer Sovereign Architecture:
 ### Section 7.1: Skill Definition Requirements
 
 **All skills MUST**:
+
 - Have a corresponding SOP in `/directives/skills/`
 - Have deterministic implementation in `/execution/skills/`
 - Define explicit inputs, outputs, and edge cases
@@ -201,6 +216,7 @@ The system SHALL operate under strict 3-Layer Sovereign Architecture:
 ### Section 7.2: Skill Discovery Protocol
 
 **When discovering new skills, agents MUST**:
+
 1. Analyze skill definition and requirements
 2. Create SOP in `/directives/skills/{skill-name}.md`
 3. Implement deterministic script in `/execution/skills/{skill-name}.ts`
@@ -215,6 +231,7 @@ The system SHALL operate under strict 3-Layer Sovereign Architecture:
 ### Section 8.1: Mandatory Checkpoints
 
 **Agents MUST pause for human review before**:
+
 - Architectural changes (A.N.T. framework modifications)
 - Spec file modifications (requirements, design, tasks)
 - File deletions (any file type)
@@ -224,6 +241,7 @@ The system SHALL operate under strict 3-Layer Sovereign Architecture:
 ### Section 8.2: Checkpoint Protocol
 
 **For each checkpoint, agents MUST**:
+
 1. Generate impact analysis (severity, affected components, risks)
 2. Present to human with clear options (proceed/modify/reject/defer)
 3. Await decision
@@ -237,6 +255,7 @@ The system SHALL operate under strict 3-Layer Sovereign Architecture:
 ### Section 9.1: TypeScript Requirements
 
 **All TypeScript code MUST**:
+
 - Use strict mode (no `any` types)
 - Have explicit return types for all functions
 - Have explicit types for all parameters
@@ -246,6 +265,7 @@ The system SHALL operate under strict 3-Layer Sovereign Architecture:
 ### Section 9.2: Testing Requirements
 
 **All core logic MUST have**:
+
 - Unit tests (specific examples, edge cases)
 - Property-based tests (universal correctness, 100+ iterations)
 - Minimum 80% code coverage
@@ -254,6 +274,7 @@ The system SHALL operate under strict 3-Layer Sovereign Architecture:
 ### Section 9.3: Documentation Requirements
 
 **All code MUST have**:
+
 - JSDoc comments for public functions
 - Inline comments for complex logic
 - README.md for modules
@@ -266,6 +287,7 @@ The system SHALL operate under strict 3-Layer Sovereign Architecture:
 ### Section 10.1: Pre-Deployment Checklist
 
 **Before ANY deployment, agents MUST**:
+
 - [ ] All tests passing (unit, property-based, integration)
 - [ ] Code coverage >80%
 - [ ] ESLint passing (zero errors)
@@ -278,6 +300,7 @@ The system SHALL operate under strict 3-Layer Sovereign Architecture:
 ### Section 10.2: Commit Message Standards
 
 **All commits MUST follow**:
+
 - Conventional Commits format: `type(scope): description`
 - Types: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`
 - Include `[AUDIT_PASSED]` tag for audited commits
@@ -290,12 +313,14 @@ The system SHALL operate under strict 3-Layer Sovereign Architecture:
 ### Section 11.1: Emergency Bypass
 
 **Emergency bypass is ONLY permitted for**:
+
 - Critical production bug fixes
 - Security vulnerability patches
 - Data loss prevention
 - System outage recovery
 
 **Emergency bypass MUST**:
+
 1. Log bypass reason to `.kiro/logs/emergency-bypass.log`
 2. Execute change immediately
 3. Generate post-execution report
@@ -305,6 +330,7 @@ The system SHALL operate under strict 3-Layer Sovereign Architecture:
 ### Section 11.2: System Halt Conditions
 
 **The system MUST halt immediately if**:
+
 - Security breach detected
 - Data corruption detected
 - Infinite loop detected (>3 Ralph-Loop exhaustions)
@@ -318,6 +344,7 @@ The system SHALL operate under strict 3-Layer Sovereign Architecture:
 ### Section 12.1: Self-Refinement Cadence
 
 **The system MUST perform self-refinement every 3 development cycles**:
+
 1. Collect performance metrics
 2. Analyze pattern effectiveness
 3. Propose rule updates
@@ -327,6 +354,7 @@ The system SHALL operate under strict 3-Layer Sovereign Architecture:
 ### Section 12.2: Amendment Process
 
 **To amend this Constitution**:
+
 1. Propose amendment with rationale
 2. Validate against historical data
 3. Simulate impact on past cycles
@@ -341,6 +369,7 @@ The system SHALL operate under strict 3-Layer Sovereign Architecture:
 ### Section 13.1: Velocity Principles
 
 **During hackathons, agents MUST**:
+
 - Prioritize working demos over perfect code
 - Document limitations clearly (⚠️ emoji)
 - Skip optional tasks if time-constrained
@@ -350,6 +379,7 @@ The system SHALL operate under strict 3-Layer Sovereign Architecture:
 ### Section 13.2: Technical Debt Management
 
 **Technical debt is acceptable if**:
+
 - Clearly documented in code comments
 - Tracked in `docs/TECHNICAL_DEBT.md`
 - Does not affect core functionality
@@ -363,21 +393,25 @@ The system SHALL operate under strict 3-Layer Sovereign Architecture:
 ### Violation Severity Levels
 
 **Critical**: Immediate system halt required
+
 - Security breach
 - Data corruption
 - Infinite loop
 
 **High**: Human review required before proceeding
+
 - Architectural changes without checkpoint
 - Production deployment without approval
 - Security-sensitive changes without audit
 
 **Medium**: Logged and reviewed in next evolution cycle
+
 - Code quality violations
 - Documentation gaps
 - Test coverage below threshold
 
 **Low**: Logged for continuous improvement
+
 - Style guide violations
 - Minor documentation issues
 - Non-critical warnings
@@ -434,4 +468,3 @@ Master Sovereign Systems Architect
 ---
 
 **"We hold these truths to be self-evident: that all autonomous systems are created with purpose, that they are endowed by their architects with certain unalienable principles—Security, Atomicity, and the pursuit of Continuous Improvement."**
-

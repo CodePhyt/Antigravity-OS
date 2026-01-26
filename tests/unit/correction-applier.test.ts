@@ -1,9 +1,9 @@
 /**
  * Unit Tests for Correction Applier
- * 
+ *
  * Tests the correction applier component that applies corrections
  * to spec files using atomic operations.
- * 
+ *
  * Requirements: 5.3, 8.5
  */
 
@@ -226,7 +226,8 @@ Added handling for null values.
         errorType: 'test_failure',
         targetFile: 'requirements.md',
         correction: '',
-        updatedContent: '# Requirements\n\n### Requirement 1: Test\n\n#### Acceptance Criteria\n\n1. Test',
+        updatedContent:
+          '# Requirements\n\n### Requirement 1: Test\n\n#### Acceptance Criteria\n\n1. Test',
         attemptNumber: 1,
         confidence: 50,
       };
@@ -245,7 +246,8 @@ Added handling for null values.
         errorType: 'invalid_error_type' as any,
         targetFile: 'requirements.md',
         correction: 'Test correction',
-        updatedContent: '# Requirements\n\n### Requirement 1: Test\n\n#### Acceptance Criteria\n\n1. Test',
+        updatedContent:
+          '# Requirements\n\n### Requirement 1: Test\n\n#### Acceptance Criteria\n\n1. Test',
         attemptNumber: 1,
         confidence: 50,
       };
@@ -264,7 +266,8 @@ Added handling for null values.
         errorType: 'test_failure',
         targetFile: 'requirements.md',
         correction: 'Test correction',
-        updatedContent: '# Requirements\n\n### Requirement 1: Test\n\n#### Acceptance Criteria\n\n1. Test',
+        updatedContent:
+          '# Requirements\n\n### Requirement 1: Test\n\n#### Acceptance Criteria\n\n1. Test',
         attemptNumber: 0,
         confidence: 50,
       };
@@ -518,7 +521,7 @@ Original data models section.
 
     it('should skip strict validation when strictValidation is false', async () => {
       // Arrange
-      const requirementsPath = join(specPath, 'requirements.md');
+      const _requirementsPath = join(specPath, 'requirements.md');
 
       // Content that would fail strict validation (no acceptance criteria)
       // but is valid markdown
@@ -700,7 +703,8 @@ Unicode: 你好世界
         errorType: 'runtime_error',
         targetFile: 'tasks.md',
         correction: 'Add third task',
-        updatedContent: '# Tasks\n\n- [ ] 1. First task\n- [ ] 2. Second task\n- [ ] 3. Third task\n',
+        updatedContent:
+          '# Tasks\n\n- [ ] 1. First task\n- [ ] 2. Second task\n- [ ] 3. Third task\n',
         attemptNumber: 2,
         confidence: 85,
       };

@@ -49,24 +49,23 @@ Implementation follows a bottom-up approach: infrastructure layer → service la
     - Build structured Property objects
     - _Requirements: 1.2_
 
-  - [ ]* 2.6 Write property test for complete spec file reading
-
+  - [ ]\* 2.6 Write property test for complete spec file reading
     - **Property 1: Complete spec file reading**
     - **Validates: Requirements 1.1**
 
-  - [ ]* 2.7 Write property test for task parsing completeness
+  - [ ]\* 2.7 Write property test for task parsing completeness
     - **Property 2: Task parsing completeness**
     - **Validates: Requirements 1.2, 1.6, 1.7**
 
-  - [ ]* 2.8 Write property test for hierarchical structure preservation
+  - [ ]\* 2.8 Write property test for hierarchical structure preservation
     - **Property 3: Hierarchical structure preservation**
     - **Validates: Requirements 1.3**
 
-  - [ ]* 2.9 Write property test for parse error descriptiveness
+  - [ ]\* 2.9 Write property test for parse error descriptiveness
     - **Property 4: Parse error descriptiveness**
     - **Validates: Requirements 1.4**
 
-  - [ ]* 2.10 Write unit tests for edge cases
+  - [ ]\* 2.10 Write unit tests for edge cases
     - Test empty files, malformed markdown, circular dependencies
     - Test missing requirement references, invalid task IDs
     - _Requirements: 1.4, 1.5_
@@ -91,15 +90,15 @@ Implementation follows a bottom-up approach: infrastructure layer → service la
     - Use atomic write pattern
     - _Requirements: 2.5, 8.4_
 
-  - [ ]* 3.4 Write property test for atomic file write pattern
+  - [ ]\* 3.4 Write property test for atomic file write pattern
     - **Property 37: Atomic file write pattern**
     - **Validates: Requirements 8.1, 8.2, 8.3**
 
-  - [ ]* 3.5 Write property test for markdown formatting preservation
+  - [ ]\* 3.5 Write property test for markdown formatting preservation
     - **Property 38: Markdown formatting preservation**
     - **Validates: Requirements 8.4**
 
-  - [ ]* 3.6 Write property test for backup creation
+  - [ ]\* 3.6 Write property test for backup creation
     - **Property 41: Backup creation**
     - **Validates: Requirements 8.7**
 
@@ -140,31 +139,31 @@ Implementation follows a bottom-up approach: infrastructure layer → service la
     - Enforce prerequisite completion
     - _Requirements: 9.1, 9.2, 9.3, 9.5_
 
-  - [ ]* 5.6 Write property test for initial task status
+  - [ ]\* 5.6 Write property test for initial task status
     - **Property 5: Initial task status**
     - **Validates: Requirements 2.1**
 
-  - [ ]* 5.7 Write property test for valid state transitions
+  - [ ]\* 5.7 Write property test for valid state transitions
     - **Property 6: Valid state transitions**
     - **Validates: Requirements 2.2, 2.3, 2.4**
 
-  - [ ]* 5.8 Write property test for parent completion invariant
+  - [ ]\* 5.8 Write property test for parent completion invariant
     - **Property 8: Parent completion invariant**
     - **Validates: Requirements 2.6**
 
-  - [ ]* 5.9 Write property test for status persistence round-trip
+  - [ ]\* 5.9 Write property test for status persistence round-trip
     - **Property 9: Status persistence round-trip**
     - **Validates: Requirements 2.7**
 
-  - [ ]* 5.10 Write property test for mutual exclusion
+  - [ ]\* 5.10 Write property test for mutual exclusion
     - **Property 12: Mutual exclusion of in-progress tasks**
     - **Validates: Requirements 3.3**
 
-  - [ ]* 5.11 Write property test for sequential task queueing
+  - [ ]\* 5.11 Write property test for sequential task queueing
     - **Property 13: Sequential task queueing**
     - **Validates: Requirements 3.4**
 
-  - [ ]* 5.12 Write property test for reference validation
+  - [ ]\* 5.12 Write property test for reference validation
     - **Property 43: Reference validation**
     - **Validates: Requirements 9.2, 9.3**
 
@@ -194,15 +193,15 @@ Implementation follows a bottom-up approach: infrastructure layer → service la
     - Identify affected tests based on file changes
     - _Requirements: 4.1_
 
-  - [ ]* 6.5 Write property test for test triggering on code changes
+  - [ ]\* 6.5 Write property test for test triggering on code changes
     - **Property 16: Test triggering on code changes**
     - **Validates: Requirements 4.1**
 
-  - [ ]* 6.6 Write property test for test failure traceability
+  - [ ]\* 6.6 Write property test for test failure traceability
     - **Property 21: Test failure traceability**
     - **Validates: Requirements 4.7**
 
-  - [ ]* 6.7 Write unit tests for test runner edge cases
+  - [ ]\* 6.7 Write unit tests for test runner edge cases
     - Test timeout handling, process crashes, malformed output
     - _Requirements: 4.1, 4.2_
 
@@ -239,154 +238,154 @@ Implementation follows a bottom-up approach: infrastructure layer → service la
     - Resume execution from failed task
     - _Requirements: 5.4, 5.5_
 
-  - [ ]* 8.6 Write property test for correct target file determination
+  - [ ]\* 8.6 Write property test for correct target file determination
     - **Property 23: Correct target file determination**
     - **Validates: Requirements 5.2**
 
-  - [ ]* 8.7 Write property test for surgical spec updates
+  - [ ]\* 8.7 Write property test for surgical spec updates
     - **Property 24: Surgical spec updates**
     - **Validates: Requirements 5.3**
 
-  - [ ]* 8.8 Write property test for Ralph-Loop iteration limit
+  - [ ]\* 8.8 Write property test for Ralph-Loop iteration limit
     - **Property 27: Ralph-Loop iteration limit**
     - **Validates: Requirements 5.6**
 
-  - [ ]* 8.9 Write unit tests for Ralph-Loop scenarios
+  - [ ]\* 8.9 Write unit tests for Ralph-Loop scenarios
     - Test each error type, test exhausted attempts, test resumption
     - _Requirements: 5.1, 5.2, 5.6_
 
-- [ ]* 9. Implement Log Manager service (OPTIONAL - DEFERRED FOR MVP)
-  - [ ]* 9.1 Create execution log writer
+- [ ]\* 9. Implement Log Manager service (OPTIONAL - DEFERRED FOR MVP)
+  - [ ]\* 9.1 Create execution log writer
     - Write structured JSON log entries
     - Include timestamp, event type, task ID, context
     - Append to `.kiro/logs/execution-{timestamp}.log`
     - _Requirements: 6.1, 6.2_
     - _Note: Console logging currently used for MVP_
 
-  - [ ]* 9.2 Implement log rotation
+  - [ ]\* 9.2 Implement log rotation
     - Check file size before each write
     - Rotate when exceeding 10MB
     - Rename to `.log.1`, `.log.2`, etc.
     - _Requirements: 6.7_
 
-  - [ ]* 9.3 Create DEVLOG writer
+  - [ ]\* 9.3 Create DEVLOG writer
     - Append to DEVLOG.md under "Self-Healing Events"
     - Format as human-readable markdown
     - Include date, task, error, correction
     - _Requirements: 6.6_
     - _Note: Manual DEVLOG updates currently used_
 
-  - [ ]* 9.4 Implement event-specific logging
+  - [ ]\* 9.4 Implement event-specific logging
     - Log task start with ID, description, requirements
     - Log task completion with duration and artifacts
     - Log errors with complete stack traces
     - _Requirements: 6.3, 6.4, 6.5_
 
-  - [ ]* 9.5 Write property test for universal action logging
+  - [ ]\* 9.5 Write property test for universal action logging
     - **Property 28: Universal action logging**
     - **Validates: Requirements 6.1**
 
-  - [ ]* 9.6 Write property test for log entry completeness
+  - [ ]\* 9.6 Write property test for log entry completeness
     - **Property 29: Log entry completeness**
     - **Validates: Requirements 6.2, 6.3, 6.4, 6.5**
 
-  - [ ]* 9.7 Write property test for log rotation threshold
+  - [ ]\* 9.7 Write property test for log rotation threshold
     - **Property 31: Log rotation threshold**
     - **Validates: Requirements 6.7**
 
-- [ ]* 10. Implement Event Emitter for real-time progress (OPTIONAL - DEFERRED FOR MVP)
-  - [ ]* 10.1 Create event subscription manager
+- [ ]\* 10. Implement Event Emitter for real-time progress (OPTIONAL - DEFERRED FOR MVP)
+  - [ ]\* 10.1 Create event subscription manager
     - Maintain map of client IDs to event streams
     - Add/remove subscribers
     - Clean up on disconnect
     - _Requirements: 7.1, 7.6_
     - _Note: Status polling can be used as alternative_
 
-  - [ ]* 10.2 Implement event broadcasting
+  - [ ]\* 10.2 Implement event broadcasting
     - Emit events to all connected clients
     - Include progress percentage in events
     - Support multiple event types (task, test, Ralph-Loop)
     - _Requirements: 7.2, 7.3, 7.4, 7.5_
 
-  - [ ]* 10.3 Implement event batching
+  - [ ]\* 10.3 Implement event batching
     - Buffer events for 100ms
     - Merge duplicate events
     - Enforce 10 events/second rate limit
     - Send critical events immediately
     - _Requirements: 7.7_
 
-  - [ ]* 10.4 Write property test for event broadcast to all clients
+  - [ ]\* 10.4 Write property test for event broadcast to all clients
     - **Property 33: Event broadcast to all clients**
     - **Validates: Requirements 7.2, 7.3, 7.4**
 
-  - [ ]* 10.5 Write property test for event batching rate limit
+  - [ ]\* 10.5 Write property test for event batching rate limit
     - **Property 36: Event batching rate limit**
     - **Validates: Requirements 7.7**
 
-  - [ ]* 10.6 Write unit tests for SSE edge cases
+  - [ ]\* 10.6 Write unit tests for SSE edge cases
     - Test client disconnect, reconnect, multiple clients
     - _Requirements: 7.1, 7.6_
 
-- [ ]* 11. Checkpoint - Ensure Ralph-Loop, logging, and events tests pass (OPTIONAL - DEFERRED)
+- [ ]\* 11. Checkpoint - Ensure Ralph-Loop, logging, and events tests pass (OPTIONAL - DEFERRED)
   - Ensure all tests pass, ask the user if questions arise.
   - _Note: Core functionality tested in Task 14_
 
-- [ ]* 12. Implement API layer with Next.js routes (OPTIONAL - DEFERRED FOR MVP)
-  - [ ]* 12.1 Create execution start endpoint
+- [ ]\* 12. Implement API layer with Next.js routes (OPTIONAL - DEFERRED FOR MVP)
+  - [ ]\* 12.1 Create execution start endpoint
     - POST `/api/orchestrator/start` with spec path
     - Validate request payload
     - Start execution and return execution ID
     - _Requirements: 10.1_
     - _Note: Direct orchestrator usage for MVP_
 
-  - [ ]* 12.2 Create status query endpoint
+  - [ ]\* 12.2 Create status query endpoint
     - GET `/api/orchestrator/status/:executionId`
     - Return current task, progress, completed count
     - _Requirements: 10.2_
 
-  - [ ]* 12.3 Create SSE progress endpoint
+  - [ ]\* 12.3 Create SSE progress endpoint
     - GET `/api/orchestrator/progress/:executionId`
     - Establish SSE stream
     - Subscribe to event emitter
     - Clean up on disconnect
     - _Requirements: 7.1, 7.6_
 
-  - [ ]* 12.4 Create n8n webhook endpoint
+  - [ ]\* 12.4 Create n8n webhook endpoint
     - POST `/api/webhooks/n8n`
     - Validate webhook payload schema
     - Trigger spec creation
     - Return 200 OK
     - _Requirements: 10.3_
 
-  - [ ]* 12.5 Implement authentication middleware
+  - [ ]\* 12.5 Implement authentication middleware
     - Validate bearer tokens on all API requests
     - Return 401 Unauthorized for invalid tokens
     - _Requirements: 10.5_
 
-  - [ ]* 12.6 Implement rate limiting middleware
+  - [ ]\* 12.6 Implement rate limiting middleware
     - Track requests per client IP
     - Enforce 100 requests/minute limit
     - Return 429 Too Many Requests when exceeded
     - _Requirements: 10.6_
 
-  - [ ]* 12.7 Implement error response formatter
+  - [ ]\* 12.7 Implement error response formatter
     - Return structured JSON errors
     - Include error code, message, HTTP status
     - _Requirements: 10.7_
 
-  - [ ]* 12.8 Write property test for bearer token authentication
+  - [ ]\* 12.8 Write property test for bearer token authentication
     - **Property 48: Bearer token authentication**
     - **Validates: Requirements 10.5**
 
-  - [ ]* 12.9 Write property test for rate limiting enforcement
+  - [ ]\* 12.9 Write property test for rate limiting enforcement
     - **Property 49: Rate limiting enforcement**
     - **Validates: Requirements 10.6**
 
-  - [ ]* 12.10 Write property test for structured error responses
+  - [ ]\* 12.10 Write property test for structured error responses
     - **Property 50: Structured error responses**
     - **Validates: Requirements 10.7**
 
-  - [ ]* 12.11 Write integration tests for API endpoints
+  - [ ]\* 12.11 Write integration tests for API endpoints
     - Test full request/response cycles for all endpoints
     - _Requirements: 10.1, 10.2, 10.3_
 
@@ -414,7 +413,7 @@ Implementation follows a bottom-up approach: infrastructure layer → service la
     - Include success/failure status and summary
     - _Requirements: 10.4_
 
-    - [ ]* 13.5 Write end-to-end integration test
+    - [ ]\* 13.5 Write end-to-end integration test
     - Test complete workflow: load spec → execute → test → fail → Ralph-Loop → fix → complete
     - _Requirements: All_
     - _Note: Core workflow tested through unit tests_
@@ -427,7 +426,6 @@ Implementation follows a bottom-up approach: infrastructure layer → service la
     - Code coverage: 86% (exceeds 80% minimum)
     - Status: PASSED (MVP threshold exceeded)
     - Note: 48 failing tests are test isolation issues, not production bugs
-  
   - [x] 14.2 Validate core functionality
     - All 9 core components operational
     - Spec parser working correctly
@@ -436,20 +434,17 @@ Implementation follows a bottom-up approach: infrastructure layer → service la
     - Test runner executing tests
     - File system operations atomic
     - Orchestrator coordinating all components
-  
   - [x] 14.3 Run demo application
     - Demo loads spec successfully
     - Shows 87 tasks, 10 requirements, 50 properties
     - Orchestrator initializes correctly
     - System ready for execution
-  
   - [x] 14.4 Validate documentation
     - DEVLOG.md: 14 comprehensive entries
     - README.md: Complete project overview
     - PROJECT_SUMMARY.md: Detailed summary
     - All spec files complete and accurate
     - Code comments comprehensive
-  
   - [x] 14.5 Final system validation
     - Manual validation: `npm run validate:quick` PASSES
     - Test pass rate: 86% (exceeds 80% threshold)
@@ -471,7 +466,9 @@ Implementation follows a bottom-up approach: infrastructure layer → service la
 ## Current Status Summary
 
 ### ✅ COMPLETED (MVP Ready)
+
 **Core Engine (100%)**: All 9 required components fully implemented and tested
+
 - Task 1: Project setup ✅
 - Task 2: Spec Parser ✅ (all required subtasks complete, optional tests deferred)
 - Task 3: File System ✅ (all subtasks complete)
@@ -484,6 +481,7 @@ Implementation follows a bottom-up approach: infrastructure layer → service la
 - Task 14: Final Validation ✅
 
 **Test Coverage**: 86% (292/339 tests passing)
+
 - Component tests: 100% passing (all 8 core components)
 - Integration tests: Passing
 - Test failures: Test isolation issues only (not production bugs)
@@ -494,7 +492,9 @@ Implementation follows a bottom-up approach: infrastructure layer → service la
 **System Status**: 🟢 PRODUCTION-READY MVP
 
 ### ⚠️ DEFERRED (Optional for MVP)
+
 Following Rule 10 (Hackathon Velocity Mode), these optional tasks are deferred:
+
 - Task 2.6-2.10: Property tests for spec parser (optional)
 - Task 3.4-3.6: Property tests for file system (optional)
 - Task 5.6-5.12: Property tests for task manager (optional)
@@ -508,7 +508,9 @@ Following Rule 10 (Hackathon Velocity Mode), these optional tasks are deferred:
 **Rationale**: Focus on core functionality and demo quality. Property-based tests and optional features can be added post-hackathon without affecting the autonomous spec-to-production pipeline.
 
 ### 🎯 Next Steps (Post-MVP)
+
 If continuing development after hackathon:
+
 1. Fix test isolation issues (refactor TaskManager for dependency injection)
 2. Implement remaining property-based tests
 3. Add Log Manager for structured logging
@@ -517,6 +519,7 @@ If continuing development after hackathon:
 6. Clean up TypeScript warnings (131 warnings)
 
 ### 📊 Key Metrics
+
 - **Components**: 9/9 required (100%) ✅
 - **Test Pass Rate**: 86% (exceeds 80% minimum) ✅
 - **Component Tests**: 100% passing ✅
@@ -525,4 +528,5 @@ If continuing development after hackathon:
 - **Hackathon Ready**: YES ✅
 
 ### 🔍 Test Status Details
+
 See **TEST_STATUS.md** for comprehensive analysis of test failures and verification that all production code is working correctly.

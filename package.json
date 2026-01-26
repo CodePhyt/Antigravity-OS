@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "description": "The Autonomous Spec-to-Production Engine",
   "private": true,
+  "bin": {
+    "ag-os-mcp": "./dist/mcp/cli.js",
+    "ag-os": "./dist/lib/medin-protocol/cli-status.js"
+  },
   "scripts": {
     "dev": "next dev -p 3001",
     "build": "next build",
@@ -16,9 +20,14 @@
     "test:properties": "vitest run tests/properties",
     "type-check": "tsc --noEmit",
     "validate": "powershell -ExecutionPolicy Bypass -File scripts/validate.ps1",
-    "validate:quick": "powershell -ExecutionPolicy Bypass -File scripts/validate-quick.ps1"
+    "validate:quick": "powershell -ExecutionPolicy Bypass -File scripts/validate-quick.ps1",
+    "mcp:start": "node dist/mcp/cli.js",
+    "mcp:dev": "tsx src/mcp/cli.ts",
+    "mcp:test": "node dist/mcp/cli.js --test",
+    "mcp:build": "tsc --project tsconfig.mcp.json"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.25.3",
     "clsx": "^2.1.1",
     "framer-motion": "^12.27.5",
     "lucide-react": "^0.562.0",
@@ -30,6 +39,8 @@
     "zod": "^3.23.0"
   },
   "devDependencies": {
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/react": "^16.3.2",
     "@types/node": "^20.14.0",
     "@types/react": "^18.3.0",
     "@types/react-dom": "^18.3.0",
@@ -41,10 +52,13 @@
     "eslint-config-next": "^14.2.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",
-    "fast-check": "^3.19.0",
+    "fast-check": "^3.23.2",
+    "happy-dom": "^20.3.7",
+    "jsdom": "^27.0.1",
     "postcss": "^8.5.6",
     "prettier": "^3.3.0",
     "tailwindcss": "^3.4.1",
+    "tsx": "^4.21.0",
     "typescript": "^5.4.5",
     "vitest": "^1.6.0"
   },

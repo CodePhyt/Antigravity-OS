@@ -1,7 +1,7 @@
 /**
  * n8n Client (Execution Layer)
  * Provides deterministic HTTP calls to n8n workflows
- * 
+ *
  * This is a pure execution script with no AI decision-making.
  * All logic is deterministic and testable.
  */
@@ -12,16 +12,16 @@
 export interface N8nConfig {
   /** Base URL for n8n instance */
   baseUrl: string;
-  
+
   /** Webhook secret for authentication */
   webhookSecret?: string;
-  
+
   /** Request timeout in milliseconds */
   timeout: number;
-  
+
   /** Number of retry attempts */
   retryAttempts: number;
-  
+
   /** Delay between retries in milliseconds */
   retryDelay: number;
 }
@@ -197,7 +197,7 @@ export class N8nClient {
 
   /**
    * Trigger deep research workflow
-   * 
+   *
    * @param payload - Research payload
    * @returns Research result
    */
@@ -210,7 +210,7 @@ export class N8nClient {
 
   /**
    * Trigger spec validation workflow
-   * 
+   *
    * @param payload - Validation payload
    * @returns Validation result
    */
@@ -223,7 +223,7 @@ export class N8nClient {
 
   /**
    * Trigger code review workflow
-   * 
+   *
    * @param payload - Review payload
    * @returns Review result
    */
@@ -236,7 +236,7 @@ export class N8nClient {
 
   /**
    * Trigger continuous learning workflow
-   * 
+   *
    * @param payload - Learning payload
    * @returns Learning result
    */
@@ -251,7 +251,7 @@ export class N8nClient {
 
   /**
    * Call n8n webhook with retry logic
-   * 
+   *
    * @param endpoint - Webhook endpoint
    * @param payload - Request payload
    * @returns Response data
@@ -305,7 +305,7 @@ export class N8nClient {
 
   /**
    * Delay execution
-   * 
+   *
    * @param ms - Milliseconds to delay
    */
   private delay(ms: number): Promise<void> {
@@ -321,7 +321,7 @@ export class N8nClient {
 
   /**
    * Update configuration
-   * 
+   *
    * @param config - Partial configuration to update
    */
   updateConfig(config: Partial<N8nConfig>): void {

@@ -1,6 +1,6 @@
 /**
  * Skill: Git Pushing
- * 
+ *
  * @description Stage, commit, and push git changes with conventional commit messages
  * @category Version Control
  * @deterministic true
@@ -41,7 +41,7 @@ type Output = z.infer<typeof OutputSchema>;
 
 /**
  * Execute the git pushing skill
- * 
+ *
  * @param input - Validated input parameters
  * @returns Skill execution result
  * @throws {GitPushingError} If execution fails
@@ -49,14 +49,14 @@ type Output = z.infer<typeof OutputSchema>;
 export async function executeSkill(input: Input): Promise<Output> {
   // Validate input
   const validatedInput = InputSchema.parse(input);
-  
+
   const startTime = Date.now();
   const timestamp = new Date().toISOString();
-  
+
   try {
     // 1. Stage files
     const filesStaged = await stageFiles(validatedInput.files);
-    
+
     // 2. Generate conventional commit message
     const commitMessage = generateConventionalCommit(
       validatedInput.type,
@@ -64,17 +64,17 @@ export async function executeSkill(input: Input): Promise<Output> {
       validatedInput.scope,
       validatedInput.breaking
     );
-    
+
     // 3. Commit changes
     const commitHash = await commitChanges(commitMessage);
-    
+
     // 4. Push to remote (if requested)
     let pushed = false;
     if (validatedInput.push) {
       await pushToRemote(validatedInput.remote, validatedInput.branch);
       pushed = true;
     }
-    
+
     // Return validated output
     return OutputSchema.parse({
       success: true,
@@ -98,7 +98,7 @@ export async function executeSkill(input: Input): Promise<Output> {
 
 /**
  * Stage files for commit
- * 
+ *
  * @param files - Array of file paths (empty = stage all)
  * @returns Number of files staged
  */
@@ -109,21 +109,26 @@ async function stageFiles(files: string[]): Promise<number> {
       execSync('git add .', { encoding: 'utf-8' });
     } else {
       // Stage specific files
-      const filesArg = files.map(f => `"${f}"`).join(' ');
+      const filesArg = files.map((f) => `"${f}"`).join(' ');
       execSync(`git add ${filesArg}`, { encoding: 'utf-8' });
     }
-    
+
     // Get count of staged files
     const status = execSync('git diff --cached --name-only', { encoding: 'utf-8' });
-    return status.trim().split('\n').filter(line => line.length > 0).length;
+    return status
+      .trim()
+      .split('\n')
+      .filter((line) => line.length > 0).length;
   } catch (error) {
-    throw new Error(`Failed to stage files: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to stage files: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 }
 
 /**
  * Generate conventional commit message
- * 
+ *
  * @param type - Commit type (feat, fix, etc.)
  * @param message - Commit message
  * @param scope - Optional scope
@@ -138,13 +143,13 @@ function generateConventionalCommit(
 ): string {
   const breakingPrefix = breaking ? '!' : '';
   const scopeStr = scope ? `(${scope})` : '';
-  
+
   return `${type}${scopeStr}${breakingPrefix}: ${message}`;
 }
 
 /**
  * Commit staged changes
- * 
+ *
  * @param message - Commit message
  * @returns Commit hash
  */
@@ -152,30 +157,35 @@ async function commitChanges(message: string): Promise<string> {
   try {
     // Commit with message
     execSync(`git commit -m "${message}"`, { encoding: 'utf-8' });
-    
+
     // Get commit hash
     const hash = execSync('git rev-parse HEAD', { encoding: 'utf-8' });
     return hash.trim();
   } catch (error) {
-    throw new Error(`Failed to commit changes: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to commit changes: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 }
 
 /**
  * Push to remote repository
- * 
+ *
  * @param remote - Remote name (default: origin)
  * @param branch - Branch name (default: current branch)
  */
 async function pushToRemote(remote: string, branch?: string): Promise<void> {
   try {
     // Get current branch if not specified
-    const targetBranch = branch || execSync('git branch --show-current', { encoding: 'utf-8' }).trim();
-    
+    const targetBranch =
+      branch || execSync('git branch --show-current', { encoding: 'utf-8' }).trim();
+
     // Push to remote
     execSync(`git push ${remote} ${targetBranch}`, { encoding: 'utf-8' });
   } catch (error) {
-    throw new Error(`Failed to push to remote: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to push to remote: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 }
 
@@ -183,7 +193,10 @@ async function pushToRemote(remote: string, branch?: string): Promise<void> {
  * Error class for git pushing failures
  */
 class GitPushingError extends Error {
-  constructor(message: string, public context: Record<string, unknown>) {
+  constructor(
+    message: string,
+    public context: Record<string, unknown>
+  ) {
     super(message);
     this.name = 'GitPushingError';
   }

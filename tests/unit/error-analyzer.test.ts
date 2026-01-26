@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { ErrorAnalyzer, type ErrorType, type TargetSpecFile } from '@/core/error-analyzer';
+import { ErrorAnalyzer } from '@/core/error-analyzer';
 import type { ErrorContext } from '@/types/spec';
 
 describe('ErrorAnalyzer', () => {
@@ -149,7 +149,8 @@ describe('ErrorAnalyzer', () => {
       const error: ErrorContext = {
         taskId: '10.1',
         errorMessage: 'TypeError: undefined is not a function',
-        stackTrace: 'at Object.test (test-runner.ts:45:20)\n    at processTask (orchestrator.ts:100:5)',
+        stackTrace:
+          'at Object.test (test-runner.ts:45:20)\n    at processTask (orchestrator.ts:100:5)',
         failedTest: null,
         timestamp: new Date(),
       };

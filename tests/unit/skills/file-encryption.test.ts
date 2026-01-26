@@ -1,6 +1,6 @@
 /**
  * Unit Tests for File Encryption Skill
- * 
+ *
  * Compliance: Article IX.2 (Testing Requirements)
  * Coverage Target: >80%
  */
@@ -38,7 +38,7 @@ describe('File Encryption Skill', () => {
       const result = await encryptFile({
         inputFile: testFile,
         outputFile: encryptedFile,
-        password: testPassword
+        password: testPassword,
       });
 
       expect(result.success).toBe(true);
@@ -51,7 +51,7 @@ describe('File Encryption Skill', () => {
       const result = await encryptFile({
         inputFile: testFile,
         outputFile: encryptedFile,
-        password: 'weak'
+        password: 'weak',
       });
 
       expect(result.success).toBe(false);
@@ -62,7 +62,7 @@ describe('File Encryption Skill', () => {
       const result = await encryptFile({
         inputFile: './nonexistent.txt',
         outputFile: encryptedFile,
-        password: testPassword
+        password: testPassword,
       });
 
       expect(result.success).toBe(false);
@@ -75,7 +75,7 @@ describe('File Encryption Skill', () => {
       const result = await encryptFile({
         inputFile: testFile,
         outputFile: encryptedFile,
-        password: testPassword
+        password: testPassword,
       });
 
       expect(result.success).toBe(false);
@@ -89,7 +89,7 @@ describe('File Encryption Skill', () => {
       await encryptFile({
         inputFile: testFile,
         outputFile: encryptedFile,
-        password: testPassword
+        password: testPassword,
       });
     });
 
@@ -97,7 +97,7 @@ describe('File Encryption Skill', () => {
       const result = await decryptFile({
         inputFile: encryptedFile,
         outputFile: decryptedFile,
-        password: testPassword
+        password: testPassword,
       });
 
       expect(result.success).toBe(true);
@@ -113,7 +113,7 @@ describe('File Encryption Skill', () => {
       const result = await decryptFile({
         inputFile: encryptedFile,
         outputFile: decryptedFile,
-        password: 'WrongPassword123!'
+        password: 'WrongPassword123!',
       });
 
       expect(result.success).toBe(false);
@@ -124,7 +124,7 @@ describe('File Encryption Skill', () => {
       const result = await decryptFile({
         inputFile: encryptedFile,
         outputFile: decryptedFile,
-        password: 'weak'
+        password: 'weak',
       });
 
       expect(result.success).toBe(false);
@@ -135,7 +135,7 @@ describe('File Encryption Skill', () => {
       const result = await decryptFile({
         inputFile: './nonexistent.enc',
         outputFile: decryptedFile,
-        password: testPassword
+        password: testPassword,
       });
 
       expect(result.success).toBe(false);
@@ -149,7 +149,7 @@ describe('File Encryption Skill', () => {
       const result = await decryptFile({
         inputFile: encryptedFile,
         outputFile: decryptedFile,
-        password: testPassword
+        password: testPassword,
       });
 
       expect(result.success).toBe(false);
@@ -163,7 +163,7 @@ describe('File Encryption Skill', () => {
       const encryptResult = await encryptFile({
         inputFile: testFile,
         outputFile: encryptedFile,
-        password: testPassword
+        password: testPassword,
       });
       expect(encryptResult.success).toBe(true);
 
@@ -171,7 +171,7 @@ describe('File Encryption Skill', () => {
       const decryptResult = await decryptFile({
         inputFile: encryptedFile,
         outputFile: decryptedFile,
-        password: testPassword
+        password: testPassword,
       });
       expect(decryptResult.success).toBe(true);
 
@@ -186,14 +186,14 @@ describe('File Encryption Skill', () => {
       await encryptFile({
         inputFile: testFile,
         outputFile: encryptedFile,
-        password: testPassword
+        password: testPassword,
       });
       const encrypted1 = await readFile(encryptedFile);
 
       await encryptFile({
         inputFile: testFile,
         outputFile: encryptedFile,
-        password: testPassword
+        password: testPassword,
       });
       const encrypted2 = await readFile(encryptedFile);
 

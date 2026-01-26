@@ -414,7 +414,7 @@ describe('TaskManager', () => {
         expect(spec).toBeDefined();
 
         // Find a parent task with children
-        const parentWithChildren = spec!.tasks.find(t => t.children.length > 0);
+        const parentWithChildren = spec!.tasks.find((t) => t.children.length > 0);
 
         if (parentWithChildren && parentWithChildren.children.length >= 2) {
           // Second child should have first child as prerequisite
@@ -481,7 +481,7 @@ describe('TaskManager', () => {
 
           // Prerequisites should be valid task IDs
           for (const prereqId of prerequisites) {
-            const prereqTask = allTasks.find(t => t.id === prereqId);
+            const prereqTask = allTasks.find((t) => t.id === prereqId);
             expect(prereqTask).toBeDefined();
           }
         }
@@ -507,7 +507,7 @@ describe('TaskManager', () => {
           const dependents = taskManager.getDependents(task.id);
 
           for (const depId of dependents) {
-            const depTask = allTasks.find(t => t.id === depId);
+            const depTask = allTasks.find((t) => t.id === depId);
             expect(depTask).toBeDefined();
           }
         }
@@ -544,7 +544,7 @@ describe('TaskManager', () => {
         });
 
         // Find a task with prerequisites
-        const taskWithPrereqs = allTasks.find(t => {
+        const taskWithPrereqs = allTasks.find((t) => {
           const prereqs = taskManager.getPrerequisites(t.id);
           return prereqs.length > 0;
         });
@@ -571,7 +571,7 @@ describe('TaskManager', () => {
         });
 
         // Find a task with prerequisites
-        const taskWithPrereqs = allTasks.find(t => {
+        const taskWithPrereqs = allTasks.find((t) => {
           const prereqs = taskManager.getPrerequisites(t.id);
           return prereqs.length > 0 && prereqs.length <= 2; // Keep it simple
         });
@@ -620,14 +620,12 @@ describe('TaskManager', () => {
         });
 
         // Find a task with incomplete prerequisites
-        const taskWithPrereqs = allTasks.find(t => {
+        const taskWithPrereqs = allTasks.find((t) => {
           const prereqs = taskManager.getPrerequisites(t.id);
           if (prereqs.length === 0) return false;
 
           // Check if any prerequisite is not completed
-          return prereqs.some(prereqId => 
-            taskManager.getTaskStatus(prereqId) !== 'completed'
-          );
+          return prereqs.some((prereqId) => taskManager.getTaskStatus(prereqId) !== 'completed');
         });
 
         if (taskWithPrereqs) {
@@ -647,16 +645,18 @@ describe('TaskManager', () => {
         });
 
         // Find a task with incomplete prerequisites
-        const taskWithPrereqs = allTasks.find(t => {
+        const taskWithPrereqs = allTasks.find((t) => {
           const prereqs = taskManager.getPrerequisites(t.id);
-          return prereqs.length > 0 && 
-                 prereqs.some(prereqId => taskManager.getTaskStatus(prereqId) !== 'completed');
+          return (
+            prereqs.length > 0 &&
+            prereqs.some((prereqId) => taskManager.getTaskStatus(prereqId) !== 'completed')
+          );
         });
 
         if (taskWithPrereqs) {
           const prerequisites = taskManager.getPrerequisites(taskWithPrereqs.id);
           const incomplete = prerequisites.filter(
-            prereqId => taskManager.getTaskStatus(prereqId) !== 'completed'
+            (prereqId) => taskManager.getTaskStatus(prereqId) !== 'completed'
           );
 
           try {
@@ -683,7 +683,7 @@ describe('TaskManager', () => {
         });
 
         // Find first not_started task with no prerequisites
-        const taskToStart = allTasks.find(t => {
+        const taskToStart = allTasks.find((t) => {
           const prereqs = taskManager.getPrerequisites(t.id);
           return t.status === 'not_started' && prereqs.length === 0 && !t.isOptional;
         });
@@ -709,11 +709,13 @@ describe('TaskManager', () => {
         });
 
         // Find a task with incomplete prerequisites
-        const taskWithPrereqs = allTasks.find(t => {
+        const taskWithPrereqs = allTasks.find((t) => {
           const prereqs = taskManager.getPrerequisites(t.id);
-          return t.status === 'not_started' && 
-                 prereqs.length > 0 && 
-                 prereqs.some(prereqId => taskManager.getTaskStatus(prereqId) !== 'completed');
+          return (
+            t.status === 'not_started' &&
+            prereqs.length > 0 &&
+            prereqs.some((prereqId) => taskManager.getTaskStatus(prereqId) !== 'completed')
+          );
         });
 
         if (taskWithPrereqs) {
@@ -792,7 +794,7 @@ describe('TaskManager', () => {
 
       it('should select first not_started task in document order', () => {
         const nextTask = taskManager.selectNextTask();
-        
+
         // Should return a task or null (if all tasks are completed/in-progress)
         // The actual task depends on the current state of the spec
         if (nextTask) {
@@ -804,21 +806,21 @@ describe('TaskManager', () => {
         // Find a not_started task to test with
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const notStartedTask = allTasks.find(t => t.status === 'not_started' && !t.isOptional);
-        
+
+        const notStartedTask = allTasks.find((t) => t.status === 'not_started' && !t.isOptional);
+
         if (notStartedTask) {
           // Mark it as completed
           await taskManager.updateTaskStatus(notStartedTask.id, 'queued');
           await taskManager.updateTaskStatus(notStartedTask.id, 'in_progress');
           await taskManager.updateTaskStatus(notStartedTask.id, 'completed');
-          
+
           const nextTask = taskManager.selectNextTask();
-          
+
           // Should not select the completed task
           if (nextTask) {
             expect(nextTask.id).not.toBe(notStartedTask.id);
@@ -831,13 +833,13 @@ describe('TaskManager', () => {
         // Find first optional task
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const optionalTask = allTasks.find(t => t.isOptional && t.status === 'not_started');
-        
+
+        const optionalTask = allTasks.find((t) => t.isOptional && t.status === 'not_started');
+
         if (optionalTask) {
           // Mark all non-optional tasks before it as completed
           for (const task of allTasks) {
@@ -847,9 +849,9 @@ describe('TaskManager', () => {
               await taskManager.updateTaskStatus(task.id, 'completed');
             }
           }
-          
+
           const nextTask = taskManager.selectNextTask(false);
-          
+
           // Should skip the optional task
           if (nextTask) {
             expect(nextTask.isOptional).toBe(false);
@@ -861,13 +863,13 @@ describe('TaskManager', () => {
         // Find first optional task
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const optionalTask = allTasks.find(t => t.isOptional && t.status === 'not_started');
-        
+
+        const optionalTask = allTasks.find((t) => t.isOptional && t.status === 'not_started');
+
         if (optionalTask) {
           // With includeOptional=true, optional tasks should be considered
           const nextTask = taskManager.selectNextTask(true);
@@ -882,15 +884,14 @@ describe('TaskManager', () => {
         // Find a parent task with children where some children are not_started
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
-        const parentWithChildren = spec!.tasks.find(t => 
-          t.children.length > 0 && 
-          t.children.some(c => c.status === 'not_started')
+
+        const parentWithChildren = spec!.tasks.find(
+          (t) => t.children.length > 0 && t.children.some((c) => c.status === 'not_started')
         );
-        
+
         if (parentWithChildren) {
           const nextTask = taskManager.selectNextTask();
-          
+
           expect(nextTask).toBeDefined();
           // Should select a child, not the parent
           if (nextTask) {
@@ -904,12 +905,12 @@ describe('TaskManager', () => {
         // Just verify the logic works
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const nextTask = taskManager.selectNextTask();
         // If we get a parent task, all its non-optional children must be completed
         if (nextTask && nextTask.children.length > 0) {
-          const nonOptionalChildren = nextTask.children.filter(c => !c.isOptional);
-          const allCompleted = nonOptionalChildren.every(c => c.status === 'completed');
+          const nonOptionalChildren = nextTask.children.filter((c) => !c.isOptional);
+          const allCompleted = nonOptionalChildren.every((c) => c.status === 'completed');
           expect(allCompleted).toBe(true);
         }
       });
@@ -918,14 +919,14 @@ describe('TaskManager', () => {
         // Find a parent where all non-optional children are completed
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
-        const eligibleParent = spec!.tasks.find(t => {
+
+        const eligibleParent = spec!.tasks.find((t) => {
           if (t.children.length === 0) return false;
           if (t.status !== 'not_started') return false;
-          const nonOptionalChildren = t.children.filter(c => !c.isOptional);
-          return nonOptionalChildren.every(c => c.status === 'completed');
+          const nonOptionalChildren = t.children.filter((c) => !c.isOptional);
+          return nonOptionalChildren.every((c) => c.status === 'completed');
         });
-        
+
         if (eligibleParent) {
           const nextTask = taskManager.selectNextTask();
           // The parent should be eligible for selection
@@ -939,23 +940,23 @@ describe('TaskManager', () => {
         // Find a not_started task
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const notStartedTask = allTasks.find(t => t.status === 'not_started' && !t.isOptional);
-        
+
+        const notStartedTask = allTasks.find((t) => t.status === 'not_started' && !t.isOptional);
+
         if (notStartedTask) {
           // Start the task
           await taskManager.updateTaskStatus(notStartedTask.id, 'queued');
           await taskManager.updateTaskStatus(notStartedTask.id, 'in_progress');
-          
+
           const nextTask = taskManager.selectNextTask();
-          
+
           // Should return null because a task is in_progress
           expect(nextTask).toBeNull();
-          
+
           // Clean up
           await taskManager.updateTaskStatus(notStartedTask.id, 'not_started');
         }
@@ -965,21 +966,21 @@ describe('TaskManager', () => {
         // Find a not_started task
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const notStartedTask = allTasks.find(t => t.status === 'not_started' && !t.isOptional);
-        
+
+        const notStartedTask = allTasks.find((t) => t.status === 'not_started' && !t.isOptional);
+
         if (notStartedTask) {
           // Start and complete the task
           await taskManager.updateTaskStatus(notStartedTask.id, 'queued');
           await taskManager.updateTaskStatus(notStartedTask.id, 'in_progress');
           await taskManager.updateTaskStatus(notStartedTask.id, 'completed');
-          
+
           const nextTask = taskManager.selectNextTask();
-          
+
           // Should now be able to select next task
           expect(nextTask).toBeDefined();
         }
@@ -989,21 +990,21 @@ describe('TaskManager', () => {
         // Find a not_started task
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const notStartedTask = allTasks.find(t => t.status === 'not_started' && !t.isOptional);
-        
+
+        const notStartedTask = allTasks.find((t) => t.status === 'not_started' && !t.isOptional);
+
         if (notStartedTask) {
           // Start then reset the task (Ralph-Loop scenario)
           await taskManager.updateTaskStatus(notStartedTask.id, 'queued');
           await taskManager.updateTaskStatus(notStartedTask.id, 'in_progress');
           await taskManager.updateTaskStatus(notStartedTask.id, 'not_started');
-          
+
           const nextTask = taskManager.selectNextTask();
-          
+
           // Should be able to select a task (could be the same task again)
           expect(nextTask).toBeDefined();
           expect(nextTask?.status).toBe('not_started');
@@ -1015,12 +1016,12 @@ describe('TaskManager', () => {
       it('should return false when no tasks are in progress', async () => {
         // Ensure no tasks are in progress by checking current state
         const inProgressTasks = taskManager.getInProgressTasks();
-        
+
         // If there are in-progress tasks, complete them first
         for (const task of inProgressTasks) {
           await taskManager.updateTaskStatus(task.id, 'completed');
         }
-        
+
         const hasInProgress = taskManager.hasTaskInProgress();
         expect(hasInProgress).toBe(false);
       });
@@ -1029,20 +1030,20 @@ describe('TaskManager', () => {
         // Find a not_started task
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const notStartedTask = allTasks.find(t => t.status === 'not_started' && !t.isOptional);
-        
+
+        const notStartedTask = allTasks.find((t) => t.status === 'not_started' && !t.isOptional);
+
         if (notStartedTask) {
           await taskManager.updateTaskStatus(notStartedTask.id, 'queued');
           await taskManager.updateTaskStatus(notStartedTask.id, 'in_progress');
-          
+
           const hasInProgress = taskManager.hasTaskInProgress();
           expect(hasInProgress).toBe(true);
-          
+
           // Clean up
           await taskManager.updateTaskStatus(notStartedTask.id, 'not_started');
         }
@@ -1052,18 +1053,18 @@ describe('TaskManager', () => {
         // Find a not_started task
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const notStartedTask = allTasks.find(t => t.status === 'not_started' && !t.isOptional);
-        
+
+        const notStartedTask = allTasks.find((t) => t.status === 'not_started' && !t.isOptional);
+
         if (notStartedTask) {
           await taskManager.updateTaskStatus(notStartedTask.id, 'queued');
           await taskManager.updateTaskStatus(notStartedTask.id, 'in_progress');
           await taskManager.updateTaskStatus(notStartedTask.id, 'completed');
-          
+
           const hasInProgress = taskManager.hasTaskInProgress();
           expect(hasInProgress).toBe(false);
         }
@@ -1077,7 +1078,7 @@ describe('TaskManager', () => {
         for (const task of inProgressTasks) {
           await taskManager.updateTaskStatus(task.id, 'completed');
         }
-        
+
         const tasks = taskManager.getInProgressTasks();
         expect(tasks).toEqual([]);
       });
@@ -1086,22 +1087,22 @@ describe('TaskManager', () => {
         // Find a not_started task
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const notStartedTask = allTasks.find(t => t.status === 'not_started' && !t.isOptional);
-        
+
+        const notStartedTask = allTasks.find((t) => t.status === 'not_started' && !t.isOptional);
+
         if (notStartedTask) {
           await taskManager.updateTaskStatus(notStartedTask.id, 'queued');
           await taskManager.updateTaskStatus(notStartedTask.id, 'in_progress');
-          
+
           const inProgressTasks = taskManager.getInProgressTasks();
           expect(inProgressTasks).toHaveLength(1);
           expect(inProgressTasks[0].id).toBe(notStartedTask.id);
           expect(inProgressTasks[0].status).toBe('in_progress');
-          
+
           // Clean up
           await taskManager.updateTaskStatus(notStartedTask.id, 'not_started');
         }
@@ -1113,24 +1114,24 @@ describe('TaskManager', () => {
         for (const task of existing) {
           await taskManager.updateTaskStatus(task.id, 'completed');
         }
-        
+
         // Find a not_started task
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const notStartedTask = allTasks.find(t => t.status === 'not_started' && !t.isOptional);
-        
+
+        const notStartedTask = allTasks.find((t) => t.status === 'not_started' && !t.isOptional);
+
         if (notStartedTask) {
           await taskManager.updateTaskStatus(notStartedTask.id, 'queued');
           await taskManager.updateTaskStatus(notStartedTask.id, 'in_progress');
-          
+
           const inProgressTasks = taskManager.getInProgressTasks();
           expect(inProgressTasks.length).toBeLessThanOrEqual(1);
-          
+
           // Clean up
           await taskManager.updateTaskStatus(notStartedTask.id, 'not_started');
         }
@@ -1142,24 +1143,25 @@ describe('TaskManager', () => {
         // Find a parent with multiple not_started children
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
-        const parentWithChildren = spec!.tasks.find(t => 
-          t.children.length > 1 && 
-          t.children.filter(c => c.status === 'not_started').length >= 2
+
+        const parentWithChildren = spec!.tasks.find(
+          (t) =>
+            t.children.length > 1 &&
+            t.children.filter((c) => c.status === 'not_started').length >= 2
         );
-        
+
         if (parentWithChildren) {
-          const firstChild = parentWithChildren.children.find(c => c.status === 'not_started');
-          
+          const firstChild = parentWithChildren.children.find((c) => c.status === 'not_started');
+
           if (firstChild) {
             // First selection should be the first not_started child
             const task1 = taskManager.selectNextTask();
             expect(task1?.id).toBe(firstChild.id);
-            
+
             await taskManager.updateTaskStatus(firstChild.id, 'queued');
             await taskManager.updateTaskStatus(firstChild.id, 'in_progress');
             await taskManager.updateTaskStatus(firstChild.id, 'completed');
-            
+
             // Next should be the second child
             const task2 = taskManager.selectNextTask();
             expect(task2).toBeDefined();
@@ -1174,9 +1176,9 @@ describe('TaskManager', () => {
         // Just verify that task selection works with nested hierarchies
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const nextTask = taskManager.selectNextTask();
-        
+
         // If we get a task, it should be valid
         if (nextTask) {
           expect(nextTask.status).toBe('not_started');
@@ -1195,18 +1197,18 @@ describe('TaskManager', () => {
         // Find a not_started task
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const notStartedTask = allTasks.find(t => t.status === 'not_started' && !t.isOptional);
-        
+
+        const notStartedTask = allTasks.find((t) => t.status === 'not_started' && !t.isOptional);
+
         if (notStartedTask) {
           const result = await taskManager.updateTaskStatus(notStartedTask.id, 'queued');
           expect(result).toBe(true);
           expect(taskManager.getTaskStatus(notStartedTask.id)).toBe('queued');
-          
+
           // Clean up
           await taskManager.updateTaskStatus(notStartedTask.id, 'not_started');
         }
@@ -1216,19 +1218,19 @@ describe('TaskManager', () => {
         // Find a not_started task
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const notStartedTask = allTasks.find(t => t.status === 'not_started' && !t.isOptional);
-        
+
+        const notStartedTask = allTasks.find((t) => t.status === 'not_started' && !t.isOptional);
+
         if (notStartedTask) {
           await taskManager.updateTaskStatus(notStartedTask.id, 'queued');
           const result = await taskManager.updateTaskStatus(notStartedTask.id, 'in_progress');
           expect(result).toBe(true);
           expect(taskManager.getTaskStatus(notStartedTask.id)).toBe('in_progress');
-          
+
           // Clean up
           await taskManager.updateTaskStatus(notStartedTask.id, 'not_started');
         }
@@ -1238,13 +1240,13 @@ describe('TaskManager', () => {
         // Find a not_started task
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const notStartedTask = allTasks.find(t => t.status === 'not_started' && !t.isOptional);
-        
+
+        const notStartedTask = allTasks.find((t) => t.status === 'not_started' && !t.isOptional);
+
         if (notStartedTask) {
           await taskManager.updateTaskStatus(notStartedTask.id, 'queued');
           await taskManager.updateTaskStatus(notStartedTask.id, 'in_progress');
@@ -1258,13 +1260,13 @@ describe('TaskManager', () => {
         // Find a not_started task
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const notStartedTask = allTasks.find(t => t.status === 'not_started' && !t.isOptional);
-        
+
+        const notStartedTask = allTasks.find((t) => t.status === 'not_started' && !t.isOptional);
+
         if (notStartedTask) {
           await taskManager.updateTaskStatus(notStartedTask.id, 'queued');
           await taskManager.updateTaskStatus(notStartedTask.id, 'in_progress');
@@ -1278,13 +1280,13 @@ describe('TaskManager', () => {
         // Find a not_started task
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const notStartedTask = allTasks.find(t => t.status === 'not_started' && !t.isOptional);
-        
+
+        const notStartedTask = allTasks.find((t) => t.status === 'not_started' && !t.isOptional);
+
         if (notStartedTask) {
           const result = await taskManager.updateTaskStatus(notStartedTask.id, 'in_progress');
           expect(result).toBe(false);
@@ -1296,13 +1298,13 @@ describe('TaskManager', () => {
         // Find a not_started task
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const notStartedTask = allTasks.find(t => t.status === 'not_started' && !t.isOptional);
-        
+
+        const notStartedTask = allTasks.find((t) => t.status === 'not_started' && !t.isOptional);
+
         if (notStartedTask) {
           const result = await taskManager.updateTaskStatus(notStartedTask.id, 'completed');
           expect(result).toBe(false);
@@ -1314,19 +1316,19 @@ describe('TaskManager', () => {
         // Find a not_started task
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const notStartedTask = allTasks.find(t => t.status === 'not_started' && !t.isOptional);
-        
+
+        const notStartedTask = allTasks.find((t) => t.status === 'not_started' && !t.isOptional);
+
         if (notStartedTask) {
           // Complete the task
           await taskManager.updateTaskStatus(notStartedTask.id, 'queued');
           await taskManager.updateTaskStatus(notStartedTask.id, 'in_progress');
           await taskManager.updateTaskStatus(notStartedTask.id, 'completed');
-          
+
           // Try to transition from completed (should fail)
           const result = await taskManager.updateTaskStatus(notStartedTask.id, 'not_started');
           expect(result).toBe(false);
@@ -1336,7 +1338,7 @@ describe('TaskManager', () => {
 
       it('should emit status transition events', async () => {
         const events: Array<{ taskId: string; previousStatus: string; newStatus: string }> = [];
-        
+
         taskManager.onStatusTransition((event) => {
           events.push({
             taskId: event.taskId,
@@ -1348,17 +1350,17 @@ describe('TaskManager', () => {
         // Find a not_started task
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const notStartedTask = allTasks.find(t => t.status === 'not_started' && !t.isOptional);
-        
+
+        const notStartedTask = allTasks.find((t) => t.status === 'not_started' && !t.isOptional);
+
         if (notStartedTask) {
           await taskManager.updateTaskStatus(notStartedTask.id, 'queued');
           await taskManager.updateTaskStatus(notStartedTask.id, 'in_progress');
-          
+
           expect(events.length).toBeGreaterThanOrEqual(2);
           expect(events[0]).toMatchObject({
             taskId: notStartedTask.id,
@@ -1370,7 +1372,7 @@ describe('TaskManager', () => {
             previousStatus: 'queued',
             newStatus: 'in_progress',
           });
-          
+
           // Clean up
           await taskManager.updateTaskStatus(notStartedTask.id, 'not_started');
         }
@@ -1382,18 +1384,18 @@ describe('TaskManager', () => {
         // Find a not_started task
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const notStartedTask = allTasks.find(t => t.status === 'not_started' && !t.isOptional);
-        
+
+        const notStartedTask = allTasks.find((t) => t.status === 'not_started' && !t.isOptional);
+
         if (notStartedTask) {
           const result = await taskManager.queueTask(notStartedTask.id);
           expect(result).toBe(true);
           expect(taskManager.getTaskStatus(notStartedTask.id)).toBe('queued');
-          
+
           // Clean up
           await taskManager.updateTaskStatus(notStartedTask.id, 'not_started');
         }
@@ -1403,20 +1405,20 @@ describe('TaskManager', () => {
         // Find a not_started task
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const notStartedTask = allTasks.find(t => t.status === 'not_started' && !t.isOptional);
-        
+
+        const notStartedTask = allTasks.find((t) => t.status === 'not_started' && !t.isOptional);
+
         if (notStartedTask) {
           await taskManager.queueTask(notStartedTask.id);
           const result = await taskManager.startTask(notStartedTask.id);
           expect(result).toBe(true);
           expect(taskManager.getTaskStatus(notStartedTask.id)).toBe('in_progress');
           expect(taskManager.getState().currentTask).toBe(notStartedTask.id);
-          
+
           // Clean up
           await taskManager.updateTaskStatus(notStartedTask.id, 'not_started');
         }
@@ -1426,13 +1428,13 @@ describe('TaskManager', () => {
         // Find a not_started task
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const notStartedTask = allTasks.find(t => t.status === 'not_started' && !t.isOptional);
-        
+
+        const notStartedTask = allTasks.find((t) => t.status === 'not_started' && !t.isOptional);
+
         if (notStartedTask) {
           await taskManager.queueTask(notStartedTask.id);
           await taskManager.startTask(notStartedTask.id);
@@ -1447,13 +1449,13 @@ describe('TaskManager', () => {
         // Find a not_started task
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const notStartedTask = allTasks.find(t => t.status === 'not_started' && !t.isOptional);
-        
+
+        const notStartedTask = allTasks.find((t) => t.status === 'not_started' && !t.isOptional);
+
         if (notStartedTask) {
           await taskManager.queueTask(notStartedTask.id);
           await taskManager.startTask(notStartedTask.id);
@@ -1475,29 +1477,29 @@ describe('TaskManager', () => {
         // Find first two not_started tasks
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const notStartedTasks = allTasks.filter(t => t.status === 'not_started' && !t.isOptional);
-        
+
+        const notStartedTasks = allTasks.filter((t) => t.status === 'not_started' && !t.isOptional);
+
         if (notStartedTasks.length >= 2) {
           const firstTask = notStartedTasks[0];
           const secondTask = notStartedTasks[1];
-          
+
           // Start first task
           await taskManager.queueTask(firstTask.id);
           await taskManager.startTask(firstTask.id);
-          
+
           // Complete and queue next
           const nextTask = await taskManager.completeAndQueueNext(firstTask.id);
-          
+
           // Verify first task is completed
           expect(taskManager.getTaskStatus(firstTask.id)).toBe('completed');
           expect(taskManager.getState().completedTasks).toContain(firstTask.id);
           expect(taskManager.getState().currentTask).toBeNull();
-          
+
           // Verify next task was queued
           expect(nextTask).toBeDefined();
           if (nextTask) {
@@ -1510,13 +1512,13 @@ describe('TaskManager', () => {
         // Complete all non-optional tasks
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const nonOptionalTasks = allTasks.filter(t => !t.isOptional);
-        
+
+        const nonOptionalTasks = allTasks.filter((t) => !t.isOptional);
+
         // Complete all but the last task
         for (let i = 0; i < nonOptionalTasks.length - 1; i++) {
           const task = nonOptionalTasks[i];
@@ -1526,15 +1528,15 @@ describe('TaskManager', () => {
             await taskManager.updateTaskStatus(task.id, 'completed');
           }
         }
-        
+
         // Start and complete the last task
         const lastTask = nonOptionalTasks[nonOptionalTasks.length - 1];
         if (lastTask.status === 'not_started') {
           await taskManager.updateTaskStatus(lastTask.id, 'queued');
           await taskManager.updateTaskStatus(lastTask.id, 'in_progress');
-          
+
           const nextTask = await taskManager.completeAndQueueNext(lastTask.id);
-          
+
           // Should return null (no more tasks)
           expect(nextTask).toBeNull();
         }
@@ -1544,29 +1546,28 @@ describe('TaskManager', () => {
         // Find a parent with not_started children
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
-        const parentWithChildren = spec!.tasks.find(t => 
-          t.children.length > 0 && 
-          t.children.some(c => c.status === 'not_started')
+
+        const parentWithChildren = spec!.tasks.find(
+          (t) => t.children.length > 0 && t.children.some((c) => c.status === 'not_started')
         );
-        
+
         if (parentWithChildren) {
-          const firstChild = parentWithChildren.children.find(c => c.status === 'not_started');
-          
+          const firstChild = parentWithChildren.children.find((c) => c.status === 'not_started');
+
           if (firstChild) {
             // Start and complete first child
             await taskManager.queueTask(firstChild.id);
             await taskManager.startTask(firstChild.id);
-            
+
             const nextTask = await taskManager.completeAndQueueNext(firstChild.id);
-            
+
             // Next task should be another child or a different task, not the parent
             if (nextTask && parentWithChildren.children.length > 1) {
               // If there are more children, next should be a child
               const hasMoreChildren = parentWithChildren.children.some(
-                c => c.status === 'not_started' && !c.isOptional
+                (c) => c.status === 'not_started' && !c.isOptional
               );
-              
+
               if (hasMoreChildren) {
                 expect(nextTask.parentId).toBe(parentWithChildren.id);
               }
@@ -1577,9 +1578,7 @@ describe('TaskManager', () => {
 
       it('should throw error if task completion fails', async () => {
         // Try to complete a non-existent task
-        await expect(
-          taskManager.completeAndQueueNext('non-existent-task')
-        ).rejects.toThrow();
+        await expect(taskManager.completeAndQueueNext('non-existent-task')).rejects.toThrow();
       });
     });
 
@@ -1588,13 +1587,13 @@ describe('TaskManager', () => {
         // Find a leaf task (no children)
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const leafTask = allTasks.find(t => t.children.length === 0);
-        
+
+        const leafTask = allTasks.find((t) => t.children.length === 0);
+
         if (leafTask) {
           const canComplete = taskManager.canCompleteParentTask(leafTask.id);
           expect(canComplete).toBe(true);
@@ -1605,12 +1604,13 @@ describe('TaskManager', () => {
         // Find a parent with not_started non-optional children
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
-        const parentWithIncompleteChildren = spec!.tasks.find(t => 
-          t.children.length > 0 && 
-          t.children.some(c => !c.isOptional && c.status !== 'completed')
+
+        const parentWithIncompleteChildren = spec!.tasks.find(
+          (t) =>
+            t.children.length > 0 &&
+            t.children.some((c) => !c.isOptional && c.status !== 'completed')
         );
-        
+
         if (parentWithIncompleteChildren) {
           const canComplete = taskManager.canCompleteParentTask(parentWithIncompleteChildren.id);
           expect(canComplete).toBe(false);
@@ -1621,9 +1621,9 @@ describe('TaskManager', () => {
         // Find a parent and complete all its non-optional children
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
-        const parentWithChildren = spec!.tasks.find(t => t.children.length > 0);
-        
+
+        const parentWithChildren = spec!.tasks.find((t) => t.children.length > 0);
+
         if (parentWithChildren) {
           // Complete all non-optional children
           for (const child of parentWithChildren.children) {
@@ -1633,7 +1633,7 @@ describe('TaskManager', () => {
               await taskManager.updateTaskStatus(child.id, 'completed');
             }
           }
-          
+
           const canComplete = taskManager.canCompleteParentTask(parentWithChildren.id);
           expect(canComplete).toBe(true);
         }
@@ -1643,12 +1643,11 @@ describe('TaskManager', () => {
         // Find a parent with optional children
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
-        const parentWithOptionalChildren = spec!.tasks.find(t => 
-          t.children.length > 0 && 
-          t.children.some(c => c.isOptional)
+
+        const parentWithOptionalChildren = spec!.tasks.find(
+          (t) => t.children.length > 0 && t.children.some((c) => c.isOptional)
         );
-        
+
         if (parentWithOptionalChildren) {
           // Complete all non-optional children
           for (const child of parentWithOptionalChildren.children) {
@@ -1658,7 +1657,7 @@ describe('TaskManager', () => {
               await taskManager.updateTaskStatus(child.id, 'completed');
             }
           }
-          
+
           const canComplete = taskManager.canCompleteParentTask(parentWithOptionalChildren.id);
           expect(canComplete).toBe(true);
         }
@@ -1675,17 +1674,19 @@ describe('TaskManager', () => {
         // Find a leaf task
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const leafTask = allTasks.find(t => t.children.length === 0 && t.status === 'not_started' && !t.isOptional);
-        
+
+        const leafTask = allTasks.find(
+          (t) => t.children.length === 0 && t.status === 'not_started' && !t.isOptional
+        );
+
         if (leafTask) {
           await taskManager.queueTask(leafTask.id);
           await taskManager.startTask(leafTask.id);
-          
+
           const result = await taskManager.completeTaskWithValidation(leafTask.id);
           expect(result).toBe(true);
           expect(taskManager.getTaskStatus(leafTask.id)).toBe('completed');
@@ -1696,12 +1697,13 @@ describe('TaskManager', () => {
         // Find a parent with incomplete children
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
-        const parentWithIncompleteChildren = spec!.tasks.find(t => 
-          t.children.length > 0 && 
-          t.children.some(c => !c.isOptional && c.status !== 'completed')
+
+        const parentWithIncompleteChildren = spec!.tasks.find(
+          (t) =>
+            t.children.length > 0 &&
+            t.children.some((c) => !c.isOptional && c.status !== 'completed')
         );
-        
+
         if (parentWithIncompleteChildren) {
           // Try to complete parent (should fail)
           await expect(
@@ -1716,27 +1718,27 @@ describe('TaskManager', () => {
         // Find a task to fail
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const task = allTasks.find(t => t.status === 'not_started' && !t.isOptional);
-        
+
+        const task = allTasks.find((t) => t.status === 'not_started' && !t.isOptional);
+
         if (task) {
           await taskManager.queueTask(task.id);
           await taskManager.startTask(task.id);
-          
+
           const error = new Error('Test error');
           const errorContext = await taskManager.haltOnFailure(task.id, error, 'test-failure');
-          
+
           // Verify error context
           expect(errorContext.taskId).toBe(task.id);
           expect(errorContext.errorMessage).toBe('Test error');
           expect(errorContext.stackTrace).toBeDefined();
           expect(errorContext.failedTest).toBe('test-failure');
           expect(errorContext.timestamp).toBeInstanceOf(Date);
-          
+
           // Verify execution halted
           expect(taskManager.getState().currentTask).toBeNull();
         }
@@ -1746,20 +1748,20 @@ describe('TaskManager', () => {
         // Find a task to fail
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const task = allTasks.find(t => t.status === 'not_started' && !t.isOptional);
-        
+
+        const task = allTasks.find((t) => t.status === 'not_started' && !t.isOptional);
+
         if (task) {
           await taskManager.queueTask(task.id);
           await taskManager.startTask(task.id);
-          
+
           const error = new Error('Compilation error');
           const errorContext = await taskManager.haltOnFailure(task.id, error);
-          
+
           expect(errorContext.failedTest).toBeNull();
           expect(errorContext.errorMessage).toBe('Compilation error');
         }
@@ -1769,22 +1771,22 @@ describe('TaskManager', () => {
         // Find a task to fail
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const task = allTasks.find(t => t.status === 'not_started' && !t.isOptional);
-        
+
+        const task = allTasks.find((t) => t.status === 'not_started' && !t.isOptional);
+
         if (task) {
           await taskManager.queueTask(task.id);
           await taskManager.startTask(task.id);
-          
+
           const error = new Error('Error without stack');
           delete error.stack;
-          
+
           const errorContext = await taskManager.haltOnFailure(task.id, error);
-          
+
           expect(errorContext.stackTrace).toBe('');
         }
       });
@@ -1800,20 +1802,20 @@ describe('TaskManager', () => {
         // Find a task and start it
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const task = allTasks.find(t => t.status === 'not_started' && !t.isOptional);
-        
+
+        const task = allTasks.find((t) => t.status === 'not_started' && !t.isOptional);
+
         if (task) {
           await taskManager.queueTask(task.id);
           await taskManager.startTask(task.id);
-          
+
           const isComplete = taskManager.isExecutionComplete();
           expect(isComplete).toBe(false);
-          
+
           // Clean up
           await taskManager.updateTaskStatus(task.id, 'not_started');
         }
@@ -1823,11 +1825,11 @@ describe('TaskManager', () => {
         // Complete all non-optional tasks
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
+
         for (const task of allTasks) {
           if (!task.isOptional && task.status !== 'completed') {
             await taskManager.updateTaskStatus(task.id, 'queued');
@@ -1835,7 +1837,7 @@ describe('TaskManager', () => {
             await taskManager.updateTaskStatus(task.id, 'completed');
           }
         }
-        
+
         const isComplete = taskManager.isExecutionComplete();
         expect(isComplete).toBe(true);
       });
@@ -1844,11 +1846,11 @@ describe('TaskManager', () => {
         // Complete all non-optional tasks, leave optional tasks
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
+
         for (const task of allTasks) {
           if (!task.isOptional && task.status !== 'completed') {
             await taskManager.updateTaskStatus(task.id, 'queued');
@@ -1856,7 +1858,7 @@ describe('TaskManager', () => {
             await taskManager.updateTaskStatus(task.id, 'completed');
           }
         }
-        
+
         const isComplete = taskManager.isExecutionComplete();
         expect(isComplete).toBe(true);
       });
@@ -1866,7 +1868,7 @@ describe('TaskManager', () => {
       it('should return zero counts when no spec loaded', () => {
         const emptyManager = new TaskManager();
         const summary = emptyManager.getExecutionSummary();
-        
+
         expect(summary.total).toBe(0);
         expect(summary.notStarted).toBe(0);
         expect(summary.queued).toBe(0);
@@ -1877,7 +1879,7 @@ describe('TaskManager', () => {
 
       it('should return correct counts after loading spec', async () => {
         const summary = taskManager.getExecutionSummary();
-        
+
         expect(summary.total).toBeGreaterThan(0);
         expect(summary.notStarted).toBeGreaterThan(0);
         expect(summary.queued).toBe(0);
@@ -1890,26 +1892,26 @@ describe('TaskManager', () => {
         // Find a task and progress it
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const task = allTasks.find(t => t.status === 'not_started' && !t.isOptional);
-        
+
+        const task = allTasks.find((t) => t.status === 'not_started' && !t.isOptional);
+
         if (task) {
           const initialSummary = taskManager.getExecutionSummary();
-          
+
           await taskManager.queueTask(task.id);
           const queuedSummary = taskManager.getExecutionSummary();
           expect(queuedSummary.queued).toBe(initialSummary.queued + 1);
           expect(queuedSummary.notStarted).toBe(initialSummary.notStarted - 1);
-          
+
           await taskManager.startTask(task.id);
           const inProgressSummary = taskManager.getExecutionSummary();
           expect(inProgressSummary.inProgress).toBe(queuedSummary.inProgress + 1);
           expect(inProgressSummary.queued).toBe(queuedSummary.queued - 1);
-          
+
           await taskManager.completeTask(task.id);
           const completedSummary = taskManager.getExecutionSummary();
           expect(completedSummary.completed).toBe(inProgressSummary.completed + 1);
@@ -1919,18 +1921,17 @@ describe('TaskManager', () => {
 
       it('should count optional tasks correctly', async () => {
         const summary = taskManager.getExecutionSummary();
-        
+
         const spec = taskManager.getSpec();
         expect(spec).toBeDefined();
-        
+
         const allTasks = spec!.tasks.flatMap(function flatten(t): typeof spec.tasks {
           return [t, ...t.children.flatMap(flatten)];
         });
-        
-        const optionalCount = allTasks.filter(t => t.isOptional).length;
+
+        const optionalCount = allTasks.filter((t) => t.isOptional).length;
         expect(summary.optional).toBe(optionalCount);
       });
     });
   });
 });
-

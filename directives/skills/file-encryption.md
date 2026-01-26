@@ -16,11 +16,13 @@ Securely encrypt and decrypt text files using AES-256-GCM encryption with authen
 ## Inputs
 
 ### Encryption
+
 - `inputFile` (string): Path to plaintext file to encrypt
 - `outputFile` (string): Path where encrypted file will be saved
 - `password` (string): Encryption password (min 12 characters)
 
 ### Decryption
+
 - `inputFile` (string): Path to encrypted file
 - `outputFile` (string): Path where decrypted file will be saved
 - `password` (string): Decryption password
@@ -30,6 +32,7 @@ Securely encrypt and decrypt text files using AES-256-GCM encryption with authen
 ## Outputs
 
 ### Success
+
 ```json
 {
   "success": true,
@@ -42,6 +45,7 @@ Securely encrypt and decrypt text files using AES-256-GCM encryption with authen
 ```
 
 ### Failure
+
 ```json
 {
   "success": false,
@@ -81,14 +85,14 @@ import { encryptFile, decryptFile } from '@/execution/skills/file-encryption';
 const result = await encryptFile({
   inputFile: './secret.txt',
   outputFile: './secret.enc',
-  password: 'MySecurePassword123!'
+  password: 'MySecurePassword123!',
 });
 
 // Decrypt
 const decrypted = await decryptFile({
   inputFile: './secret.enc',
   outputFile: './secret-decrypted.txt',
-  password: 'MySecurePassword123!'
+  password: 'MySecurePassword123!',
 });
 ```
 

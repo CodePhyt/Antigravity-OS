@@ -1,0 +1,473 @@
+# Implementation Plan: Universal Sovereign MCP Engine (AS-MCP)
+
+## Overview
+
+This implementation plan transforms Antigravity OS into a Universal Sovereign MCP Engine that provides anti-hallucination tools to AI agents across any IDE. The implementation follows a bottom-up approach: pure functions first, then tools, then MCP server, then UI, ensuring each layer is tested before building the next.
+
+## Tasks
+
+- [x] 1. Install MCP SDK and setup project structure
+  - Install @modelcontextprotocol/sdk dependency
+  - Create src/mcp/ directory structure
+  - Create src/mcp/tools/ directory for tool implementations
+  - Create src/services/ directory for pure functions
+  - Add npm scripts for MCP server (mcp:start, mcp:dev, mcp:test)
+  - Configure TypeScript for MCP server compilation
+  - _Requirements: 1, 14_
+
+- [x] 2. Implement pure function services layer
+  - [x] 2.1 Create Docker service (src/services/docker-service.ts)
+    - Implement listContainers() function
+    - Implement listImages() function
+    - Implement removeContainer(id) function
+    - Implement removeImage(id) function
+    - Implement isDockerAvailable() function
+    - _Requirements: 2, 11_
+  - [x] 2.2 Create System Info service (src/services/system-info-service.ts)
+    - Implement getCPUInfo() function
+    - Implement getMemoryInfo() function
+    - Implement getDiskInfo() function
+    - Implement getNodeVersion() function
+    - Implement getNpmVersion() function
+    - Implement getCurrentBranch() function
+    - _Requirements: 2, 11_
+  - [x] 2.3 Create Telemetry service (src/services/telemetry-service.ts)
+    - Implement readTelemetry() function
+    - Implement writeTelemetry(data) function
+    - Implement logEvent(event) function
+    - _Requirements: 6, 11_
+  - [x] 2.4 Write unit tests for pure function services
+    - Test Docker service with mocked exec commands
+    - Test System Info service with mocked system calls
+    - Test Telemetry service with mocked file I/O
+    - Test error handling for unavailable resources
+    - _Requirements: 2, 6, 11_
+
+- [x] 3. Implement Constitutional Validator
+  - [x] 3.1 Create validator core (src/mcp/validator.ts)
+    - Define ConstitutionalViolation interface
+    - Implement validate(context) method
+    - Implement isDestructive(command, args) method
+    - Implement isDockerWhitelisted(image) method
+    - Implement isSensitiveDirectory(path) method
+    - Define 13 Articles validation rules
+    - _Requirements: 4, 12_
+  - [x] 3.2 Write property test for constitutional validation
+    - **Property 9: Constitutional Validation Enforcement**
+    - **Validates: Requirements 4.1, 12.1**
+    - Generate random commands and verify validation against 13 Articles
+    - _Requirements: 4, 12_
+  - [x] 3.3 Write property test for destructive operation detection
+    - **Property 10: Destructive Operation Detection**
+    - **Validates: Requirements 4.2, 12.2**
+    - Test with known destructive commands (rm -rf, DROP TABLE, docker rmi)
+    - _Requirements: 4, 12_
+  - [x] 3.4 Write property test for Docker whitelist enforcement
+    - **Property 11: Docker Whitelist Enforcement**
+    - **Validates: Requirements 4.3, 12.3**
+    - Test with whitelisted and non-whitelisted images
+    - _Requirements: 4, 12_
+  - [x] 3.5 Write property test for sensitive directory protection
+    - **Property 30: Sensitive Directory Protection**
+    - **Validates: Requirements 12.4**
+    - Test with paths to .git, node_modules, .env
+    - _Requirements: 12_
+
+- [x] 4. Implement Anti-Hallucination Tools
+  - [x] 4.1 Create get_system_context tool (src/mcp/tools/system-context.ts)
+    - Define SystemContext interface
+    - Implement getSystemContext() function using pure services
+    - Handle Docker unavailable gracefully
+    - Return complete system state (CPU, memory, disk, Docker, ports, environment)
+    - _Requirements: 2_
+  - [x] 4.2 Write property test for system context completeness
+    - **Property 6: System Context Completeness**
+    - **Validates: Requirements 2.1, 2.2, 2.3, 2.4, 2.5**
+    - Verify all required fields are present in response
+    - _Requirements: 2_
+  - [x] 4.3 Create validate_environment tool (src/mcp/tools/validate-environment.ts)
+    - Define ValidationRequest and ValidationResult interfaces
+    - Implement validateEnvironment(req) function
+    - Check commands in PATH
+    - Check npm packages installed
+    - Check files exist and readable
+    - Check ports available
+    - Generate installation suggestions for missing dependencies
+    - _Requirements: 3_
+  - [x] 4.4 Write property test for environment validation completeness
+    - **Property 7: Environment Validation Completeness**
+    - **Validates: Requirements 3.1, 3.2, 3.3, 3.4, 3.5**
+    - Test with multiple dependency types
+    - _Requirements: 3_
+  - [x] 4.5 Write property test for missing dependency suggestions
+    - **Property 8: Missing Dependency Suggestions**
+    - **Validates: Requirements 3.6**
+    - Verify suggestions are provided for missing dependencies
+    - _Requirements: 3_
+  - [x] 4.6 Create sovereign_execute tool (src/mcp/tools/sovereign-execute.ts)
+    - Define ExecuteRequest and ExecuteResult interfaces
+    - Implement sovereignExecute(req) function
+    - Integrate Constitutional Validator
+    - Execute commands with timeout (30s default)
+    - Capture stdout, stderr, exitCode
+    - Log to telemetry
+    - _Requirements: 4, 12_
+  - [x] 4.7 Write property test for command output capture
+    - **Property 12: Command Output Capture**
+    - **Validates: Requirements 4.4**
+    - Verify stdout, stderr, exitCode are captured
+    - _Requirements: 4_
+  - [x] 4.8 Write property test for execution telemetry logging
+    - **Property 13: Execution Telemetry Logging**
+    - **Validates: Requirements 4.5, 12.5**
+    - Verify telemetry is updated after execution
+    - _Requirements: 4, 12_
+  - [x] 4.9 Write property test for constitutional violation rejection
+    - **Property 14: Constitutional Violation Rejection**
+    - **Validates: Requirements 4.6**
+    - Test with violating commands and verify rejection
+    - _Requirements: 4_
+  - [x] 4.10 Create trigger_ralph_loop tool (src/mcp/tools/ralph-loop-trigger.ts)
+    - Define RalphLoopRequest and RalphLoopResult interfaces
+    - Implement triggerRalphLoop(req) function
+    - Integrate with existing Ralph-Loop engine (src/core/ralph-loop.ts)
+    - Support analyze, correct, and health-check modes
+    - Return analysis, correction plan, or health check results
+    - _Requirements: 5_
+  - [x] 4.11 Write property test for Ralph-Loop error analysis
+    - **Property 15: Ralph-Loop Error Analysis**
+    - **Validates: Requirements 5.1**
+    - Test with error contexts and verify analysis
+    - _Requirements: 5_
+  - [x] 4.12 Write property test for spec violation correction
+    - **Property 16: Spec Violation Correction**
+    - **Validates: Requirements 5.2**
+    - Test with spec violations and verify correction plans
+    - _Requirements: 5_
+
+- [x] 5. Checkpoint - Ensure all tool tests pass
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [x] 6. Implement Error Interceptor
+  - [x] 6.1 Create error interceptor (src/mcp/background/error-interceptor.ts)
+    - Define ErrorAnalysis interface
+    - Implement analyze(error) method
+    - Implement detectRootCause(error) method
+    - Implement categorizeError(error) method
+    - Implement generateRemediation(category, rootCause) method
+    - _Requirements: 7_
+  - [x] 6.2 Write property test for error analysis execution
+    - **Property 23: Error Analysis Execution**
+    - **Validates: Requirements 7.1, 7.2**
+    - Test with various error messages and verify root cause detection
+    - _Requirements: 7_
+  - [x] 6.3 Write property test for error remediation suggestions
+    - **Property 24: Error Remediation Suggestions**
+    - **Validates: Requirements 7.3**
+    - Test with known errors and verify remediation steps
+    - _Requirements: 7_
+  - [x] 6.4 Write property test for tool suggestion for error categories
+    - **Property 25: Tool Suggestion for Error Categories**
+    - **Validates: Requirements 7.4, 7.5**
+    - Test environment and spec errors and verify tool suggestions
+    - _Requirements: 7_
+
+- [x] 7. Implement MCP Server Core
+  - [x] 7.1 Create MCP server (src/mcp/server.ts)
+    - Import @modelcontextprotocol/sdk
+    - Define MCPServerConfig interface
+    - Create AntigravityMCPServer class
+    - Initialize Server with StdioServerTransport
+    - Implement start() method
+    - Implement stop() method
+    - Implement registerTool(tool) method
+    - Implement handleToolCall(name, args) method
+    - _Requirements: 1, 9_
+  - [x] 7.2 Register all anti-hallucination tools
+    - Register get_system_context tool
+    - Register validate_environment tool
+    - Register sovereign_execute tool
+    - Register trigger_ralph_loop tool
+    - Define JSON Schema for each tool
+    - _Requirements: 1, 9_
+  - [x] 7.3 Implement tool invocation handlers
+    - Handle tools/list request
+    - Handle tools/call request
+    - Validate parameters against schemas
+    - Invoke tool handlers
+    - Format responses as MCP-compliant JSON
+    - Handle errors with JSON-RPC error codes
+    - _Requirements: 1, 9_
+  - [x] 7.4 Write property test for stdio communication exclusivity
+    - **Property 1: stdio Communication Exclusivity**
+    - **Validates: Requirements 1.2**
+    - Verify all communication via stdin/stdout only
+    - _Requirements: 1_
+  - [x] 7.5 Write property test for MCP handshake completion
+    - **Property 2: MCP Handshake Completion**
+    - **Validates: Requirements 1.3**
+    - Test initialize handshake with random client IDs
+    - _Requirements: 1_
+  - [x] 7.6 Write property test for tool list completeness
+    - **Property 3: Tool List Completeness**
+    - **Validates: Requirements 1.4**
+    - Verify all 4 tools are returned with valid schemas
+    - _Requirements: 1_
+  - [x] 7.7 Write property test for parameter validation rejection
+    - **Property 4: Parameter Validation Rejection**
+    - **Validates: Requirements 1.5**
+    - Test with random invalid parameters
+    - _Requirements: 1_
+  - [x] 7.8 Write property test for error code compliance
+    - **Property 5: Error Code Compliance**
+    - **Validates: Requirements 1.6**
+    - Test various error conditions and verify error codes
+    - _Requirements: 1_
+  - [x] 7.9 Write property test for exception handling
+    - **Property 32: Exception Handling**
+    - **Validates: Requirements 13.1**
+    - Test tool invocations that throw exceptions
+    - _Requirements: 13_
+  - [x] 7.10 Write property test for tool timeout handling
+    - **Property 33: Tool Timeout Handling**
+    - **Validates: Requirements 13.5**
+    - Test long-running operations and verify timeout
+    - _Requirements: 13_
+
+- [x] 8. Checkpoint - Ensure MCP server tests pass
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [x] 9. Implement Background Reasoning - State Sync
+  - [x] 9.1 Create state sync (src/mcp/background/state-sync.ts)
+    - Define StateSyncConfig interface
+    - Create StateSync class
+    - Implement start(config) method
+    - Implement stop() method
+    - Implement addClient(clientId) method
+    - Implement removeClient(clientId) method
+    - Implement pushUpdate() method
+    - _Requirements: 6_
+  - [x] 9.2 Write property test for telemetry update push
+    - **Property 19: Telemetry Update Push**
+    - **Validates: Requirements 6.2**
+    - Test telemetry changes and verify updates are pushed
+    - _Requirements: 6_
+  - [x] 9.3 Write property test for state sync completeness
+    - **Property 20: State Sync Completeness**
+    - **Validates: Requirements 6.3**
+    - Verify complete telemetry snapshot is returned
+    - _Requirements: 6_
+  - [x] 9.4 Write property test for telemetry file change detection
+    - **Property 21: Telemetry File Change Detection**
+    - **Validates: Requirements 6.5**
+    - Modify telemetry file and verify detection
+    - _Requirements: 6_
+  - [x] 9.5 Write property test for streaming pause without clients
+    - **Property 22: Streaming Pause Without Clients**
+    - **Validates: Requirements 6.6**
+    - Verify streaming pauses when no clients connected
+    - _Requirements: 6_
+
+- [x] 10. Implement CLI Adapter
+  - [x] 10.1 Create CLI binary (src/mcp/cli.ts)
+    - Add shebang (#!/usr/bin/env node)
+    - Define CLIOptions interface
+    - Implement main(options) function
+    - Handle --config flag (output MCP configuration)
+    - Handle --test flag (run connectivity test)
+    - Handle --version flag (show version)
+    - Default behavior: start MCP server in stdio mode
+    - _Requirements: 9, 14_
+  - [x] 10.2 Add bin entry to package.json
+    - Add "ag-os-mcp": "./dist/mcp/cli.js" to bin field
+    - _Requirements: 9, 14_
+  - [x] 10.3 Write unit tests for CLI commands
+    - Test --config outputs valid JSON
+    - Test --test runs connectivity test
+    - Test --version shows version
+    - Test default behavior starts server
+    - _Requirements: 9, 14_
+
+- [x] 11. Implement MCP Config Generator
+  - [x] 11.1 Create config generator (src/mcp/config-generator.ts)
+    - Define IDEType type
+    - Define MCPConfig interface
+    - Implement generateConfig(ide) function
+    - Generate Cursor-specific config
+    - Generate Windsurf-specific config
+    - Generate Claude Desktop-specific config
+    - Generate generic config
+    - _Requirements: 8, 14_
+  - [x] 11.2 Write property test for IDE config generation completeness
+    - **Property 27: IDE Config Generation Completeness**
+    - **Validates: Requirements 8.4, 8.5**
+    - Test all IDE types and verify config completeness
+    - _Requirements: 8_
+  - [x] 11.3 Write unit tests for specific IDE configs
+    - Test Cursor config format
+    - Test Windsurf config format
+    - Test Claude Desktop config format
+    - _Requirements: 8_
+
+- [x] 12. Checkpoint - Ensure CLI and config tests pass
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [x] 13. Refactor existing API routes for dual interface
+  - [x] 13.1 Update Docker API route (src/app/api/system/docker/route.ts)
+    - Extract logic to pure functions in docker-service.ts
+    - Call pure functions from HTTP route
+    - Maintain backward compatibility
+    - _Requirements: 11_
+  - [x] 13.2 Update Telemetry API route (src/app/api/telemetry/route.ts)
+    - Extract logic to pure functions in telemetry-service.ts
+    - Call pure functions from HTTP route
+    - Maintain backward compatibility
+    - _Requirements: 11_
+  - [x] 13.3 Write property test for HTTP and MCP function reuse
+    - **Property 29: HTTP and MCP Function Reuse**
+    - **Validates: Requirements 11.2, 11.3**
+    - Verify both interfaces call same underlying functions
+    - _Requirements: 11_
+
+- [x] 14. Implement Observer Console UI
+  - [x] 14.1 Create ConnectionStatus component (src/app/observer/ConnectionStatus.tsx)
+    - Define ConnectionStatusProps interface
+    - Display connection indicator
+    - Show client name and version
+    - Show "Waiting for Connection" when disconnected
+    - _Requirements: 10_
+  - [x] 14.2 Create ToolActivityMonitor component (src/app/observer/ToolActivityMonitor.tsx)
+    - Define ToolInvocation interface
+    - Define ToolActivityMonitorProps interface
+    - Display list of tool invocations
+    - Show timestamp, status, execution time
+    - Show result or error
+    - _Requirements: 10_
+  - [x] 14.3 Create NeonPulse component (src/app/observer/NeonPulse.tsx)
+    - Define NeonPulseProps interface
+    - Implement neon pulse animation (CSS/Framer Motion)
+    - Support colors: blue, green, red, yellow
+    - Support intensity levels (0-100)
+    - _Requirements: 10_
+  - [x] 14.4 Create MCPConfigDisplay component (src/app/observer/MCPConfigDisplay.tsx)
+    - Define MCPConfigDisplayProps interface
+    - Display MCP configuration JSON
+    - Support IDE selection (Cursor, Windsurf, Claude Desktop)
+    - Add copy-to-clipboard button
+    - _Requirements: 10_
+  - [x] 14.5 Create Observer Console page (src/app/observer/page.tsx)
+    - Integrate all Observer Console components
+    - Setup WebSocket connection for real-time updates
+    - Handle tool invocation events
+    - Trigger neon pulses on tool invocations
+    - Update metrics in real-time
+    - _Requirements: 10_
+  - [x] 14.6 Write integration tests for Observer Console
+    - Test WebSocket connection
+    - Test real-time updates
+    - Test neon pulse triggers
+    - Test MCP config display
+    - _Requirements: 10_
+
+- [x] 15. Implement WebSocket server for real-time updates
+  - [x] 15.1 Create WebSocket server (src/mcp/websocket-server.ts)
+    - Setup WebSocketServer on port 3002
+    - Handle client connections
+    - Send initial state on connection
+    - Subscribe to MCP server events
+    - Push updates to connected clients
+    - _Requirements: 10_
+  - [x] 15.2 Integrate WebSocket with MCP server
+    - Emit events on tool invocations
+    - Emit events on telemetry updates
+    - Emit events on client connections
+    - _Requirements: 10_
+
+- [x] 16. Add configuration and environment setup
+  - [x] 16.1 Create .env.example file
+    - Add NODE_ENV
+    - Add MCP_LOG_LEVEL
+    - Add TELEMETRY_PATH
+    - Add DOCKER_WHITELIST
+    - Add RALPH_LOOP_MAX_ATTEMPTS
+    - Add TOOL_TIMEOUT
+    - _Requirements: 14_
+  - [x] 16.2 Update package.json scripts
+    - Add mcp:start script
+    - Add mcp:dev script
+    - Add mcp:test script
+    - _Requirements: 14_
+  - [x] 16.3 Write property test for configuration loading
+    - **Property 34: Configuration Loading**
+    - **Validates: Requirements 14.2**
+    - Test with different .env configurations
+    - _Requirements: 14_
+  - [x] 16.4 Write property test for development vs production modes
+    - **Property 35: Development vs Production Modes**
+    - **Validates: Requirements 14.4**
+    - Verify logging behavior in each mode
+    - _Requirements: 14_
+  - [x] 16.5 Write property test for dependency validation on startup
+    - **Property 36: Dependency Validation on Startup**
+    - **Validates: Requirements 14.6**
+    - Test startup with missing dependencies
+    - _Requirements: 14_
+
+- [x] 17. Create documentation and examples
+  - [x] 17.1 Create MCP setup guide (docs/mcp-setup.md)
+    - Document installation steps
+    - Document IDE configuration (Cursor, Windsurf, Claude Desktop)
+    - Document CLI usage
+    - Document troubleshooting
+    - _Requirements: 8, 14_
+  - [x] 17.2 Create tool usage examples (docs/mcp-examples.md)
+    - Example: get_system_context usage
+    - Example: validate_environment usage
+    - Example: sovereign_execute usage
+    - Example: trigger_ralph_loop usage
+    - _Requirements: 2, 3, 4, 5_
+  - [x] 17.3 Update README.md
+    - Add MCP server section
+    - Add Observer Console section
+    - Add CLI usage section
+    - Add configuration section
+    - _Requirements: 14_
+
+- [x] 18. Final integration and testing
+  - [x] 18.1 Run full test suite
+    - Run all unit tests
+    - Run all property tests (100+ iterations each)
+    - Verify 80% code coverage
+    - _Requirements: All_
+  - [x] 18.2 Test MCP server with real IDE clients
+    - Test with Cursor
+    - Test with Windsurf
+    - Test with Claude Desktop
+    - Verify all tools work correctly
+    - _Requirements: 1, 2, 3, 4, 5, 8_
+  - [x] 18.3 Test Observer Console real-time updates
+    - Connect IDE client
+    - Invoke tools
+    - Verify neon pulses
+    - Verify metrics update
+    - _Requirements: 10_
+  - [x] 18.4 Test CLI commands
+    - Test npx ag-os-mcp
+    - Test npx ag-os-mcp --config
+    - Test npx ag-os-mcp --test
+    - Test piping to other processes
+    - _Requirements: 9_
+
+- [x] 19. Final checkpoint - Ensure all tests pass
+  - Ensure all tests pass, ask the user if questions arise.
+
+## Notes
+
+- All tasks are required for comprehensive testing and robustness
+- Each task references specific requirements for traceability
+- Checkpoints ensure incremental validation
+- Property tests validate universal correctness properties (100+ iterations)
+- Unit tests validate specific examples and edge cases
+- All pure functions are tested before building MCP server
+- MCP server is tested before building UI
+- Observer Console is the final layer (visualization only)

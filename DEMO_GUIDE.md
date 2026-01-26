@@ -9,21 +9,27 @@
 ## Quick Start (30 seconds)
 
 ### 1. Validate System Health
+
 ```bash
 npm run validate:quick
 ```
+
 **Expected Output**: ✅ VALIDATION PASSED (85.7% test pass rate)
 
 ### 2. Launch Dashboard
+
 ```bash
 npm run dev
 ```
+
 **Open**: http://localhost:3000
 
 ### 3. Run Encryption Demo
+
 ```bash
 npm run demo:encryption
 ```
+
 **Expected Output**: ✅ All encryption operations successful
 
 ---
@@ -35,6 +41,7 @@ npm run demo:encryption
 **Objective**: Demonstrate 13-Article Constitutional Framework governing autonomous operations
 
 **Steps**:
+
 1. Open `directives/00_GLOBAL_STEERING.md`
 2. Show **Article I**: 3-Layer Sovereign Architecture
 3. Show **Article V**: Self-Annealing Protocol (Ralph-Loop)
@@ -44,6 +51,7 @@ npm run demo:encryption
 7. Show **Rule 11**: Human-in-the-Loop Checkpoints
 
 **Key Points**:
+
 - 13 Articles govern all autonomous operations
 - Security-first principles (Article II)
 - Atomic operations mandate (Article III)
@@ -59,6 +67,7 @@ npm run demo:encryption
 **Objective**: Demonstrate real-time observability and system transparency
 
 **Steps**:
+
 1. Ensure dev server is running: `npm run dev`
 2. Open http://localhost:3000 in browser
 3. Show **5 Operational Sectors**:
@@ -76,6 +85,7 @@ npm run demo:encryption
 5. Show **Constitutional Compliance**: Articles I, II, III, VII verified
 
 **Key Points**:
+
 - Real-time telemetry visualization
 - 5 sectors covering all system aspects
 - Dark cyber-ops aesthetic
@@ -91,6 +101,7 @@ npm run demo:encryption
 **Objective**: Demonstrate B.L.A.S.T. protocol and Ralph-Loop effectiveness
 
 **Steps**:
+
 1. Open `docs/telemetry.json`
 2. Show **Ralph-Loop Metrics**:
    ```json
@@ -114,6 +125,7 @@ npm run demo:encryption
    - **T**est: Re-run until green (max 3 attempts)
 
 **Key Points**:
+
 - 100% effectiveness (1/1 fixes successful)
 - <1 second resolution time for module errors
 - Systematic debugging beats guessing
@@ -129,6 +141,7 @@ npm run demo:encryption
 **Objective**: Demonstrate long-term learning and pattern recognition
 
 **Steps**:
+
 1. Open `docs/memory/insight-graph.md`
 2. Show **20 Patterns Captured**:
    - 10 Success Paths
@@ -151,6 +164,7 @@ npm run demo:encryption
    - Accelerates development velocity
 
 **Key Points**:
+
 - 20 patterns captured across 3 development cycles
 - Never repeat mistakes
 - Continuous improvement
@@ -166,6 +180,7 @@ npm run demo:encryption
 **Objective**: Demonstrate skill discovery protocol and security-first implementation
 
 **Steps**:
+
 1. Run encryption demo:
    ```bash
    npm run demo:encryption
@@ -190,6 +205,7 @@ npm run demo:encryption
    - Password validation (min 12 chars)
 
 **Key Points**:
+
 - Article VII compliance (Skill Discovery Protocol)
 - Security-first implementation
 - 3-Layer architecture maintained
@@ -205,6 +221,7 @@ npm run demo:encryption
 **Objective**: Demonstrate comprehensive testing and validation
 
 **Steps**:
+
 1. Run quick validation:
    ```bash
    npm run validate:quick
@@ -228,6 +245,7 @@ npm run demo:encryption
    - Minimum 80% coverage enforced
 
 **Key Points**:
+
 - 85.7% test pass rate (above threshold)
 - Property-based testing with fast-check
 - Comprehensive unit test coverage
@@ -243,6 +261,7 @@ npm run demo:encryption
 **Objective**: Demonstrate comprehensive documentation and process transparency
 
 **Steps**:
+
 1. Show **Documentation Files**:
    - `README.md`: System overview
    - `DEVLOG.md`: 10 development entries
@@ -267,6 +286,7 @@ npm run demo:encryption
    - Validation
 
 **Key Points**:
+
 - Comprehensive documentation (100%)
 - Process transparency (Rule 12)
 - Decision-tree logging
@@ -280,6 +300,7 @@ npm run demo:encryption
 ## Key Talking Points
 
 ### Innovation Highlights
+
 1. **Constitutional AI Governance**: 13-Article framework governing autonomous operations
 2. **Self-Healing Architecture**: B.L.A.S.T. protocol with 100% effectiveness
 3. **Memory-Driven Development**: 20 patterns captured, never repeat mistakes
@@ -287,11 +308,13 @@ npm run demo:encryption
 5. **Hybrid AI Infrastructure**: Intelligent cloud/local routing
 
 ### Competitive Advantages
+
 - ✅ **vs. Traditional Systems**: Autonomous, memory-driven, constitutional
 - ✅ **vs. AI Assistants**: Spec-first, property-based testing, self-healing
 - ✅ **vs. Single-Agent**: Multi-agent orchestration (n8n workflows)
 
 ### Technical Excellence
+
 - ✅ TypeScript strict mode (zero `any` types)
 - ✅ 85.7% test pass rate (above 80% threshold)
 - ✅ Property-based testing (fast-check)
@@ -299,6 +322,7 @@ npm run demo:encryption
 - ✅ Security-first principles
 
 ### Hackathon Scoring
+
 - **Technical Excellence**: 48/50 (96%)
 - **Innovation**: 46/50 (92%)
 - **Documentation**: 50/50 (100%)
@@ -310,9 +334,11 @@ npm run demo:encryption
 ## Demo Flow (15 minutes total)
 
 ### Opening (1 minute)
+
 "Antigravity OS is a Constitutional AI Development System that demonstrates autonomous spec-to-production engineering with self-healing capabilities."
 
 ### Core Demo (10 minutes)
+
 1. **Constitutional Framework** (2 min): Show 13 Articles
 2. **Dashboard** (2 min): Live Omni-Panel at http://localhost:3000
 3. **Self-Healing** (2 min): B.L.A.S.T. protocol and Ralph-Loop
@@ -320,6 +346,7 @@ npm run demo:encryption
 5. **Encryption Skill** (2 min): Live demo + security features
 
 ### Closing (4 minutes)
+
 1. **Validation** (1 min): Run `npm run validate:quick`
 2. **Documentation** (1 min): Show comprehensive docs
 3. **Competitive Advantages** (1 min): vs. traditional systems
@@ -330,6 +357,7 @@ npm run demo:encryption
 ## Troubleshooting
 
 ### Dashboard Not Loading
+
 ```bash
 # Check if dev server is running
 npm run dev
@@ -338,6 +366,7 @@ npm run dev
 ```
 
 ### Validation Failing
+
 ```bash
 # Run quick validation (lenient for hackathon)
 npm run validate:quick
@@ -347,6 +376,7 @@ npm test
 ```
 
 ### Demo Script Not Working
+
 ```bash
 # Ensure dependencies are installed
 npm install
@@ -359,36 +389,40 @@ npm run demo:encryption
 
 ## Quick Commands Reference
 
-| Command | Purpose |
-|---------|---------|
-| `npm run validate:quick` | Quick validation (hackathon mode) |
-| `npm run dev` | Launch dashboard |
-| `npm run demo:encryption` | Run encryption demo |
-| `npm test` | Run full test suite |
-| `cat docs/telemetry.json` | View system metrics |
-| `cat HACKATHON_READINESS.md` | View readiness report |
+| Command                      | Purpose                           |
+| ---------------------------- | --------------------------------- |
+| `npm run validate:quick`     | Quick validation (hackathon mode) |
+| `npm run dev`                | Launch dashboard                  |
+| `npm run demo:encryption`    | Run encryption demo               |
+| `npm test`                   | Run full test suite               |
+| `cat docs/telemetry.json`    | View system metrics               |
+| `cat HACKATHON_READINESS.md` | View readiness report             |
 
 ---
 
 ## Key Files to Show
 
 ### Constitutional Framework
+
 - `directives/00_GLOBAL_STEERING.md` (13 Articles)
 - `.kiro/steering/global_rules.md` (13 Rules)
 - `.kiro/steering/checkpoint_rules.md` (Human-in-the-Loop)
 
 ### Documentation
+
 - `README.md` (System overview)
 - `DEVLOG.md` (10 development entries)
 - `HACKATHON_READINESS.md` (96.5% score projection)
 - `SYSTEM_STATUS.md` (Real-time health)
 
 ### Memory & Learning
+
 - `docs/memory/insight-graph.md` (20 patterns)
 - `docs/internal/rationales.md` (8 decisions)
 - `docs/telemetry.json` (Live metrics)
 
 ### Skills
+
 - `directives/skills/file-encryption.md` (SOP)
 - `execution/skills/file-encryption.ts` (Implementation)
 - `tests/unit/skills/file-encryption.test.ts` (Tests)
@@ -398,12 +432,15 @@ npm run demo:encryption
 ## Backup Talking Points
 
 ### If Asked About Limitations
+
 "We have 2 non-critical test failures (85.7% pass rate) and 2 ESLint warnings. These are documented in our transparency reports and don't affect core functionality. We prioritized working demos over perfect code, following Hackathon Velocity Mode (Article XIII)."
 
 ### If Asked About n8n Integration
+
 "We have 4 n8n workflows configured (Deep Research, Spec Validation, Multi-Agent Review, Continuous Learning). The architecture is ready, with a 5-week implementation roadmap documented in `docs/specs/n8n-integration-plan.md`."
 
 ### If Asked About Production Readiness
+
 "The system is production-ready for demonstration. Post-hackathon, we have a clear roadmap for production hardening: fix remaining test failures, complete n8n integration, security audit, and performance optimization."
 
 ---
@@ -411,6 +448,7 @@ npm run demo:encryption
 ## Success Metrics
 
 ### System Health
+
 - ✅ Validation: PASSED (85.7%)
 - ✅ Dashboard: ONLINE
 - ✅ Tests: 12/14 passing
@@ -418,6 +456,7 @@ npm run demo:encryption
 - ✅ Documentation: 100% complete
 
 ### Hackathon Readiness
+
 - ✅ Working demos: 3 (validation, dashboard, encryption)
 - ✅ Documentation: Comprehensive
 - ✅ Innovation: Constitutional AI governance
@@ -432,7 +471,7 @@ npm run demo:encryption
 
 **Confidence**: 95%
 
-**Philosophy**: *"Autonomy with accountability. Speed with safety. Trust with verification."*
+**Philosophy**: _"Autonomy with accountability. Speed with safety. Trust with verification."_
 
 ---
 

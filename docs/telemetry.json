@@ -1,76 +1,19 @@
 {
   "metrics": {
-    "ralphLoopActivations": 1,
+    "ralphLoopActivations": 2,
     "ralphLoopSuccesses": 1,
-    "ralphLoopFailures": 0,
-    "ralphLoopExhaustions": 0,
+    "ralphLoopFailures": 1,
     "autonomousFixes": 1,
-    "specUpdates": 15,
-    "tasksCompleted": 11,
-    "tasksFailed": 0,
-    "testsPassed": 12,
-    "testsFailed": 2,
-    "uptime": 7200,
-    "startTime": "2026-01-20T00:00:00.000Z",
-    "lastUpdated": "2026-01-20T14:30:00.000Z",
-    "successRate": 100,
-    "ralphLoopEffectiveness": 100
+    "tasksCompleted": 2,
+    "successRate": 50
   },
   "recentEvents": [
     {
-      "type": "system_started",
-      "timestamp": "2026-01-20T00:00:00.000Z",
-      "context": {
-        "version": "1.0.0",
-        "environment": "production"
-      }
-    },
-    {
-      "type": "skill_created",
-      "timestamp": "2026-01-20T11:20:00.000Z",
-      "context": {
-        "skillName": "file-encryption",
-        "directive": "directives/skills/file-encryption.md",
-        "implementation": "execution/skills/file-encryption.ts",
-        "tests": "tests/unit/skills/file-encryption.test.ts",
-        "testsPassed": 11,
-        "coverage": "100%"
-      }
-    },
-    {
-      "type": "ralph_loop_activated",
-      "timestamp": "2026-01-20T11:20:23.000Z",
-      "context": {
-        "error": "Module resolution failure",
-        "fix": "Updated import path from alias to relative",
-        "attempts": 1,
-        "success": true,
-        "recoveryTime": "1s"
-      }
-    },
-    {
-      "type": "demo_executed",
-      "timestamp": "2026-01-20T11:21:08.000Z",
-      "context": {
-        "demoType": "file-encryption",
-        "operations": ["encrypt", "decrypt", "verify", "wrong-password-test"],
-        "allPassed": true,
-        "constitutionalCompliance": ["Article I", "Article II", "Article III", "Article VII"]
-      }
-    },
-    {
-      "type": "dashboard_deployed",
-      "timestamp": "2026-01-20T14:30:00.000Z",
-      "context": {
-        "component": "Sovereign Omni-Panel",
-        "url": "http://localhost:3000",
-        "sectors": 5,
-        "features": ["AI Infrastructure", "Ralph-Loop Hub", "3-Layer Architecture", "Docker Sandbox", "System Telemetry"],
-        "telemetryIntegration": true,
-        "realTimeUpdates": true,
-        "constitutionalCompliance": ["Article I", "Article VIII", "Article XIII"]
-      }
+      "timestamp": "2026-01-26T19:25:57.776Z",
+      "type": "change_1",
+      "result": "success",
+      "details": "Change 1"
     }
   ],
-  "generatedAt": "2026-01-20T14:30:00.000Z"
+  "generatedAt": "2026-01-26T19:25:57.776Z"
 }

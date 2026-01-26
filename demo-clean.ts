@@ -1,6 +1,6 @@
 /**
  * CLEAN DEMO SCRIPT - ZERO NOISE MODE
- * 
+ *
  * Professional output for video recording
  * Constitutional Compliance: Article I (3-Layer Architecture)
  */
@@ -15,7 +15,7 @@ console.warn = () => {};
 async function runCleanDemo() {
   // Clear screen
   console.clear();
-  
+
   console.log('\n');
   console.log('═'.repeat(70));
   console.log('  ANTIGRAVITY OS - SOVEREIGN 3-LAYER ARCHITECTURE DEMO');
@@ -41,7 +41,8 @@ async function runCleanDemo() {
     // Create secret file
     console.log('📝 STEP 2: DIRECTIVE LAYER - SKILL DEFINITION');
     console.log('─'.repeat(70));
-    const secretMessage = 'CLASSIFIED: Project Antigravity\nSecurity Level: TOP SECRET\nEncryption: AES-256-GCM';
+    const secretMessage =
+      'CLASSIFIED: Project Antigravity\nSecurity Level: TOP SECRET\nEncryption: AES-256-GCM';
     await writeFile(secretFile, secretMessage);
     console.log('   ✅ Directive: directives/skills/file-encryption.md');
     console.log('   ✅ Purpose: Secure file encryption with AES-256-GCM');
@@ -54,7 +55,7 @@ async function runCleanDemo() {
     const encryptResult = await encryptFile({
       inputFile: secretFile,
       outputFile: encryptedFile,
-      password
+      password,
     });
 
     if (encryptResult.success) {
@@ -75,7 +76,7 @@ async function runCleanDemo() {
     const decryptResult = await decryptFile({
       inputFile: encryptedFile,
       outputFile: decryptedFile,
-      password
+      password,
     });
 
     if (decryptResult.success) {
@@ -107,7 +108,7 @@ async function runCleanDemo() {
     const wrongPasswordResult = await decryptFile({
       inputFile: encryptedFile,
       outputFile: './demo-wrong.txt',
-      password: 'WrongPassword123!'
+      password: 'WrongPassword123!',
     });
 
     if (!wrongPasswordResult.success) {
@@ -140,7 +141,6 @@ async function runCleanDemo() {
     console.log('  SYSTEM READY FOR DEMO');
     console.log('═'.repeat(70));
     console.log('\n');
-
   } catch (error) {
     console.error('❌ Demo failed:', error);
   } finally {

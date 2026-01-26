@@ -49,21 +49,25 @@ antigravity-os/
 ## File Naming Conventions
 
 ### Specs
+
 - Feature directories: `kebab-case` (e.g., `spec-orchestrator`)
 - Spec files: `requirements.md`, `design.md`, `tasks.md`
 
 ### Code
+
 - Components: `PascalCase.tsx` (e.g., `SpecViewer.tsx`)
 - Utilities: `camelCase.ts` (e.g., `parseSpec.ts`)
 - Types: `PascalCase.ts` (e.g., `SpecTypes.ts`)
 
 ### Tests
+
 - Unit tests: `{filename}.test.ts`
 - Property tests: `{filename}.properties.ts`
 
 ## Module Organization
 
 ### Core Modules
+
 1. **Orchestrator**: Manages spec execution lifecycle
 2. **Spec Parser**: Reads and validates spec files
 3. **Ralph Loop**: Handles error detection and correction
@@ -71,6 +75,7 @@ antigravity-os/
 5. **Test Runner**: Executes unit and property-based tests
 
 ### UI Modules
+
 1. **Spec Viewer**: Display requirements, design, and tasks
 2. **Execution Dashboard**: Real-time progress tracking
 3. **Log Viewer**: Browse execution and error logs

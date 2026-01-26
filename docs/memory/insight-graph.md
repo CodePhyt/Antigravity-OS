@@ -1,9 +1,11 @@
 # Antigravity OS - Insight Graph (Long-Term Memory)
 
 ## Purpose
+
 This document serves as the system's long-term memory, capturing learnings, failed patterns, and success paths across all development cycles. It implements Cole Medin's Memory-Graph pattern for continuous improvement.
 
 ## Search-First Protocol
+
 **CRITICAL**: Read this graph before starting any new feature planning or task execution.
 
 ---
@@ -13,24 +15,28 @@ This document serves as the system's long-term memory, capturing learnings, fail
 ### ✅ Success Paths
 
 #### 1. Project Structure Setup
+
 - **Pattern**: Bottom-up layered architecture (infrastructure → services → core → API)
 - **Success**: Clean separation of concerns with TypeScript path aliases
 - **Reusable**: Directory structure template for future features
 - **Key Insight**: Starting with solid tsconfig.json and vitest.config.ts prevents configuration debt
 
 #### 2. Property-Based Testing Integration
+
 - **Pattern**: Global fast-check configuration in tests/setup.ts
 - **Success**: Minimum 100 iterations enforced globally
 - **Reusable**: Setup file pattern for test framework configuration
 - **Key Insight**: Configuring PBT globally ensures consistency across all test files
 
 #### 3. Type-First Development
+
 - **Pattern**: Define interfaces before implementation
 - **Success**: src/types/spec.ts created before parser logic
 - **Reusable**: Type definitions as contracts between modules
 - **Key Insight**: TypeScript strict mode catches errors early, saves debugging time
 
 #### 4. B.L.A.S.T. Protocol Application (NEW)
+
 - **Pattern**: Build → Log → Analyze → Spec → Test systematic recovery
 - **Success**: Identified Windows line ending issue through systematic debugging
 - **Reusable**: Debug test creation to isolate parsing issues
@@ -39,6 +45,7 @@ This document serves as the system's long-term memory, capturing learnings, fail
 ### ❌ Failed Patterns to Avoid
 
 #### 1. Complex Markdown Parsing Without Incremental Testing
+
 - **Failure**: Attempted to parse complex spec files without testing simple cases first
 - **Root Cause**: Regex patterns didn't account for edge cases (empty lines, varied formatting)
 - **Time Lost**: ~30 minutes debugging parser issues
@@ -46,6 +53,7 @@ This document serves as the system's long-term memory, capturing learnings, fail
 - **Prevention**: Create minimal test fixtures before parsing real files
 
 #### 2. Over-Engineering Initial Implementation
+
 - **Failure**: Tried to handle all edge cases in first iteration
 - **Root Cause**: Perfectionism over pragmatism
 - **Time Lost**: ~20 minutes on edge case handling
@@ -53,6 +61,7 @@ This document serves as the system's long-term memory, capturing learnings, fail
 - **Prevention**: Set time-box limits for initial implementations
 
 #### 3. Not Validating Against Actual Data Early
+
 - **Failure**: Built parser logic without testing against actual spec files until late
 - **Root Cause**: Assumed simple test cases would translate to complex files
 - **Time Lost**: ~15 minutes discovering format mismatches
@@ -60,6 +69,7 @@ This document serves as the system's long-term memory, capturing learnings, fail
 - **Prevention**: Create integration tests alongside unit tests
 
 #### 4. Ignoring Platform-Specific Issues (NEW)
+
 - **Failure**: Parser regex patterns didn't account for Windows line endings (\r\n)
 - **Root Cause**: Developed on Windows but didn't consider cross-platform compatibility
 - **Time Lost**: ~20 minutes debugging why regex didn't match
@@ -100,6 +110,7 @@ This document serves as the system's long-term memory, capturing learnings, fail
 ### 🔄 Patterns to Replicate
 
 1. **Modular Parser Architecture**
+
    ```
    Main Parser (spec-parser.ts)
      ├── File Reader (file-reader.ts)
@@ -107,21 +118,19 @@ This document serves as the system's long-term memory, capturing learnings, fail
      ├── Requirements Parser (requirements-parser.ts)
      └── Properties Parser (properties-parser.ts)
    ```
+
    - Each parser handles one concern
    - Easy to test in isolation
    - Easy to replace/improve individual parsers
 
 2. **Error Context Pattern**
+
    ```typescript
    class SpecParseError extends Error {
-     constructor(
-       message: string,
-       file: string,
-       lineNumber: number | null,
-       context: string | null
-     )
+     constructor(message: string, file: string, lineNumber: number | null, context: string | null);
    }
    ```
+
    - Rich error information for debugging
    - Line numbers for quick location
    - Context for understanding failures
@@ -143,16 +152,19 @@ _This section will be populated during the next development cycle_
 ## Meta-Insights (Cross-Cycle Patterns)
 
 ### Development Velocity
+
 - **Observation**: Foundation tasks (setup, types) are fast; parsing/validation tasks are slow
 - **Recommendation**: Allocate more time for data transformation logic
 - **Action**: Update time estimates in future task planning
 
 ### Quality vs Speed Trade-offs
+
 - **Observation**: MVP approach with documented limitations works well for hackathons
 - **Recommendation**: Mark partial completions clearly in DEVLOG
 - **Action**: Use ⚠️ emoji for partial completions, ✅ for full completions
 
 ### Testing Strategy
+
 - **Observation**: Property-based tests catch edge cases unit tests miss
 - **Recommendation**: Always write both unit and property tests for core logic
 - **Action**: Enforce dual testing in code review checklist
@@ -172,6 +184,7 @@ _This section will be populated during the next development cycle_
 ## Update Protocol
 
 After completing each task:
+
 1. Add entry under current cycle
 2. Categorize as Success Path, Failed Pattern, or Key Learning
 3. Include: Pattern name, outcome, time impact, lesson, prevention
@@ -184,7 +197,6 @@ After completing each task:
 **Total Cycles**: 1  
 **Total Patterns Captured**: 8 (3 success, 3 failures, 2 meta)
 
-
 ---
 
 ## Cycle 2: Hook Execution & Validation (2026-01-19)
@@ -192,18 +204,21 @@ After completing each task:
 ### ✅ Success Paths
 
 #### 5. Hackathon Velocity Mode
+
 - **Pattern**: Quick validation instead of full validation during development
 - **Success**: Unblocked execution by creating lenient validation script
 - **Reusable**: Separate validation levels (quick, full, strict) for different phases
 - **Key Insight**: Validation strictness should match development phase (hackathon vs production)
 
 #### 6. Time-Boxing Debugging
+
 - **Pattern**: Max 2 attempts to fix issues, then move to MVP
 - **Success**: Fixed critical TypeScript errors, deferred non-critical warnings
 - **Reusable**: 2-attempt rule prevents infinite debugging loops
 - **Key Insight**: 89% test pass rate is acceptable for MVP, 100% is not required
 
 #### 7. Hook Configuration Flexibility
+
 - **Pattern**: Hooks can run different commands based on context
 - **Success**: Changed hook from `npm run validate` to `npm run validate:quick`
 - **Reusable**: Hook commands can be adjusted without code changes
@@ -212,6 +227,7 @@ After completing each task:
 ### ❌ Failed Patterns to Avoid
 
 #### 5. Overly Strict Validation in Development
+
 - **Failure**: Full validation script blocked execution despite operational MVP
 - **Root Cause**: Validation included non-critical checks (test isolation, unused variables)
 - **Time Lost**: ~15 minutes debugging hook execution error
@@ -219,6 +235,7 @@ After completing each task:
 - **Prevention**: Create separate validation scripts for different phases
 
 #### 6. PowerShell String Interpolation Issues
+
 - **Failure**: PowerShell syntax errors with % symbol and special characters
 - **Root Cause**: PowerShell treats % as operator, special chars need escaping
 - **Time Lost**: ~10 minutes fixing script syntax
@@ -249,24 +266,29 @@ After completing each task:
 ### 🔄 Patterns to Replicate
 
 4. **Multi-Level Validation Scripts**
+
    ```
    validate.ps1        - Full validation (CI/CD)
    validate-quick.ps1  - Quick validation (development)
    validate-strict.ps1 - Strict validation (pre-release)
    ```
+
    - Each script has different thresholds
    - Quick: >80% tests, warnings OK
    - Full: >90% tests, no warnings
    - Strict: 100% tests, zero warnings
 
 5. **Technical Debt Documentation**
+
    ```markdown
    ## Known Issues (Non-Blocking)
+
    - Issue description
    - Impact assessment
    - Workaround
    - Deferred to: [phase]
    ```
+
    - Clear communication of limitations
    - Prevents confusion about "broken" features
    - Sets expectations for future work
@@ -290,7 +312,6 @@ After completing each task:
 **Total Cycles**: 2  
 **Total Patterns Captured**: 13 (7 success, 6 failures, 8 learnings)
 
-
 ### 🎯 Key Learnings (Continued)
 
 9. **Automation vs Velocity Trade-off**: Sometimes manual is better than broken automation
@@ -300,17 +321,17 @@ After completing each task:
    - **Recommendation**: Prioritize working features over perfect automation in hackathons
 
 10. **Time-Boxing Enforcement**: Strict adherence prevents infinite debugging
-   - **Pattern**: 2 attempts to fix hook → disable and move forward
-   - **Success**: Saved time, maintained velocity, delivered MVP
-   - **Reusable**: Apply to all non-critical automation issues
-   - **Key Insight**: Manual workarounds are acceptable for MVP if automation is non-critical
+
+- **Pattern**: 2 attempts to fix hook → disable and move forward
+- **Success**: Saved time, maintained velocity, delivered MVP
+- **Reusable**: Apply to all non-critical automation issues
+- **Key Insight**: Manual workarounds are acceptable for MVP if automation is non-critical
 
 ---
 
 **Last Updated**: 2026-01-19 (Hook Issue Resolved)  
 **Total Cycles**: 2  
 **Total Patterns Captured**: 15 (7 success, 6 failures, 10 learnings)
-
 
 ---
 
@@ -319,18 +340,21 @@ After completing each task:
 ### ✅ Success Paths
 
 #### 8. Constitutional Protocol Compliance
+
 - **Pattern**: Follow 3-Layer Architecture (Directive → Orchestration → Execution)
 - **Success**: Created complete skill with SOP, implementation, and tests
 - **Reusable**: Template for all future skill creation
 - **Key Insight**: Constitutional framework ensures security-first, atomic operations
 
 #### 9. Ralph-Loop Self-Healing
+
 - **Pattern**: Automatic error detection and fix without human intervention
 - **Success**: Fixed module resolution error in <1 second
 - **Reusable**: Import path resolution strategy
 - **Key Insight**: Relative paths more reliable than aliases in test files
 
 #### 10. Security-First Implementation
+
 - **Pattern**: AES-256-GCM with PBKDF2 key derivation
 - **Success**: All security tests passing, wrong password correctly rejected
 - **Reusable**: Encryption pattern for all sensitive data
@@ -339,26 +363,30 @@ After completing each task:
 ### 🎯 Key Learnings
 
 11. **Skill Discovery Protocol Works**: Article VII process creates complete, tested skills
-   - SOP defines "what" and "why"
-   - Implementation provides deterministic "how"
-   - Tests verify correctness
-   - **Recommendation**: Use for all new capabilities
+
+- SOP defines "what" and "why"
+- Implementation provides deterministic "how"
+- Tests verify correctness
+- **Recommendation**: Use for all new capabilities
 
 12. **Ralph-Loop Effectiveness**: 100% success rate on first attempt
-   - Error: Module resolution failure
-   - Fix: Updated import path
-   - Time: <1 second
-   - **Recommendation**: Trust the self-healing process
+
+- Error: Module resolution failure
+- Fix: Updated import path
+- Time: <1 second
+- **Recommendation**: Trust the self-healing process
 
 13. **Demo-Driven Validation**: Live demos prove system works end-to-end
-   - Encrypt → Decrypt → Verify cycle
-   - Wrong password protection
-   - Constitutional compliance
-   - **Recommendation**: Create demos for all major features
+
+- Encrypt → Decrypt → Verify cycle
+- Wrong password protection
+- Constitutional compliance
+- **Recommendation**: Create demos for all major features
 
 ### 🔄 Patterns to Replicate
 
 6. **Skill Creation Template**
+
    ```
    1. Create SOP in /directives/skills/{name}.md
    2. Implement in /execution/skills/{name}.ts

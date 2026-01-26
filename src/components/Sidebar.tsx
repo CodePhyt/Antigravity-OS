@@ -48,6 +48,13 @@ export function Sidebar() {
           collapsed={isCollapsed}
         />
         <SidebarItem
+          href="/brain"
+          icon={<Brain size={20} />}
+          label="Ralph's Brain"
+          pathname={pathname}
+          collapsed={isCollapsed}
+        />
+        <SidebarItem
           href="/infrastructure"
           icon={<Server size={20} />}
           label="Infrastructure"

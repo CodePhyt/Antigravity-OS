@@ -9,12 +9,14 @@ This document outlines the strategic integration of n8n workflows into Antigravi
 ### From Single Agent to Multi-Agent Ecosystem
 
 **Current State**: Kiro agent handles all tasks inline
+
 - Limited by single LLM context window
 - Sequential processing only
 - No specialized expertise
 - Manual error recovery
 
 **Future State**: Kiro orchestrates specialized n8n sub-agents
+
 - Parallel workflow execution
 - Domain-specific expertise (security, performance, research)
 - Autonomous error recovery with deep research
@@ -23,9 +25,11 @@ This document outlines the strategic integration of n8n workflows into Antigravi
 ## Implementation Phases
 
 ### Phase 1: Foundation (Week 1)
+
 **Goal**: Establish n8n connectivity and basic webhook infrastructure
 
 **Tasks**:
+
 1. Install n8n locally: `npx n8n`
 2. Create utility function: `src/infrastructure/n8n-client.ts`
 3. Implement webhook authentication
@@ -34,20 +38,24 @@ This document outlines the strategic integration of n8n workflows into Antigravi
 6. Test basic webhook connectivity
 
 **Deliverables**:
+
 - Working n8n instance on localhost:5678
 - `triggerN8nWorkflow()` utility function
 - Environment variables configured
 - Basic connectivity tests passing
 
 **Success Criteria**:
+
 - Can trigger n8n workflow from Kiro agent
 - Receives structured response
 - Error handling works correctly
 
 ### Phase 2: Deep Research Agent (Week 2)
+
 **Goal**: Enhance Ralph-Loop with intelligent research capabilities
 
 **Tasks**:
+
 1. Create n8n workflow: "Deep Research Agent"
    - Webhook trigger node
    - Strategy agent (clarifying questions)
@@ -62,21 +70,25 @@ This document outlines the strategic integration of n8n workflows into Antigravi
 5. Test with complex errors
 
 **Deliverables**:
+
 - Deep Research workflow (JSON export)
 - Ralph-Loop integration code
 - Test suite for research integration
 - Documentation in DEVLOG
 
 **Success Criteria**:
+
 - Ralph-Loop triggers research after 3 failed attempts
 - Research returns actionable solutions
 - Solutions successfully fix errors
 - Research findings logged to memory graph
 
 ### Phase 3: Spec Validation Agent (Week 3)
+
 **Goal**: Prevent errors before they happen with proactive validation
 
 **Tasks**:
+
 1. Create n8n workflow: "Spec Validation Agent"
    - Webhook trigger node
    - Spec file parser
@@ -90,21 +102,25 @@ This document outlines the strategic integration of n8n workflows into Antigravi
 5. Test with incomplete specs
 
 **Deliverables**:
+
 - Spec Validation workflow (JSON export)
 - Task Manager integration code
 - Validation report format
 - Test suite for validation
 
 **Success Criteria**:
+
 - Validates specs before task execution
 - Catches missing requirements
 - Identifies ambiguous criteria
 - Suggests improvements
 
 ### Phase 4: Multi-Agent Code Review (Week 4)
+
 **Goal**: Ensure code quality with specialized review agents
 
 **Tasks**:
+
 1. Create main coordinator workflow
 2. Create sub-agent workflows:
    - Security agent (OWASP checks)
@@ -116,12 +132,14 @@ This document outlines the strategic integration of n8n workflows into Antigravi
 5. Test with real code
 
 **Deliverables**:
+
 - 5 n8n workflows (1 coordinator + 4 sub-agents)
 - Task Manager integration code
 - Review report format
 - Test suite for reviews
 
 **Success Criteria**:
+
 - Reviews code after task completion
 - Catches security vulnerabilities
 - Identifies performance issues
@@ -129,9 +147,11 @@ This document outlines the strategic integration of n8n workflows into Antigravi
 - Checks documentation quality
 
 ### Phase 5: Continuous Learning Agent (Week 5)
+
 **Goal**: Enable autonomous self-improvement
 
 **Tasks**:
+
 1. Create n8n workflow: "Continuous Learning Agent"
    - Webhook trigger node
    - Pattern extractor
@@ -145,12 +165,14 @@ This document outlines the strategic integration of n8n workflows into Antigravi
 5. Test with self-healing events
 
 **Deliverables**:
+
 - Continuous Learning workflow (JSON export)
 - Ralph-Loop integration code
 - Evolution metrics dashboard
 - Test suite for learning
 
 **Success Criteria**:
+
 - Automatically updates memory graph
 - Generates new global rules
 - Proposes steering file updates
@@ -179,28 +201,28 @@ export interface N8nWorkflowResponse {
 
 export class N8nClient {
   private client: AxiosInstance;
-  
+
   constructor() {
     this.client = axios.create({
       baseURL: n8nConfig.baseUrl,
       timeout: n8nConfig.timeout,
       headers: {
-        'Authorization': `Bearer ${n8nConfig.webhookSecret}`,
-        'Content-Type': 'application/json'
-      }
+        Authorization: `Bearer ${n8nConfig.webhookSecret}`,
+        'Content-Type': 'application/json',
+      },
     });
   }
-  
+
   async triggerWorkflow(
     workflowName: string,
     payload: N8nWorkflowPayload
   ): Promise<N8nWorkflowResponse> {
     const endpoint = n8nConfig.workflows[workflowName];
-    
+
     if (!endpoint) {
       throw new Error(`Unknown workflow: ${workflowName}`);
     }
-    
+
     try {
       const response = await this.client.post(endpoint, payload);
       return response.data;
@@ -209,7 +231,7 @@ export class N8nClient {
       return await this.retryWithBackoff(endpoint, payload);
     }
   }
-  
+
   private async retryWithBackoff(
     endpoint: string,
     payload: N8nWorkflowPayload,
@@ -218,9 +240,9 @@ export class N8nClient {
     if (attempt > n8nConfig.retryAttempts) {
       throw new Error('Max retry attempts exceeded');
     }
-    
+
     await this.delay(n8nConfig.retryDelay * attempt);
-    
+
     try {
       const response = await this.client.post(endpoint, payload);
       return response.data;
@@ -228,11 +250,11 @@ export class N8nClient {
       return await this.retryWithBackoff(endpoint, payload, attempt + 1);
     }
   }
-  
+
   private delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
-  
+
   async healthCheck(): Promise<boolean> {
     try {
       const response = await axios.get(`${n8nConfig.baseURL}/healthz`);
@@ -269,26 +291,26 @@ export class RalphLoopEngine {
     if (error.attemptNumber < 3) {
       return await this.generateStandardCorrection(error);
     }
-    
+
     // Deep research for attempt 3+
     console.log(`[Ralph-Loop] Triggering deep research for ${error.taskId}`);
-    
+
     const research = await triggerN8nWorkflow('deepResearch', {
       taskId: error.taskId,
       errorMessage: error.errorMessage,
       stackTrace: error.stackTrace,
       specPath: error.specPath,
       attemptNumber: error.attemptNumber,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
-    
+
     if (!research.success) {
       throw new Error('Deep research failed - requesting human intervention');
     }
-    
+
     // Parse research findings
     const findings = research.data as ResearchFindings;
-    
+
     // Generate correction from research
     return {
       errorType: error.errorType,
@@ -297,13 +319,11 @@ export class RalphLoopEngine {
       updatedContent: findings.updatedSpecContent,
       attemptNumber: error.attemptNumber,
       researchBacked: true,
-      sources: findings.sources
+      sources: findings.sources,
     };
   }
-  
-  private async generateStandardCorrection(
-    error: ErrorContext
-  ): Promise<CorrectionPlan> {
+
+  private async generateStandardCorrection(error: ErrorContext): Promise<CorrectionPlan> {
     // Existing logic...
   }
 }
@@ -333,52 +353,52 @@ export class TaskManager {
   async executeTask(taskId: string): Promise<void> {
     // 1. Validate spec before execution
     const validation = await this.validateSpec(taskId);
-    
+
     if (!validation.isValid) {
       await this.requestHumanReview(validation.issues);
       return;
     }
-    
+
     // 2. Execute task
     await this.runTaskImplementation(taskId);
-    
+
     // 3. Review code after completion
     const review = await this.reviewCode(taskId);
-    
+
     if (!review.approved) {
       await this.applySuggestions(review.suggestions);
       await this.runTests(taskId);
     }
-    
+
     // 4. Mark as complete
     await this.updateTaskStatus(taskId, 'completed');
   }
-  
+
   private async validateSpec(taskId: string): Promise<ValidationResult> {
     const specPath = await this.getSpecPath(taskId);
-    
+
     const validation = await triggerN8nWorkflow('specValidation', {
       specPath,
       requirementsPath: `${specPath}/requirements.md`,
       designPath: `${specPath}/design.md`,
       tasksPath: `${specPath}/tasks.md`,
-      taskId
+      taskId,
     });
-    
+
     return validation.data as ValidationResult;
   }
-  
+
   private async reviewCode(taskId: string): Promise<ReviewResult> {
     const changedFiles = await this.getChangedFiles(taskId);
     const testFiles = await this.getTestFiles(taskId);
-    
+
     const review = await triggerN8nWorkflow('multiAgentReview', {
       taskId,
       changedFiles,
       testFiles,
-      specPath: await this.getSpecPath(taskId)
+      specPath: await this.getSpecPath(taskId),
     });
-    
+
     return review.data as ReviewResult;
   }
 }
@@ -508,26 +528,31 @@ export class TaskManager {
 ## Success Metrics
 
 ### Phase 1 Metrics
+
 - n8n uptime: >99%
 - Webhook response time: <500ms
 - Authentication success rate: 100%
 
 ### Phase 2 Metrics
+
 - Research success rate: >80%
 - Time to resolution: <5 minutes
 - Solution accuracy: >70%
 
 ### Phase 3 Metrics
+
 - Validation accuracy: >90%
 - False positive rate: <10%
 - Spec improvement suggestions: >5 per validation
 
 ### Phase 4 Metrics
+
 - Review completion time: <2 minutes
 - Security issue detection: >95%
 - Performance issue detection: >80%
 
 ### Phase 5 Metrics
+
 - Learning pattern extraction: >90%
 - Memory graph updates: 100%
 - Rule generation accuracy: >70%
@@ -535,15 +560,19 @@ export class TaskManager {
 ## Risk Mitigation
 
 ### Risk 1: n8n Downtime
+
 **Mitigation**: Fallback to standard Ralph-Loop if n8n unavailable
 
 ### Risk 2: API Rate Limits
+
 **Mitigation**: Implement request queuing and retry logic
 
 ### Risk 3: Workflow Complexity
+
 **Mitigation**: Start simple, iterate based on feedback
 
 ### Risk 4: Cost Overruns
+
 **Mitigation**: Use local Ollama for validation, cloud for generation
 
 ## Next Steps

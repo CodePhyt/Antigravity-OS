@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Activity, Zap, Terminal } from 'lucide-react';
+import { Activity, Zap, Terminal, Brain } from 'lucide-react';
 import { GlassCard } from '@/components/ui/GlassCard';
+import { RalphsBrainView } from '@/components/dashboard/RalphsBrainView';
 
 export default function Dashboard() {
   const [telemetry, setTelemetry] = useState<any>(null);
@@ -39,9 +40,7 @@ export default function Dashboard() {
           <div className="flex justify-between items-start mb-6 z-10 relative">
             <div className="flex items-center gap-2">
               <Activity className="text-emerald-500" size={18} />
-              <h3 className="font-bold text-lg text-white">
-                System Vitality Monitor
-              </h3>
+              <h3 className="font-bold text-lg text-white">System Vitality Monitor</h3>
             </div>
             <div className="flex gap-1">
               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
@@ -60,9 +59,7 @@ export default function Dashboard() {
               <div className="absolute inset-0 border-4 border-emerald-500 rounded-full border-l-transparent border-r-transparent animate-spin-slow" />
               <div className="absolute inset-4 border-2 border-emerald-500/30 rounded-full border-t-transparent animate-spin-reverse" />
               <div className="text-center">
-                <div className="text-3xl font-bold text-emerald-400">
-                  OPERATIONAL
-                </div>
+                <div className="text-3xl font-bold text-emerald-400">OPERATIONAL</div>
                 <div className="text-[10px] text-emerald-500/50 tracking-widest mt-1">
                   SYSTEM STATUS
                 </div>
@@ -107,9 +104,7 @@ export default function Dashboard() {
           <div className="flex justify-between items-start mb-6">
             <div className="flex items-center gap-2">
               <Zap className="text-rose-500" size={18} />
-              <h3 className="font-bold text-lg text-white">
-                The Ralph-Loop Analytics
-              </h3>
+              <h3 className="font-bold text-lg text-white">The Ralph-Loop Analytics</h3>
             </div>
             <div className="px-2 py-0.5 rounded bg-rose-500/10 border border-rose-500/30 text-[10px] text-rose-400">
               V2.0 ALPHA
@@ -119,15 +114,11 @@ export default function Dashboard() {
           <div className="flex-1 grid grid-cols-2 gap-6 font-mono text-xs">
             {/* Stats Column */}
             <div className="space-y-4">
-              <h4 className="text-rose-400/70 uppercase tracking-widest mb-2">
-                Native Status
-              </h4>
+              <h4 className="text-rose-400/70 uppercase tracking-widest mb-2">Native Status</h4>
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                  <span className="text-white/80">
-                    Success Rate ({metrics.successRate}%)
-                  </span>
+                  <span className="text-white/80">Success Rate ({metrics.successRate}%)</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
@@ -189,17 +180,29 @@ export default function Dashboard() {
         </GlassCard>
       </div>
 
-      {/* Bottom Row: Active Skill Stream */}
+      {/* Bottom Row: Ralph's Brain View & Active Skill Stream */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        <GlassCard
-          neonColor="cyan"
-          className="min-h-[300px] xl:col-span-2 flex flex-col"
-        >
+        {/* Ralph's Brain View - Real-time Agent Monitoring */}
+        <GlassCard neonColor="violet" className="min-h-[500px] flex flex-col">
+          <div className="flex items-center gap-2 mb-4">
+            <Brain className="text-purple-500" size={18} />
+            <h3 className="font-bold text-lg text-white">Ralph's Brain View</h3>
+            <div className="ml-auto px-2 py-0.5 rounded bg-purple-500/10 border border-purple-500/30 text-[10px] text-purple-400">
+              LIVE
+            </div>
+          </div>
+          
+          {/* Embedded Brain View */}
+          <div className="flex-1 overflow-hidden">
+            <RalphsBrainView />
+          </div>
+        </GlassCard>
+
+        {/* Active Skill Stream */}
+        <GlassCard neonColor="cyan" className="min-h-[500px] flex flex-col">
           <div className="flex items-center gap-2 mb-4">
             <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-            <h3 className="font-bold text-lg text-white">
-              Active Skill Stream
-            </h3>
+            <h3 className="font-bold text-lg text-white">Active Skill Stream</h3>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 flex-1">
@@ -214,10 +217,7 @@ export default function Dashboard() {
                       key={i}
                       className="flex items-center gap-2 p-2 rounded text-xs font-mono cursor-pointer transition-colors text-white/70 hover:bg-white/5 hover:text-cyan-400 group"
                     >
-                      <Terminal
-                        size={12}
-                        className="text-white/30 group-hover:text-cyan-500"
-                      />
+                      <Terminal size={12} className="text-white/30 group-hover:text-cyan-500" />
                       <span className="truncate">
                         {event.type.toUpperCase().replace(/_/g, ' ')}
                       </span>
@@ -246,8 +246,7 @@ export default function Dashboard() {
                     .map((event: any, i: number) => (
                       <div key={i} className="mb-4">
                         <p className="text-cyan-500/80">
-                          [{new Date(event.timestamp).toLocaleTimeString()}]{' '}
-                          {event.type}
+                          [{new Date(event.timestamp).toLocaleTimeString()}] {event.type}
                         </p>
                         <pre className="text-white/50 pl-4 border-l border-white/10 mt-1 whitespace-pre-wrap font-mono">
                           {JSON.stringify(event.context, null, 2)}
@@ -259,9 +258,7 @@ export default function Dashboard() {
                     <p className="text-white/50">
                       User set loop mode active_artifact. Initiating Sequence.
                     </p>
-                    <p className="text-white/50 animate-pulse">
-                      Waiting for telemetry uplink...
-                    </p>
+                    <p className="text-white/50 animate-pulse">Waiting for telemetry uplink...</p>
                   </div>
                 )}
                 <p className="text-emerald-500/50 animate-pulse">_</p>

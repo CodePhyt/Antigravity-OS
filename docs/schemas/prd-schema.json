@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://antigravity-os.dev/schemas/prd.json",
+  "title": "PRD Document Schema",
+  "description": "JSON Schema for Product Requirements Document (PRD) validation",
+  "type": "object",
+  "required": ["version", "lastUpdated", "requirements"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of the PRD (e.g., 1.0.0)"
+    },
+    "lastUpdated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of last update"
+    },
+    "requirements": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Requirement"
+      },
+      "description": "List of requirements"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata"
+    }
+  },
+  "definitions": {
+    "Requirement": {
+      "type": "object",
+      "required": ["id", "title", "description", "acceptanceCriteria", "priority"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique requirement identifier (e.g., REQ-1.1)"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Short requirement title"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Detailed requirement description"
+        },
+        "acceptanceCriteria": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "description": "List of acceptance criteria"
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["critical", "high", "medium", "low"],
+          "description": "Requirement priority level"
+        }
+      }
+    }
+  }
+}

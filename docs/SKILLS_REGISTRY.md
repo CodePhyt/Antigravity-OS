@@ -10,6 +10,7 @@
 ## Overview
 
 This registry tracks all skills integrated into Antigravity OS following the Skill Discovery Protocol. Each skill has:
+
 - **Directive**: Natural language SOP in `/directives/skills/`
 - **Execution**: Deterministic script in `/execution/skills/`
 - **Tests**: Unit and property-based tests in `/tests/unit/skills/`
@@ -121,18 +122,23 @@ This registry tracks all skills integrated into Antigravity OS following the Ski
 ## Skill Categories
 
 ### File Operations
+
 - File Organizer
 
 ### Development Tools
+
 - Systematic Debugging
 
 ### Version Control
+
 - Git Pushing
 
 ### Quality Control
+
 - Lint and Validate
 
 ### Testing
+
 - Test Fixing
 
 ---
@@ -140,6 +146,7 @@ This registry tracks all skills integrated into Antigravity OS following the Ski
 ## Skill Statistics
 
 ### Overall Metrics
+
 - **Total Skills**: 5
 - **Active Skills**: 5
 - **Deprecated Skills**: 0
@@ -148,6 +155,7 @@ This registry tracks all skills integrated into Antigravity OS following the Ski
 - **Tests Passing**: 45 (100%)
 
 ### Usage Statistics
+
 - **Most Used**: Git Pushing (15 invocations)
 - **Highest Success Rate**: Lint and Validate (100%)
 - **Fastest Execution**: File Organizer (avg 0.5s)
@@ -158,6 +166,7 @@ This registry tracks all skills integrated into Antigravity OS following the Ski
 ## Pending Integration
 
 ### High Priority (Q1 2026)
+
 1. **Plan Writing** - Structured task planning
 2. **Verification Before Completion** - Quality gates
 3. **Clean Code** - Standards enforcement
@@ -165,6 +174,7 @@ This registry tracks all skills integrated into Antigravity OS following the Ski
 5. **Skill Creator** - Meta-skill for creating new skills
 
 ### Medium Priority (Q2 2026)
+
 6. **Concise Planning** - Actionable checklists
 7. **Brainstorming** - Creative ideation
 8. **Code Review Checklist** - Review guidelines
@@ -172,6 +182,7 @@ This registry tracks all skills integrated into Antigravity OS following the Ski
 10. **Performance Profiling** - Performance analysis
 
 ### Low Priority (Q3 2026)
+
 11. **Docker Expert** - Container optimization
 12. **Database Design** - Schema design
 13. **API Patterns** - API design principles
@@ -183,15 +194,19 @@ This registry tracks all skills integrated into Antigravity OS following the Ski
 ## Skill Lifecycle
 
 ### Active
+
 Skills that are production-ready and actively used.
 
 ### Beta
+
 Skills that are functional but undergoing testing and refinement.
 
 ### Deprecated
+
 Skills that are no longer recommended for use (migration path provided).
 
 ### Archived
+
 Skills that have been removed from the system (historical reference only).
 
 ---
@@ -199,6 +214,7 @@ Skills that have been removed from the system (historical reference only).
 ## Skill Quality Standards
 
 ### Minimum Requirements
+
 - [ ] Directive document complete
 - [ ] Execution script implemented
 - [ ] Unit tests written (>80% coverage)
@@ -209,7 +225,8 @@ Skills that have been removed from the system (historical reference only).
 - [ ] Performance benchmarks met
 
 ### Excellence Criteria
-- [ ] >90% test coverage
+
+- [ ] > 90% test coverage
 - [ ] <1s average execution time
 - [ ] 100% success rate
 - [ ] Zero security vulnerabilities
@@ -222,11 +239,13 @@ Skills that have been removed from the system (historical reference only).
 ## Skill Discovery Sources
 
 ### Trusted Repositories
+
 1. **Antigravity Awesome Skills**: https://github.com/sickn33/antigravity-awesome-skills (200+ skills)
 2. **Anthropic Official Skills**: https://github.com/anthropics/skills
 3. **Vercel AI Skills**: https://github.com/vercel/ai-skills
 
 ### Evaluation Criteria
+
 - [ ] Source is trusted and reputable
 - [ ] License is compatible (MIT, Apache 2.0, BSD)
 - [ ] Code is well-documented
@@ -239,22 +258,26 @@ Skills that have been removed from the system (historical reference only).
 ## Maintenance Schedule
 
 ### Daily
+
 - Monitor skill execution metrics
 - Track error rates
 - Review performance
 
 ### Weekly
+
 - Review skill usage patterns
 - Update documentation
 - Address reported issues
 
 ### Monthly
+
 - Comprehensive skill audit
 - Dependency updates
 - Performance optimization
 - Security review
 
 ### Quarterly
+
 - Skill effectiveness review
 - Deprecation decisions
 - Roadmap updates
@@ -265,6 +288,7 @@ Skills that have been removed from the system (historical reference only).
 ## Contributing New Skills
 
 ### Process
+
 1. **Propose**: Submit skill proposal with use cases
 2. **Review**: Team reviews for alignment and quality
 3. **Implement**: Follow Skill Discovery Protocol
@@ -274,35 +298,44 @@ Skills that have been removed from the system (historical reference only).
 7. **Deploy**: Integrate into orchestrator
 
 ### Proposal Template
+
 ```markdown
 ## Skill Proposal: {Skill Name}
 
 ### Problem Statement
+
 What problem does this skill solve?
 
 ### Use Cases
+
 - Use case 1
 - Use case 2
 - Use case 3
 
 ### Inputs
+
 - Input 1: Type, description
 - Input 2: Type, description
 
 ### Outputs
+
 - Output 1: Type, description
 
 ### Dependencies
+
 - Dependency 1
 - Dependency 2
 
 ### Estimated Complexity
+
 Low / Medium / High
 
 ### Priority
+
 High / Medium / Low
 
 ### Rationale
+
 Why should we integrate this skill?
 ```
 
@@ -311,18 +344,21 @@ Why should we integrate this skill?
 ## Skill Performance Benchmarks
 
 ### Execution Time Targets
+
 - **Fast**: <0.5s (File operations, validation)
 - **Medium**: 0.5-2s (Analysis, transformation)
 - **Slow**: 2-5s (Complex operations, external APIs)
 - **Very Slow**: >5s (Requires justification)
 
 ### Success Rate Targets
+
 - **Excellent**: >95%
 - **Good**: 90-95%
 - **Acceptable**: 80-90%
 - **Needs Improvement**: <80%
 
 ### Coverage Targets
+
 - **Excellent**: >90%
 - **Good**: 85-90%
 - **Acceptable**: 80-85%
@@ -333,6 +369,7 @@ Why should we integrate this skill?
 ## Appendix: Skill Integration Checklist
 
 ### Pre-Integration
+
 - [ ] Skill proposal approved
 - [ ] Source code reviewed
 - [ ] Security audit passed
@@ -340,6 +377,7 @@ Why should we integrate this skill?
 - [ ] Dependencies assessed
 
 ### Implementation
+
 - [ ] Directive created
 - [ ] Execution script implemented
 - [ ] Input/output schemas defined
@@ -347,6 +385,7 @@ Why should we integrate this skill?
 - [ ] Edge cases handled
 
 ### Testing
+
 - [ ] Unit tests written
 - [ ] Property-based tests written
 - [ ] Integration tests written
@@ -354,6 +393,7 @@ Why should we integrate this skill?
 - [ ] All tests passing
 
 ### Documentation
+
 - [ ] Directive complete
 - [ ] Examples provided
 - [ ] Edge cases documented
@@ -361,6 +401,7 @@ Why should we integrate this skill?
 - [ ] Registry updated
 
 ### Deployment
+
 - [ ] Orchestrator updated
 - [ ] Skill registered
 - [ ] Telemetry configured
@@ -374,5 +415,4 @@ Why should we integrate this skill?
 **Average Coverage**: 88.4%  
 **Next Review**: 2026-02-20
 
-**Philosophy**: *"Skills are tools, not solutions. The orchestrator must still make intelligent decisions about when and how to use them."*
-
+**Philosophy**: _"Skills are tools, not solutions. The orchestrator must still make intelligent decisions about when and how to use them."_

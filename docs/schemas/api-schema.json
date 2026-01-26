@@ -10,7 +10,16 @@
     },
     "Task": {
       "type": "object",
-      "required": ["id", "description", "status", "isOptional", "parentId", "children", "requirementRefs", "propertyRefs"],
+      "required": [
+        "id",
+        "description",
+        "status",
+        "isOptional",
+        "parentId",
+        "children",
+        "requirementRefs",
+        "propertyRefs"
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -167,10 +176,7 @@
       "required": ["currentTask", "completedCount", "totalCount", "isRunning", "progress"],
       "properties": {
         "currentTask": {
-          "oneOf": [
-            { "$ref": "#/definitions/Task" },
-            { "type": "null" }
-          ],
+          "oneOf": [{ "$ref": "#/definitions/Task" }, { "type": "null" }],
           "description": "Currently executing task"
         },
         "completedCount": {

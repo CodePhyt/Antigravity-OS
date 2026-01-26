@@ -3,7 +3,7 @@
  * Tests Requirements 2.2, 2.3, 2.4, 2.5
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { TaskManager } from '@/core/task-manager';
 import { promises as fs } from 'fs';
 import { join } from 'path';
@@ -83,7 +83,7 @@ describe('TaskManager - Task Status Transitions', () => {
     it('should parse tasks correctly', () => {
       const spec = taskManager.getSpec();
       expect(spec).not.toBeNull();
-      
+
       if (spec) {
         expect(spec.tasks.length).toBeGreaterThan(0);
         // Task IDs should include the period: "1.", "2.", "3."

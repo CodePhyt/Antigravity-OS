@@ -14,7 +14,9 @@ This document describes the autonomous hook system that makes our B.L.A.S.T. loo
 **Location**: `.kiro/hooks/post-execution-validator.kiro.hook`
 
 #### What It Does
+
 Automatically validates code quality after every agent execution:
+
 1. **TypeScript Compilation**: Checks for type errors
 2. **ESLint Validation**: Checks code quality
 3. **Unit Tests**: Runs full test suite
@@ -23,6 +25,7 @@ Automatically validates code quality after every agent execution:
 6. **Steering File Validation**: Ensures steering files exist
 
 #### Validation Flow
+
 ```
 Agent Execution Completes
     ↓
@@ -45,7 +48,9 @@ If failure → B.L.A.S.T. Protocol Triggered
 ```
 
 #### B.L.A.S.T. Integration
+
 When validation fails (exit code 1):
+
 1. **Build**: Validation detected errors
 2. **Log**: Error logs captured in `/tmp/`
 3. **Analyze**: Review error types and root causes
@@ -53,6 +58,7 @@ When validation fails (exit code 1):
 5. **Test**: Fix code and re-run validation
 
 #### Configuration
+
 ```json
 {
   "enabled": true,
@@ -79,7 +85,9 @@ When validation fails (exit code 1):
 **Location**: `.kiro/hooks/context-steerer.kiro.hook`
 
 #### What It Does
+
 Ensures the agent always cross-references steering files before responding:
+
 - Checks `.kiro/steering/` for all rules
 - Validates against A.N.T. architecture
 - Enforces global rules and checkpoint protocols
@@ -87,6 +95,7 @@ Ensures the agent always cross-references steering files before responding:
 - Consults decision rationales for consistency
 
 #### Steering Flow
+
 ```
 User Submits Prompt
     ↓
@@ -104,6 +113,7 @@ Response Adheres to All Rules
 ```
 
 #### Steering Files Referenced
+
 1. **antigravity-protocol.md**: Core principles and execution rules
 2. **global_rules.md**: 13 system-wide rules
 3. **checkpoint_rules.md**: Human-in-the-loop protocol
@@ -111,6 +121,7 @@ Response Adheres to All Rules
 5. **evolution/evolution_log.md**: Self-refinement patterns
 
 #### Configuration
+
 ```json
 {
   "enabled": true,
@@ -138,52 +149,63 @@ Response Adheres to All Rules
 ### Validation Steps
 
 #### Step 1: TypeScript Compilation
+
 ```bash
 npm run type-check
 ```
+
 - Checks for type errors
 - Validates strict mode compliance
 - Ensures no `any` types
 - Output: `/tmp/typecheck.log`
 
 #### Step 2: ESLint Validation
+
 ```bash
 npm run lint
 ```
+
 - Checks code quality
 - Enforces style rules
 - Validates best practices
 - Output: `/tmp/lint.log`
 
 #### Step 3: Unit Tests
+
 ```bash
 npm test
 ```
+
 - Runs full test suite
 - Validates all functionality
 - Checks property-based tests
 - Output: `/tmp/test.log`
 
 #### Step 4: JSON Schema Validation
+
 ```bash
 jq empty docs/schemas/*.json
 ```
+
 - Validates schema syntax
 - Checks all schema files
 - Ensures valid JSON
 
 #### Step 5: Spec File Validation
+
 ```bash
 # Check for required files
 requirements.md
 design.md
 tasks.md
 ```
+
 - Validates spec structure
 - Checks for required files
 - Ensures completeness
 
 #### Step 6: Steering File Validation
+
 ```bash
 # Check for required steering files
 antigravity-protocol.md
@@ -191,12 +213,14 @@ global_rules.md
 checkpoint_rules.md
 n8n_integration.md
 ```
+
 - Validates steering files exist
 - Ensures governance in place
 
 ### Error Reporting
 
 When validation fails:
+
 ```
 ❌ VALIDATION FAILED
 
@@ -219,6 +243,7 @@ Next steps:
 ## How Hooks Make B.L.A.S.T. Autonomous
 
 ### Before Hooks (Manual Process)
+
 ```
 Agent Execution
     ↓
@@ -234,6 +259,7 @@ Human manually triggers B.L.A.S.T. if errors
 ```
 
 ### After Hooks (Autonomous Process)
+
 ```
 Agent Execution
     ↓
@@ -251,6 +277,7 @@ Agent Self-Corrects (automatic)
 ### Human-Free Operations
 
 **Routine Tasks** (No Human Needed):
+
 - ✅ Code generation
 - ✅ Type checking
 - ✅ Linting
@@ -261,6 +288,7 @@ Agent Self-Corrects (automatic)
 - ✅ Self-correction (attempts 1-3)
 
 **Human Checkpoints** (Human Required):
+
 - 🚨 Architectural changes
 - 🚨 Spec modifications
 - 🚨 File deletions
@@ -273,6 +301,7 @@ Agent Self-Corrects (automatic)
 ## Integration with Existing Systems
 
 ### B.L.A.S.T. Protocol Enhancement
+
 ```
 1. Build: Execute code/tests
 2. Log: Capture full context
@@ -287,6 +316,7 @@ Agent Self-Corrects (automatic)
 ```
 
 ### Context Steering Enhancement
+
 ```
 User Prompt
     ↓
@@ -309,6 +339,7 @@ Response Adheres to All Rules
 ### Enable/Disable Hooks
 
 **Enable a Hook**:
+
 ```json
 {
   "enabled": true,
@@ -317,6 +348,7 @@ Response Adheres to All Rules
 ```
 
 **Disable a Hook**:
+
 ```json
 {
   "enabled": false,
@@ -327,11 +359,13 @@ Response Adheres to All Rules
 ### Manual Validation
 
 Run validation manually:
+
 ```bash
 npm run validate
 ```
 
 Quick validation (skip schema/spec checks):
+
 ```bash
 npm run validate:quick
 ```
@@ -339,11 +373,13 @@ npm run validate:quick
 ### View Hook Status
 
 Check hook files:
+
 ```bash
 ls -la .kiro/hooks/
 ```
 
 View hook configuration:
+
 ```bash
 cat .kiro/hooks/post-execution-validator.kiro.hook
 cat .kiro/hooks/context-steerer.kiro.hook
@@ -354,30 +390,35 @@ cat .kiro/hooks/context-steerer.kiro.hook
 ## Benefits
 
 ### 1. Autonomous Operation
+
 - ✅ No manual validation needed
 - ✅ Automatic error detection
 - ✅ Self-triggering B.L.A.S.T. protocol
 - ✅ Continuous quality enforcement
 
 ### 2. Consistent Governance
+
 - ✅ Always references steering files
 - ✅ Enforces A.N.T. architecture
 - ✅ Validates against global rules
 - ✅ Maintains checkpoint protocols
 
 ### 3. Fast Feedback
+
 - ✅ Immediate validation after execution
 - ✅ Quick error detection
 - ✅ Rapid self-correction
 - ✅ Reduced debugging time
 
 ### 4. Quality Assurance
+
 - ✅ Type safety enforced
 - ✅ Code quality maintained
 - ✅ Tests always run
 - ✅ Specs always validated
 
 ### 5. Human-Free Routine
+
 - ✅ 80% of operations autonomous
 - ✅ Only critical decisions need human
 - ✅ Faster development velocity
@@ -390,6 +431,7 @@ cat .kiro/hooks/context-steerer.kiro.hook
 ### Hook Execution Logs
 
 Hooks log to:
+
 - Kiro's internal execution log
 - `.kiro/logs/hooks.log` (if configured)
 - Console output (visible in IDE)
@@ -397,6 +439,7 @@ Hooks log to:
 ### Validation Logs
 
 Validation outputs to:
+
 - `/tmp/typecheck.log` - TypeScript errors
 - `/tmp/lint.log` - ESLint errors
 - `/tmp/test.log` - Test results
@@ -417,12 +460,14 @@ Validation outputs to:
 ### Hook Not Triggering
 
 **Check**:
+
 1. Hook is enabled: `"enabled": true`
 2. Event type is correct: `agentStop` or `promptSubmit`
 3. Hook file is valid JSON
 4. Kiro has reloaded hooks
 
 **Fix**:
+
 - Restart Kiro IDE
 - Check hook syntax
 - View Kiro logs for errors
@@ -430,12 +475,14 @@ Validation outputs to:
 ### Validation Failing
 
 **Check**:
+
 1. TypeScript compilation: `npm run type-check`
 2. ESLint: `npm run lint`
 3. Tests: `npm test`
 4. Schemas: `jq empty docs/schemas/*.json`
 
 **Fix**:
+
 - Review error logs in `/tmp/`
 - Fix code issues
 - Update specs if needed
@@ -444,11 +491,13 @@ Validation outputs to:
 ### B.L.A.S.T. Not Triggering
 
 **Check**:
+
 1. Validation script exits with code 1
 2. Error logs are captured
 3. B.L.A.S.T. protocol is enabled
 
 **Fix**:
+
 - Ensure validation script has execute permissions
 - Check error log paths
 - Review B.L.A.S.T. configuration
@@ -458,18 +507,21 @@ Validation outputs to:
 ## Future Enhancements
 
 ### Phase 2: Advanced Hooks
+
 - **Pre-Commit Hook**: Validate before git commit
 - **File-Watch Hook**: Validate on file save
 - **Test-Failure Hook**: Auto-debug failing tests
 - **Coverage Hook**: Enforce 80% coverage
 
 ### Phase 3: Intelligent Hooks
+
 - **Pattern-Learning Hook**: Learn from corrections
 - **Risk-Assessment Hook**: Estimate change risk
 - **Auto-Rollback Hook**: Revert on critical failure
 - **Performance Hook**: Monitor execution time
 
 ### Phase 4: Integration Hooks
+
 - **GitHub Hook**: Auto-create issues
 - **Slack Hook**: Notify team on failures
 - **n8n Hook**: Trigger workflows
@@ -483,7 +535,7 @@ The autonomous hook system transforms Antigravity OS from a **human-supervised**
 
 **Key Achievement**: 80% of operations now run autonomously with automatic validation and self-correction, while 20% of critical decisions still require human oversight.
 
-**Philosophy**: *"Automate the routine, checkpoint the critical."*
+**Philosophy**: _"Automate the routine, checkpoint the critical."_
 
 ---
 
@@ -493,6 +545,7 @@ The autonomous hook system transforms Antigravity OS from a **human-supervised**
 **Author**: Kiro Agent
 
 **Hooks Configured**:
+
 - ✅ Post-Execution Validator
 - ✅ Context Steerer
 

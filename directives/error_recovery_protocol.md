@@ -21,6 +21,7 @@ This directive defines how the orchestration layer should handle errors during t
 **"Errors are learning opportunities. Fix the system, not just the symptom."**
 
 When an error occurs:
+
 1. Don't panic or ask for permission
 2. Analyze the root cause systematically
 3. Update the relevant specification
@@ -32,17 +33,21 @@ When an error occurs:
 ## B.L.A.S.T. Recovery Protocol
 
 ### Step 1: Build
+
 **Action**: Execute the code or test that failed
 
 **Orchestrator Decision**:
+
 - Run the failing task/test
 - Capture full execution context
 - Record exact error message and stack trace
 
 ### Step 2: Log
+
 **Action**: Capture comprehensive error context
 
 **Required Information**:
+
 - Task ID that failed
 - Error message (full text)
 - Stack trace (complete)
@@ -51,13 +56,16 @@ When an error occurs:
 - Attempt number (1, 2, or 3)
 
 **Orchestrator Decision**:
+
 - Store error context in memory
 - Prepare for analysis phase
 
 ### Step 3: Analyze
+
 **Action**: Determine root cause of failure
 
 **Analysis Questions**:
+
 1. Is this a code bug or a spec issue?
 2. Is the requirement unclear or missing?
 3. Is the property definition incorrect?
@@ -65,29 +73,35 @@ When an error occurs:
 5. Is this a known pattern from memory graph?
 
 **Orchestrator Decision**:
+
 - Check `docs/memory/insight-graph.md` for similar patterns
 - Identify which spec file needs updating
 - Determine if this is architectural (trigger checkpoint)
 
 ### Step 4: Spec
+
 **Action**: Update the relevant specification
 
 **Update Targets**:
+
 - **requirements.md**: If acceptance criteria are unclear
 - **design.md**: If properties are incorrect
 - **tasks.md**: If task description is ambiguous
 - **Memory graph**: Always log the pattern
 
 **Orchestrator Decision**:
+
 - If architectural change → Trigger Human Checkpoint
 - If minor clarification → Update spec directly
 - If type error → Trigger B.L.A.S.T. Type-Repair
 - Always validate updated spec against JSON Schema
 
 ### Step 5: Test
+
 **Action**: Re-execute the corrected task
 
 **Orchestrator Decision**:
+
 - Re-run the failing task/test
 - If success → Mark task complete, log to DEVLOG
 - If failure → Increment attempt counter
@@ -101,13 +115,16 @@ When an error occurs:
 **Directive**: When executing untrusted or generated code, ALWAYS prefer sandboxed execution.
 
 ### When to Use Sandboxing
+
 - Executing user-provided code
 - Running generated code for the first time
 - Testing potentially unsafe operations
 - Validating external scripts
 
 ### How to Use Sandboxing
+
 **Orchestrator Decision**:
+
 1. Check if Docker is available (call `execution/container_service.ts`)
 2. If available → Use `executeCodeSandboxed(code)`
 3. If not available → Warn user and execute with caution
@@ -115,17 +132,19 @@ When an error occurs:
 5. Always disable network access for untrusted code
 
 ### Sandboxing Configuration
+
 ```typescript
 // Orchestrator calls execution layer
 const result = await executeCodeSandboxed(generatedCode, {
-  timeout: 30000,        // 30 seconds max
-  memoryLimit: '512m',   // 512 MB max
-  cpuLimit: '1.0',       // 1 CPU core max
-  network: 'none'        // No network access
+  timeout: 30000, // 30 seconds max
+  memoryLimit: '512m', // 512 MB max
+  cpuLimit: '1.0', // 1 CPU core max
+  network: 'none', // No network access
 });
 ```
 
 **Benefits**:
+
 - Prevents system damage from buggy code
 - Isolates resource usage
 - Enables safe experimentation
@@ -138,6 +157,7 @@ const result = await executeCodeSandboxed(generatedCode, {
 **Directive**: Pause for human review on critical changes.
 
 ### Checkpoint Triggers
+
 - Architectural changes (A.N.T. framework modifications)
 - Spec file modifications (requirements, design, tasks)
 - File deletions (any file type)
@@ -145,7 +165,9 @@ const result = await executeCodeSandboxed(generatedCode, {
 - Production deployments (main branch, builds)
 
 ### Checkpoint Protocol
+
 **Orchestrator Decision**:
+
 1. Detect checkpoint trigger
 2. Generate impact analysis:
    - Severity (low/medium/high/critical)
@@ -171,21 +193,27 @@ const result = await executeCodeSandboxed(generatedCode, {
 **Directive**: Validate all data at compile-time and runtime.
 
 ### Compile-Time Validation
+
 **Orchestrator Decision**:
+
 - Ensure all code passes TypeScript strict mode
 - No `any` types allowed
 - All functions have explicit return types
 - All parameters have explicit types
 
 ### Runtime Validation
+
 **Orchestrator Decision**:
+
 - Validate all API inputs against JSON Schema
 - Validate all spec files before parsing
 - Validate all external data on entry
 - If validation fails → Trigger B.L.A.S.T. Type-Repair
 
 ### B.L.A.S.T. Type-Repair Loop
+
 **Orchestrator Decision**:
+
 1. Validation fails
 2. Analyze error (missing field, wrong type, invalid format)
 3. Determine if schema or code is wrong
@@ -200,13 +228,16 @@ const result = await executeCodeSandboxed(generatedCode, {
 **Directive**: When local information is insufficient, trigger external research.
 
 ### When to Trigger Research
+
 - Ralph-Loop exhausts 3 attempts
 - Error is complex or unfamiliar
 - No similar pattern in memory graph
 - Solution requires external knowledge
 
 ### How to Trigger Research
+
 **Orchestrator Decision**:
+
 1. Check if n8n is available
 2. Prepare research payload:
    - Task ID
@@ -229,7 +260,9 @@ const result = await executeCodeSandboxed(generatedCode, {
 **Directive**: Document all technical decisions for transparency.
 
 ### What to Log
+
 **Orchestrator Decision**:
+
 - Technical choice made
 - Alternatives considered (with pros/cons)
 - Why spec-compliant
@@ -237,11 +270,13 @@ const result = await executeCodeSandboxed(generatedCode, {
 - Validation approach
 
 ### Where to Log
+
 - `docs/internal/rationales.md` (decision log)
 - `DEVLOG.md` (execution log)
 - `docs/memory/insight-graph.md` (pattern learning)
 
 **Benefits**:
+
 - Process transparency for hackathon judging
 - Learning from outcomes
 - Onboarding documentation
@@ -254,12 +289,15 @@ const result = await executeCodeSandboxed(generatedCode, {
 **Directive**: Respect attempt limits to maintain velocity.
 
 ### Standard Limits
+
 - **Ralph-Loop**: 3 attempts maximum
 - **Type Repair**: 2 attempts maximum
 - **Debugging**: 2 attempts maximum
 
 ### After Limit Exhausted
+
 **Orchestrator Decision**:
+
 1. Log exhaustion event
 2. Trigger n8n Deep Research Agent
 3. If research fails → Mark task as blocked
@@ -275,6 +313,7 @@ const result = await executeCodeSandboxed(generatedCode, {
 **Directive**: Log all self-healing events for continuous learning.
 
 ### What to Log
+
 - Error type and context
 - Root cause analysis
 - Correction applied
@@ -283,11 +322,13 @@ const result = await executeCodeSandboxed(generatedCode, {
 - Time to resolution
 
 ### Where to Log
+
 - `DEVLOG.md` under "Self-Healing Events" section
 - `docs/memory/insight-graph.md` as new pattern
 - `docs/telemetry.json` as telemetry event
 
 **Orchestrator Decision**:
+
 - Record telemetry event: `ralph_loop_success` or `ralph_loop_failure`
 - Update memory graph with new pattern
 - Trigger Continuous Learning Agent (n8n)
@@ -299,7 +340,9 @@ const result = await executeCodeSandboxed(generatedCode, {
 **Directive**: Before finalizing any task, switch to Independent Auditor persona.
 
 ### Auditor Checklist
+
 **Orchestrator Decision**:
+
 1. Security review (no credentials, input validation)
 2. Code quality review (DRY, SRP, error handling)
 3. Testing review (coverage, edge cases, property tests)
@@ -308,7 +351,9 @@ const result = await executeCodeSandboxed(generatedCode, {
 6. Documentation review (README, DEVLOG, JSDoc)
 
 ### Audit Outcome
+
 **Orchestrator Decision**:
+
 - If PASS → Add `[AUDIT_PASSED]` tag to commit
 - If FAIL → Fix critical issues, re-audit
 - Log audit report to commit message
@@ -320,9 +365,11 @@ const result = await executeCodeSandboxed(generatedCode, {
 ## Error Recovery Patterns
 
 ### Pattern 1: Simple Bug Fix
+
 **Scenario**: Code has a typo or logic error
 
 **Orchestrator Decision**:
+
 1. Analyze error message
 2. Identify buggy line
 3. Fix code directly
@@ -330,9 +377,11 @@ const result = await executeCodeSandboxed(generatedCode, {
 5. If success → Complete task
 
 ### Pattern 2: Spec Clarification
+
 **Scenario**: Requirement is ambiguous
 
 **Orchestrator Decision**:
+
 1. Identify ambiguous requirement
 2. Update requirements.md with clarification
 3. Regenerate code based on updated spec
@@ -340,9 +389,11 @@ const result = await executeCodeSandboxed(generatedCode, {
 5. If success → Complete task
 
 ### Pattern 3: Property Violation
+
 **Scenario**: Code violates a correctness property
 
 **Orchestrator Decision**:
+
 1. Identify violated property
 2. Determine if property is correct
 3. If property wrong → Update design.md
@@ -351,9 +402,11 @@ const result = await executeCodeSandboxed(generatedCode, {
 6. If success → Complete task
 
 ### Pattern 4: Complex Error
+
 **Scenario**: Error is unfamiliar or complex
 
 **Orchestrator Decision**:
+
 1. Attempt standard fixes (2 attempts)
 2. If still failing → Trigger n8n Deep Research
 3. Wait for research results
@@ -369,6 +422,7 @@ const result = await executeCodeSandboxed(generatedCode, {
 **Directive**: The orchestration layer makes decisions, the execution layer executes them.
 
 ### Orchestrator Responsibilities
+
 - Analyze errors
 - Decide on correction strategy
 - Choose which execution script to call
@@ -376,6 +430,7 @@ const result = await executeCodeSandboxed(generatedCode, {
 - Update specs
 
 ### Execution Layer Responsibilities
+
 - Run Docker containers (`execution/container_service.ts`)
 - Execute tests (`execution/test_runner.ts`)
 - Make API calls (`execution/n8n_client.ts`)
@@ -389,6 +444,7 @@ const result = await executeCodeSandboxed(generatedCode, {
 ## Success Criteria
 
 **Directive**: A task is complete when:
+
 1. All tests pass (unit + property)
 2. Code passes audit review
 3. Spec is updated (if needed)
@@ -397,6 +453,7 @@ const result = await executeCodeSandboxed(generatedCode, {
 6. Telemetry is recorded
 
 **Orchestrator Decision**:
+
 - Mark task as completed
 - Update task status in tasks.md
 - Commit changes with `[AUDIT_PASSED]` tag
@@ -407,12 +464,14 @@ const result = await executeCodeSandboxed(generatedCode, {
 ## Failure Criteria
 
 **Directive**: A task has failed when:
+
 1. Ralph-Loop exhausts 3 attempts
 2. n8n Deep Research fails
 3. Human intervention is required
 4. Critical security issue found
 
 **Orchestrator Decision**:
+
 - Mark task as blocked
 - Document issue comprehensively
 - Request human review
@@ -424,4 +483,4 @@ const result = await executeCodeSandboxed(generatedCode, {
 **Enforcement**: MANDATORY for all error recovery  
 **Review Cycle**: After every self-healing event
 
-**Philosophy**: *"Fix the system, not just the symptom. Learn from every error."*
+**Philosophy**: _"Fix the system, not just the symptom. Learn from every error."_

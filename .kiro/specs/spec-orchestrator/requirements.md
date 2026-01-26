@@ -31,8 +31,8 @@ The Spec Orchestrator is the core engine of Antigravity OS that manages the comp
 3. WHEN a task has sub-tasks, THE Spec_Parser SHALL preserve the hierarchical structure with parent-child relationships
 4. WHEN parsing fails due to malformed markdown, THE Spec_Parser SHALL return a descriptive error with line number and context
 5. WHEN a spec file is missing, THE Spec_Parser SHALL return an error indicating which file is absent
-6. THE Spec_Parser SHALL extract requirement references from task descriptions (format: _Requirements: X.Y_)
-7. THE Spec_Parser SHALL identify optional tasks marked with asterisk suffix (format: - [ ]* Task description)
+6. THE Spec*Parser SHALL extract requirement references from task descriptions (format: \_Requirements: X.Y*)
+7. THE Spec_Parser SHALL identify optional tasks marked with asterisk suffix (format: - [ ]\* Task description)
 
 ### Requirement 2: Track Task Status
 

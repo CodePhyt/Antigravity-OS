@@ -104,10 +104,13 @@ describe('Property Test: Memory Efficiency Under Load', () => {
             if (memorySnapshots.length >= 2) {
               const firstBatchMemory = memorySnapshots[0];
               const lastBatchMemory = memorySnapshots[memorySnapshots.length - 1];
-              const memoryGrowth = lastBatchMemory - firstBatchMemory;
               
-              // Memory growth should be less than 100MB
-              expect(memoryGrowth).toBeLessThan(100);
+              if (firstBatchMemory !== undefined && lastBatchMemory !== undefined) {
+                const memoryGrowth = lastBatchMemory - firstBatchMemory;
+                
+                // Memory growth should be less than 100MB
+                expect(memoryGrowth).toBeLessThan(100);
+              }
             }
             
             // Cleanup

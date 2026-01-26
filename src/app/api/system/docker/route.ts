@@ -1,46 +1,36 @@
 import { NextResponse } from 'next/server';
-import { exec } from 'child_process';
-import { promisify } from 'util';
-
-const execAsync = promisify(exec);
+import {
+  listContainers,
+  listImages,
+  removeContainer,
+  removeImage,
+  isDockerAvailable,
+} from '@/services/docker-service';
 
 // Security: Whitelist allowed image prefixes
 const ALLOWED_IMAGE_PREFIXES = ['antigravity', 'test-', 'dev-'];
 
 export async function GET() {
   try {
-    // Get Docker containers
-    const { stdout: containers } = await execAsync(
-      'docker ps -a --format "{{.ID}}|{{.Image}}|{{.Status}}"'
-    );
-
-    // Get Docker images
-    const { stdout: images } = await execAsync(
-      'docker images --format "{{.Repository}}:{{.Tag}}|{{.ID}}|{{.Size}}"'
-    );
-
-    const containerList = containers
-      .trim()
-      .split('\n')
-      .filter(Boolean)
-      .map((line) => {
-        const [id, image, status] = line.split('|');
-        return { id, image, status };
+    // Check if Docker is available
+    const dockerAvailable = await isDockerAvailable();
+    if (!dockerAvailable) {
+      return NextResponse.json({
+        success: false,
+        error: 'Docker not available or not running',
+        containers: [],
+        images: [],
       });
+    }
 
-    const imageList = images
-      .trim()
-      .split('\n')
-      .filter(Boolean)
-      .map((line) => {
-        const [name, id, size] = line.split('|');
-        return { name, id, size };
-      });
+    // Use pure functions from docker-service
+    const containers = await listContainers();
+    const images = await listImages();
 
     return NextResponse.json({
       success: true,
-      containers: containerList,
-      images: imageList,
+      containers,
+      images,
     });
   } catch (error) {
     return NextResponse.json({
@@ -70,14 +60,15 @@ export async function DELETE(request: Request) {
       }
     }
 
+    // Use pure functions from docker-service
     if (type === 'container') {
-      await execAsync(`docker rm -f ${id}`);
+      await removeContainer(id);
       return NextResponse.json({
         success: true,
         message: `Container ${id} removed`,
       });
     } else if (type === 'image') {
-      await execAsync(`docker rmi -f ${id}`);
+      await removeImage(id);
       return NextResponse.json({
         success: true,
         message: `Image ${id} removed`,

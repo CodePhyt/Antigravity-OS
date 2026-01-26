@@ -148,12 +148,12 @@ export class TestRunner {
       let stderr = '';
 
       // Capture stdout
-      vitestProcess.stdout?.on('data', (data) => {
+      vitestProcess.stdout?.on('data', (data: Buffer) => {
         stdout += data.toString();
       });
 
       // Capture stderr
-      vitestProcess.stderr?.on('data', (data) => {
+      vitestProcess.stderr?.on('data', (data: Buffer) => {
         stderr += data.toString();
       });
 
@@ -202,7 +202,7 @@ export class TestRunner {
         return this.parseVerboseOutput(output);
       }
 
-      const json: VitestJsonOutput = JSON.parse(jsonMatch);
+      const json = JSON.parse(jsonMatch) as VitestJsonOutput;
 
       const failures: TestFailure[] = [];
 
@@ -582,10 +582,10 @@ export class TestRunner {
    *
    * Requirements: 4.7
    */
-  async enrichFailureWithPropertyInfo(
+  enrichFailureWithPropertyInfo(
     failure: TestFailure,
     testFileContent?: string
-  ): Promise<EnrichedTestFailure> {
+  ): EnrichedTestFailure {
     let propertyNumber: number | null = null;
     let propertyTitle: string | null = null;
 

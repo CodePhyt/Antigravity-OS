@@ -1,9 +1,9 @@
 /**
  * File Encryption Skill - AES-256-GCM
- * 
+ *
  * Deterministic encryption/decryption implementation
  * Compliance: Article II (Security-First), Article III (Atomic Operations)
- * 
+ *
  * @module execution/skills/file-encryption
  */
 
@@ -36,7 +36,7 @@ export interface EncryptOptions {
 
 /**
  * Derive encryption key from password using PBKDF2
- * 
+ *
  * @param password - User password
  * @param salt - Random salt (16 bytes)
  * @returns 32-byte encryption key
@@ -48,7 +48,7 @@ function deriveKey(password: string, salt: Buffer): Buffer {
 
 /**
  * Validate password strength
- * 
+ *
  * @param password - Password to validate
  * @returns true if valid, false otherwise
  */
@@ -59,7 +59,7 @@ function validatePassword(password: string): boolean {
 
 /**
  * Check if file exists and is readable
- * 
+ *
  * @param filePath - Path to file
  * @returns true if exists and readable
  */
@@ -74,10 +74,10 @@ async function fileExists(filePath: string): Promise<boolean> {
 
 /**
  * Encrypt a file using AES-256-GCM
- * 
+ *
  * Article II.1: Validate all inputs
  * Article III.1: Atomic operations (temp file → rename)
- * 
+ *
  * @param options - Encryption options
  * @returns Encryption result
  */
@@ -91,7 +91,7 @@ export async function encryptFile(options: EncryptOptions): Promise<EncryptionRe
         success: false,
         operation: 'encrypt',
         error: 'Password must be at least 12 characters',
-        code: 'WEAK_PASSWORD'
+        code: 'WEAK_PASSWORD',
       };
     }
 
@@ -101,7 +101,7 @@ export async function encryptFile(options: EncryptOptions): Promise<EncryptionRe
         success: false,
         operation: 'encrypt',
         error: `Input file not found: ${inputFile}`,
-        code: 'FILE_NOT_FOUND'
+        code: 'FILE_NOT_FOUND',
       };
     }
 
@@ -114,7 +114,7 @@ export async function encryptFile(options: EncryptOptions): Promise<EncryptionRe
         success: false,
         operation: 'encrypt',
         error: 'Input file is empty',
-        code: 'EMPTY_FILE'
+        code: 'EMPTY_FILE',
       };
     }
 
@@ -129,10 +129,7 @@ export async function encryptFile(options: EncryptOptions): Promise<EncryptionRe
     const cipher = createCipheriv('aes-256-gcm', key, iv);
 
     // Encrypt
-    const encrypted = Buffer.concat([
-      cipher.update(plaintext),
-      cipher.final()
-    ]);
+    const encrypted = Buffer.concat([cipher.update(plaintext), cipher.final()]);
 
     // Get authentication tag (Article II.1: Authenticated encryption)
     const authTag = cipher.getAuthTag();
@@ -153,25 +150,24 @@ export async function encryptFile(options: EncryptOptions): Promise<EncryptionRe
       inputFile,
       outputFile,
       algorithm: 'aes-256-gcm',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
-
   } catch (error) {
     return {
       success: false,
       operation: 'encrypt',
       error: error instanceof Error ? error.message : 'Unknown error',
-      code: 'ENCRYPTION_FAILED'
+      code: 'ENCRYPTION_FAILED',
     };
   }
 }
 
 /**
  * Decrypt a file using AES-256-GCM
- * 
+ *
  * Article II.1: Validate all inputs
  * Article III.1: Atomic operations
- * 
+ *
  * @param options - Decryption options
  * @returns Decryption result
  */
@@ -185,7 +181,7 @@ export async function decryptFile(options: EncryptOptions): Promise<EncryptionRe
         success: false,
         operation: 'decrypt',
         error: 'Password must be at least 12 characters',
-        code: 'WEAK_PASSWORD'
+        code: 'WEAK_PASSWORD',
       };
     }
 
@@ -195,7 +191,7 @@ export async function decryptFile(options: EncryptOptions): Promise<EncryptionRe
         success: false,
         operation: 'decrypt',
         error: `Input file not found: ${inputFile}`,
-        code: 'FILE_NOT_FOUND'
+        code: 'FILE_NOT_FOUND',
       };
     }
 
@@ -208,7 +204,7 @@ export async function decryptFile(options: EncryptOptions): Promise<EncryptionRe
         success: false,
         operation: 'decrypt',
         error: 'Invalid encrypted file format',
-        code: 'INVALID_FORMAT'
+        code: 'INVALID_FORMAT',
       };
     }
 
@@ -226,10 +222,7 @@ export async function decryptFile(options: EncryptOptions): Promise<EncryptionRe
     decipher.setAuthTag(authTag);
 
     // Decrypt
-    const decrypted = Buffer.concat([
-      decipher.update(ciphertext),
-      decipher.final()
-    ]);
+    const decrypted = Buffer.concat([decipher.update(ciphertext), decipher.final()]);
 
     // Write to temp file first (Article III.1)
     const tempFile = `${outputFile}.tmp`;
@@ -244,9 +237,8 @@ export async function decryptFile(options: EncryptOptions): Promise<EncryptionRe
       inputFile,
       outputFile,
       algorithm: 'aes-256-gcm',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
-
   } catch (error) {
     // Authentication failure or wrong password
     if (error instanceof Error && error.message.includes('auth')) {
@@ -254,7 +246,7 @@ export async function decryptFile(options: EncryptOptions): Promise<EncryptionRe
         success: false,
         operation: 'decrypt',
         error: 'Invalid password or corrupted file',
-        code: 'INVALID_PASSWORD'
+        code: 'INVALID_PASSWORD',
       };
     }
 
@@ -262,7 +254,7 @@ export async function decryptFile(options: EncryptOptions): Promise<EncryptionRe
       success: false,
       operation: 'decrypt',
       error: error instanceof Error ? error.message : 'Unknown error',
-      code: 'DECRYPTION_FAILED'
+      code: 'DECRYPTION_FAILED',
     };
   }
 }
@@ -272,5 +264,5 @@ export async function decryptFile(options: EncryptOptions): Promise<EncryptionRe
  */
 export default {
   encryptFile,
-  decryptFile
+  decryptFile,
 };

@@ -1,6 +1,6 @@
 /**
  * Encryption Skill Demo
- * 
+ *
  * Demonstrates the file encryption skill following Constitutional Protocol
  * Article I: 3-Layer Architecture
  * Article II: Security-First Principles
@@ -12,7 +12,7 @@ import { existsSync } from 'fs';
 
 async function runDemo() {
   console.log('🔐 ANTIGRAVITY OS - FILE ENCRYPTION DEMO');
-  console.log('=' .repeat(60));
+  console.log('='.repeat(60));
   console.log('');
 
   // Test files
@@ -24,7 +24,8 @@ async function runDemo() {
   try {
     // Step 1: Create secret file
     console.log('📝 Step 1: Creating secret file...');
-    const secretMessage = 'This is a highly confidential message!\nIt contains sensitive data that must be protected.\n\nClassification: TOP SECRET';
+    const secretMessage =
+      'This is a highly confidential message!\nIt contains sensitive data that must be protected.\n\nClassification: TOP SECRET';
     await writeFile(secretFile, secretMessage);
     console.log(`   ✅ Created: ${secretFile}`);
     console.log(`   Content: "${secretMessage.substring(0, 50)}..."`);
@@ -35,7 +36,7 @@ async function runDemo() {
     const encryptResult = await encryptFile({
       inputFile: secretFile,
       outputFile: encryptedFile,
-      password
+      password,
     });
 
     if (encryptResult.success) {
@@ -43,7 +44,7 @@ async function runDemo() {
       console.log(`   Algorithm: ${encryptResult.algorithm}`);
       console.log(`   Output: ${encryptResult.outputFile}`);
       console.log(`   Timestamp: ${encryptResult.timestamp}`);
-      
+
       // Show encrypted file size
       const encryptedData = await readFile(encryptedFile);
       console.log(`   Encrypted size: ${encryptedData.length} bytes`);
@@ -58,7 +59,7 @@ async function runDemo() {
     const decryptResult = await decryptFile({
       inputFile: encryptedFile,
       outputFile: decryptedFile,
-      password
+      password,
     });
 
     if (decryptResult.success) {
@@ -89,7 +90,7 @@ async function runDemo() {
     const wrongPasswordResult = await decryptFile({
       inputFile: encryptedFile,
       outputFile: './demo-wrong.txt',
-      password: 'WrongPassword123!'
+      password: 'WrongPassword123!',
     });
 
     if (!wrongPasswordResult.success) {
@@ -102,9 +103,9 @@ async function runDemo() {
     console.log('');
 
     // Summary
-    console.log('=' .repeat(60));
+    console.log('='.repeat(60));
     console.log('📊 DEMO SUMMARY');
-    console.log('=' .repeat(60));
+    console.log('='.repeat(60));
     console.log('✅ Encryption: PASSED');
     console.log('✅ Decryption: PASSED');
     console.log('✅ Content Integrity: VERIFIED');
@@ -117,7 +118,6 @@ async function runDemo() {
     console.log('   ✅ Article VII: Skill Discovery (SOP + Implementation + Tests)');
     console.log('');
     console.log('🚀 System Status: OPERATIONAL');
-
   } catch (error) {
     console.error('❌ Demo failed:', error);
   } finally {

@@ -4,7 +4,12 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { TestRunner, identifyTestFiles, identifyAffectedTests, findAllTestFiles } from '@/services/test-runner';
+import {
+  TestRunner,
+  identifyTestFiles,
+  identifyAffectedTests,
+  findAllTestFiles,
+} from '@/services/test-runner';
 import type { TestFailure } from '@/types/spec';
 import { promises as fs } from 'fs';
 import path from 'path';
@@ -242,7 +247,7 @@ describe('TestRunner', () => {
       const path = await import('path');
       const tmpDir = await fs.mkdtemp(path.join(process.cwd(), 'tmp-test-'));
       const testFile = path.join(tmpDir, 'test.property.test.ts');
-      
+
       try {
         await fs.writeFile(testFile, testContent);
 
@@ -250,7 +255,7 @@ describe('TestRunner', () => {
 
         expect(validation.valid).toBe(false);
         expect(validation.issues.length).toBeGreaterThan(0);
-        expect(validation.issues.some(i => i.issue === 'missing_iteration_count')).toBe(true);
+        expect(validation.issues.some((i) => i.issue === 'missing_iteration_count')).toBe(true);
       } finally {
         // Cleanup
         await fs.rm(tmpDir, { recursive: true, force: true });
@@ -274,7 +279,7 @@ describe('TestRunner', () => {
       const path = await import('path');
       const tmpDir = await fs.mkdtemp(path.join(process.cwd(), 'tmp-test-'));
       const testFile = path.join(tmpDir, 'test.property.test.ts');
-      
+
       try {
         await fs.writeFile(testFile, testContent);
 
@@ -282,7 +287,9 @@ describe('TestRunner', () => {
 
         expect(validation.valid).toBe(false);
         expect(validation.issues.length).toBeGreaterThan(0);
-        const insufficientIssue = validation.issues.find(i => i.issue === 'insufficient_iterations');
+        const insufficientIssue = validation.issues.find(
+          (i) => i.issue === 'insufficient_iterations'
+        );
         expect(insufficientIssue).toBeDefined();
         expect(insufficientIssue?.message).toContain('50 iterations');
       } finally {
@@ -307,7 +314,7 @@ describe('TestRunner', () => {
       const path = await import('path');
       const tmpDir = await fs.mkdtemp(path.join(process.cwd(), 'tmp-test-'));
       const testFile = path.join(tmpDir, 'test.property.test.ts');
-      
+
       try {
         await fs.writeFile(testFile, testContent);
 
@@ -336,14 +343,14 @@ describe('TestRunner', () => {
       const path = await import('path');
       const tmpDir = await fs.mkdtemp(path.join(process.cwd(), 'tmp-test-'));
       const testFile = path.join(tmpDir, 'test.property.test.ts');
-      
+
       try {
         await fs.writeFile(testFile, testContent);
 
         const validation = await testRunner.validatePropertyTests([testFile]);
 
         expect(validation.valid).toBe(false);
-        expect(validation.issues.some(i => i.issue === 'missing_property_tag')).toBe(true);
+        expect(validation.issues.some((i) => i.issue === 'missing_property_tag')).toBe(true);
       } finally {
         await fs.rm(tmpDir, { recursive: true, force: true });
       }
@@ -364,7 +371,7 @@ describe('TestRunner', () => {
       const path = await import('path');
       const tmpDir = await fs.mkdtemp(path.join(process.cwd(), 'tmp-test-'));
       const testFile = path.join(tmpDir, 'test.test.ts');
-      
+
       try {
         await fs.writeFile(testFile, testContent);
 
@@ -387,7 +394,7 @@ describe('TestRunner', () => {
   });
 
   describe('enrichFailureWithPropertyInfo', () => {
-    it('should extract property number from propertyRef', async () => {
+    it('should extract property number from propertyRef', () => {
       const failure: TestFailure = {
         testName: 'test',
         errorMessage: 'failed',
@@ -396,12 +403,12 @@ describe('TestRunner', () => {
         requirementRef: null,
       };
 
-      const enriched = await testRunner.enrichFailureWithPropertyInfo(failure);
+      const enriched = testRunner.enrichFailureWithPropertyInfo(failure);
 
       expect(enriched.propertyNumber).toBe(5);
     });
 
-    it('should extract property info from test file content', async () => {
+    it('should extract property info from test file content', () => {
       const failure: TestFailure = {
         testName: 'test',
         errorMessage: 'failed',
@@ -415,13 +422,13 @@ describe('TestRunner', () => {
         fc.assert(fc.property(...));
       `;
 
-      const enriched = await testRunner.enrichFailureWithPropertyInfo(failure, testContent);
+      const enriched = testRunner.enrichFailureWithPropertyInfo(failure, testContent);
 
       expect(enriched.propertyNumber).toBe(20);
       expect(enriched.propertyTitle).toBe('Property test iteration minimum');
     });
 
-    it('should handle missing property information', async () => {
+    it('should handle missing property information', () => {
       const failure: TestFailure = {
         testName: 'test',
         errorMessage: 'failed',
@@ -430,7 +437,7 @@ describe('TestRunner', () => {
         requirementRef: null,
       };
 
-      const enriched = await testRunner.enrichFailureWithPropertyInfo(failure);
+      const enriched = testRunner.enrichFailureWithPropertyInfo(failure);
 
       expect(enriched.propertyNumber).toBeNull();
       expect(enriched.propertyTitle).toBeNull();
@@ -443,7 +450,7 @@ describe('TestRunner', () => {
     beforeEach(async () => {
       // Create temporary directory structure for testing
       tmpDir = await fs.mkdtemp(path.join(process.cwd(), 'tmp-test-id-'));
-      
+
       // Create test directory structure
       await fs.mkdir(path.join(tmpDir, 'src'), { recursive: true });
       await fs.mkdir(path.join(tmpDir, 'tests', 'unit'), { recursive: true });
@@ -607,10 +614,7 @@ describe('TestRunner', () => {
         const testFile = path.join(tmpDir, 'tests', 'unit', 'shared1.test.ts');
         await fs.writeFile(testFile, 'test shared');
 
-        const affectedTests = await identifyAffectedTests(
-          [srcFile1],
-          path.join(tmpDir, 'tests')
-        );
+        const affectedTests = await identifyAffectedTests([srcFile1], path.join(tmpDir, 'tests'));
 
         // Should only return unique test files
         expect(affectedTests.length).toBe(new Set(affectedTests).size);
@@ -620,10 +624,7 @@ describe('TestRunner', () => {
         const srcFile = path.join(tmpDir, 'src', 'notested.ts');
         await fs.writeFile(srcFile, 'export function notested() {}');
 
-        const affectedTests = await identifyAffectedTests(
-          [srcFile],
-          path.join(tmpDir, 'tests')
-        );
+        const affectedTests = await identifyAffectedTests([srcFile], path.join(tmpDir, 'tests'));
 
         expect(affectedTests).toHaveLength(0);
       });

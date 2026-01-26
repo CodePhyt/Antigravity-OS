@@ -3,7 +3,7 @@
  * Tests iteration tracking, max attempts, and correction coordination
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { RalphLoop, createRalphLoop } from '@/core/ralph-loop';
 import { TaskManager } from '@/core/task-manager';
 import type { ErrorContext } from '@/types/spec';

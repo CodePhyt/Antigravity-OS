@@ -1,12 +1,15 @@
 # Antigravity OS - Schema Validation
 
 ## Purpose
+
 This directory contains JSON Schema definitions for all data structures in Antigravity OS. Schemas enforce structured validation (Pydantic-style) to prevent runtime errors and ensure data consistency.
 
 ## Schema Files
 
 ### api-schema.json
+
 Complete API and data structure schemas including:
+
 - Task, Requirement, Property definitions
 - ParsedSpec structure
 - ExecutionRequest/Status
@@ -15,14 +18,18 @@ Complete API and data structure schemas including:
 ## Validation Protocol
 
 ### Pre-Execution Validation
+
 Before any task execution:
+
 1. Load relevant schema
 2. Validate input data structure
 3. If validation fails → Trigger B.L.A.S.T. Schema-Fix
 4. Only proceed after validation passes
 
 ### B.L.A.S.T. Schema-Fix Protocol
+
 When schema validation fails:
+
 1. **Build**: Attempt to construct valid object
 2. **Log**: Record validation errors with context
 3. **Analyze**: Determine if schema or data is incorrect
@@ -32,6 +39,7 @@ When schema validation fails:
 ## Usage Examples
 
 ### TypeScript Validation
+
 ```typescript
 import Ajv from 'ajv';
 import schema from '@/docs/schemas/api-schema.json';
@@ -45,6 +53,7 @@ if (!validate(taskData)) {
 ```
 
 ### Runtime Validation
+
 ```typescript
 import { validateTask } from '@/lib/validation';
 
@@ -55,12 +64,14 @@ validateTask(task); // Throws if invalid
 ## Schema Evolution
 
 ### Adding New Schemas
+
 1. Define schema in api-schema.json under `definitions`
 2. Add validation function in src/lib/validation.ts
 3. Update this README with usage example
 4. Add tests in tests/unit/validation.test.ts
 
 ### Modifying Existing Schemas
+
 1. Update schema definition
 2. Run validation tests to catch breaking changes
 3. Update dependent code

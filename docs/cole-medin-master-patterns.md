@@ -8,13 +8,14 @@ This document summarizes the implementation of Cole Medin's three Master Pattern
 
 ### 1. Human-in-the-Loop Checkpoints 🚨
 
-**Philosophy**: *"Autonomy with accountability. Speed with safety. Trust with verification."*
+**Philosophy**: _"Autonomy with accountability. Speed with safety. Trust with verification."_
 
 **What It Solves**: Prevents catastrophic errors from autonomous decisions while maintaining development velocity.
 
 **Implementation**: `.kiro/steering/checkpoint_rules.md`
 
 #### Checkpoint Triggers
+
 - ✅ Architectural changes (A.N.T. framework modifications)
 - ✅ Spec file modifications (requirements, design, tasks)
 - ✅ File deletions (any file type)
@@ -22,6 +23,7 @@ This document summarizes the implementation of Cole Medin's three Master Pattern
 - ✅ Production deployments (main branch, builds, migrations)
 
 #### The Protocol
+
 ```
 Detect Trigger
     ↓
@@ -37,6 +39,7 @@ Log Decision with Reasoning
 ```
 
 #### Impact Analysis Components
+
 - **Severity**: low/medium/high/critical
 - **Affected Components**: List of impacted modules
 - **Breaking Changes**: Yes/no assessment
@@ -45,31 +48,38 @@ Log Decision with Reasoning
 - **Recommendation**: proceed/review/reject
 
 #### Example Checkpoint
+
 ```markdown
 ## 🚨 Checkpoint Required: Architectural Change
 
 ### Summary
+
 Adding n8n webhook integration to Ralph-Loop engine
 
 ### Impact Analysis
+
 - **Severity**: high
 - **Affected Components**: ralph-loop.ts, task-manager.ts, n8n-client.ts
 - **Breaking Changes**: no
 - **Estimated Risk**: 40
 
 ### Rollback Strategy
+
 1. Remove n8n client calls
 2. Revert to standard Ralph-Loop
 3. No data loss, no breaking changes
 
 ### Recommendation
+
 **proceed** - Well-documented, clear rollback, comprehensive tests
 
 **What would you like to do?**
 ```
 
 #### Integration with B.L.A.S.T.
+
 Enhanced B.L.A.S.T. protocol now includes checkpoint awareness:
+
 1. **Build**: Execute code/tests
 2. **Log**: Capture full context
 3. **Analyze**: Check against specs and memory
@@ -78,6 +88,7 @@ Enhanced B.L.A.S.T. protocol now includes checkpoint awareness:
 5. **Test**: Re-run until green
 
 #### Benefits
+
 - ✅ Prevents catastrophic errors
 - ✅ Maintains audit trail
 - ✅ Balances autonomy with oversight
@@ -88,21 +99,24 @@ Enhanced B.L.A.S.T. protocol now includes checkpoint awareness:
 
 ### 2. Decision-Tree Logging (Shadow Specs) 📝
 
-**Philosophy**: *"Document decisions, learn from outcomes, improve continuously."*
+**Philosophy**: _"Document decisions, learn from outcomes, improve continuously."_
 
 **What It Solves**: Provides process transparency for hackathon judging, enables learning from decisions, creates onboarding documentation.
 
 **Implementation**: `docs/internal/rationales.md`
 
 #### Decision Documentation Format
+
 ```markdown
 ### D001: [Decision Name]
+
 **Date**: YYYY-MM-DD
 **Context**: What problem we're solving
 
 **Technical Choice**: What we decided to do
 
 **Alternatives Considered**:
+
 1. **Option A**: Description
    - Pros: [list]
    - Cons: [list]
@@ -111,21 +125,25 @@ Enhanced B.L.A.S.T. protocol now includes checkpoint awareness:
    - Cons: [list]
 
 **Why Spec-Compliant**:
+
 - Requirement X.Y: [how this satisfies it]
 - Property Z: [how this validates it]
 - Global Rule N: [how this follows it]
 
 **Trade-offs**:
+
 - ✅ Gained: [benefits]
 - ❌ Lost: [costs]
 
 **Validation**:
+
 - [How we'll verify this was correct]
 
 **Status**: ✅ Validated / ⚠️ In Progress / ❌ Reversed
 ```
 
 #### Current Decisions Logged
+
 1. **D001**: TypeScript Strict Mode
 2. **D002**: Vitest over Jest
 3. **D003**: Next.js 14 App Router
@@ -136,12 +154,14 @@ Enhanced B.L.A.S.T. protocol now includes checkpoint awareness:
 8. **D008**: JSON Schema for Validation
 
 #### Decision Patterns Identified
+
 - **Pattern 1**: Prefer Standards Over Custom
 - **Pattern 2**: Optimize for Maintainability
 - **Pattern 3**: Validate Early, Validate Often
 - **Pattern 4**: Learn from Research
 
 #### Benefits
+
 - ✅ Hackathon "Process Transparency" points
 - ✅ Learning from outcomes
 - ✅ Onboarding new team members
@@ -152,7 +172,7 @@ Enhanced B.L.A.S.T. protocol now includes checkpoint awareness:
 
 ### 3. Strict Type-Safe Validation ✅
 
-**Philosophy**: *"Catch errors at design time, not runtime. Zero surprises in production."*
+**Philosophy**: _"Catch errors at design time, not runtime. Zero surprises in production."_
 
 **What It Solves**: Eliminates runtime type errors, provides self-documenting schemas, enables automatic validation.
 
@@ -161,6 +181,7 @@ Enhanced B.L.A.S.T. protocol now includes checkpoint awareness:
 #### Dual Validation Approach
 
 **Compile-Time Validation** (TypeScript):
+
 - ✅ Strict mode enabled (no `any` types)
 - ✅ Explicit return types on all functions
 - ✅ Explicit types on all parameters
@@ -168,13 +189,16 @@ Enhanced B.L.A.S.T. protocol now includes checkpoint awareness:
 - ✅ Pre-commit hooks block type errors
 
 **Runtime Validation** (JSON Schema + Ajv):
+
 - ✅ All data structures have schemas in `/docs/schemas/`
 - ✅ API inputs/outputs validated
 - ✅ External data validated on entry
 - ✅ Spec files validated before parsing
 
 #### B.L.A.S.T. Type-Repair Loop
+
 When validation fails:
+
 1. **Build**: Attempt validation
 2. **Log**: Capture validation error details
 3. **Analyze**: Determine if schema or code is wrong
@@ -182,6 +206,7 @@ When validation fails:
 5. **Test**: Re-validate until green
 
 #### Implementation Example
+
 ```typescript
 import Ajv from 'ajv';
 import taskSchema from '@/schemas/task.schema.json';
@@ -202,11 +227,13 @@ if (!validateTask(generatedTask)) {
 ```
 
 #### Validation Libraries
+
 - **TypeScript**: Compile-time type checking
 - **Ajv**: JSON Schema validation (runtime)
 - **Zod**: TypeScript-first validation (optional)
 
 #### Benefits
+
 - ✅ Zero runtime type errors
 - ✅ Self-documenting schemas
 - ✅ Automatic validation
@@ -256,11 +283,13 @@ if (!validateTask(generatedTask)) {
 ### Enhanced B.L.A.S.T. Protocol
 
 **Before** (Standard Ralph-Loop):
+
 ```
 Error → Analyze → Update Spec → Re-execute (max 3 attempts)
 ```
 
 **After** (Human-Aware, Type-Safe B.L.A.S.T.):
+
 ```
 Error
   ↓
@@ -283,22 +312,26 @@ Test (re-run until green)
 ## Updated Global Rules
 
 ### Rule 3: B.L.A.S.T. Recovery Protocol (Enhanced)
+
 - ✅ Human-Aware checkpoints for major changes
 - ✅ Type-Safe validation before commit
 - ✅ Decision-Tree logging for transparency
 
 ### Rule 11: Human-in-the-Loop Checkpoints (NEW)
+
 - ✅ Mandatory for architectural/security/production changes
 - ✅ Impact analysis with risk estimation
 - ✅ Emergency bypass for critical issues
 
 ### Rule 12: Decision-Tree Logging (NEW)
+
 - ✅ Document all technical choices
 - ✅ List alternatives with pros/cons
 - ✅ Explain spec compliance
 - ✅ Track validation outcomes
 
 ### Rule 13: Strict Type-Safe Validation (NEW)
+
 - ✅ TypeScript strict mode (compile-time)
 - ✅ JSON Schema validation (runtime)
 - ✅ B.L.A.S.T. Type-Repair loop
@@ -307,6 +340,7 @@ Test (re-run until green)
 ## Files Created/Updated
 
 ### Created
+
 1. **`.kiro/steering/checkpoint_rules.md`** (5,000+ words)
    - Complete checkpoint protocol
    - Impact analysis format
@@ -325,6 +359,7 @@ Test (re-run until green)
    - Benefits and philosophy
 
 ### Updated
+
 1. **`.kiro/steering/global_rules.md`**
    - Enhanced Rule 3 (B.L.A.S.T.)
    - Added Rule 11 (Checkpoints)
@@ -341,23 +376,27 @@ Test (re-run until green)
 ## Hackathon Impact
 
 ### Innovation Score: +20 points
+
 - ✅ Human-Aware autonomous system (novel)
 - ✅ Type-Safe validation with auto-repair (advanced)
 - ✅ Process transparency with decision logging (unique)
 
 ### Technical Excellence Score: +15 points
+
 - ✅ Comprehensive checkpoint protocol
 - ✅ Dual validation (compile + runtime)
 - ✅ B.L.A.S.T. Type-Repair loop
 - ✅ Decision pattern extraction
 
 ### Documentation Score: +10 points
+
 - ✅ Complete checkpoint rules
 - ✅ Decision rationales documented
 - ✅ Integration guides
 - ✅ Philosophy and best practices
 
 ### Process Transparency Score: +10 points
+
 - ✅ All decisions documented
 - ✅ Alternatives considered
 - ✅ Trade-offs explained
@@ -368,25 +407,29 @@ Test (re-run until green)
 ## Philosophy
 
 ### Human-Aware
-> *"The agent knows when to ask for help. It doesn't pretend to know everything."*
+
+> _"The agent knows when to ask for help. It doesn't pretend to know everything."_
 
 ### Type-Safe
-> *"Catch errors at design time, not runtime. Zero surprises in production."*
+
+> _"Catch errors at design time, not runtime. Zero surprises in production."_
 
 ### Process-Transparent
-> *"Document decisions, learn from outcomes, improve continuously."*
+
+> _"Document decisions, learn from outcomes, improve continuously."_
 
 ### Combined
-> *"Autonomy with accountability. Speed with safety. Trust with verification."*
+
+> _"Autonomy with accountability. Speed with safety. Trust with verification."_
 
 ## What Cole Medin Would Say
 
 > "This is exactly what I teach. You've implemented:
-> 
+>
 > 1. **Human-in-the-Loop**: The agent knows its limits and asks for help
 > 2. **Type-Safe Everything**: Validation at every boundary
 > 3. **Process Transparency**: Every decision is documented and justified
-> 
+>
 > This is a production-ready autonomous system that I would trust in my own projects."
 
 ## Next Steps
@@ -401,6 +444,7 @@ Test (re-run until green)
 ## Conclusion
 
 With these three Master Patterns, Antigravity OS is now:
+
 - **Human-Aware**: Knows when to pause for review
 - **Type-Safe**: Catches errors at design time
 - **Process-Transparent**: Documents all decisions
@@ -412,6 +456,6 @@ This is the **full-spectrum agentic upgrade** that Cole Medin would build himsel
 **Status**: 🟢 COMPLETE  
 **Version**: 1.0.0  
 **Date**: 2026-01-19  
-**Author**: Kiro Agent  
+**Author**: Kiro Agent
 
-**Philosophy**: *"The project Cole Medin would build himself."*
+**Philosophy**: _"The project Cole Medin would build himself."_
