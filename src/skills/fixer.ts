@@ -282,27 +282,18 @@ export class FixerSkill implements ISkill<FixerInput, FixerOutput> {
     const path = require('path');
     const fs = require('fs');
     
-    console.log(`\n[DEBUG] Command: "${command}"`);
-    
     // Strategy 1: Extract file from command (most reliable)
     // Pattern: tsx/ts-node/node followed by a .ts file
     const commandMatch = command.match(/(?:tsx?|ts-node|node)\s+([^\s]+\.ts)/);
     let file: string | undefined;
     
-    console.log(`[DEBUG] Command match: ${commandMatch ? commandMatch[1] : 'NO MATCH'}`);
-    
     if (commandMatch) {
       const candidatePath = commandMatch[1];
-      console.log(`[DEBUG] Candidate path: "${candidatePath}"`);
       // Resolve to absolute path
       const absolutePath = path.resolve(process.cwd(), candidatePath);
-      console.log(`[DEBUG] Absolute path: "${absolutePath}"`);
       // Verify file exists
       if (fs.existsSync(absolutePath)) {
         file = absolutePath;
-        console.log(`[DEBUG] File exists! Using: "${file}"`);
-      } else {
-        console.log(`[DEBUG] File does NOT exist at: "${absolutePath}"`);
       }
     }
     

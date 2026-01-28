@@ -1,19 +1,19 @@
 {
   "metrics": {
-    "ralphLoopActivations": 3,
-    "ralphLoopSuccesses": 2,
+    "ralphLoopActivations": 2,
+    "ralphLoopSuccesses": 1,
     "ralphLoopFailures": 1,
-    "autonomousFixes": 2,
-    "tasksCompleted": 4,
-    "successRate": 66
+    "autonomousFixes": 1,
+    "tasksCompleted": 2,
+    "successRate": 50
   },
   "recentEvents": [
     {
-      "timestamp": "2026-01-28T16:04:28.429Z",
-      "type": "change_2",
+      "timestamp": "2026-01-28T16:13:37.840Z",
+      "type": "change_1",
       "result": "success",
-      "details": "Change 2"
+      "details": "Change 1"
     }
   ],
-  "generatedAt": "2026-01-28T16:04:28.429Z"
+  "generatedAt": "2026-01-28T16:13:37.840Z"
 }
