@@ -283,8 +283,8 @@ export class FixerSkill implements ISkill<FixerInput, FixerOutput> {
     const fs = require('fs');
     
     // Strategy 1: Extract file from command (most reliable)
-    // Pattern: tsx/ts-node/node followed by a .ts file
-    const commandMatch = command.match(/(?:tsx?|ts-node|node)\s+([^\s]+\.ts)/);
+    // Pattern: tsx/ts-node/node followed by a .ts or .js file
+    const commandMatch = command.match(/(?:tsx?|ts-node|node)\s+([^\s]+\.(?:ts|js))/);
     let file: string | undefined;
     
     if (commandMatch) {
