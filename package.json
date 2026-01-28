@@ -5,7 +5,7 @@
   "private": true,
   "bin": {
     "ag-os-mcp": "./dist/mcp/cli.js",
-    "ag-os": "./dist/lib/medin-protocol/cli-status.js"
+    "ag-os": "./dist/cli.js"
   },
   "scripts": {
     "dev": "next dev -p 3001",
@@ -21,6 +21,8 @@
     "type-check": "tsc --noEmit",
     "validate": "powershell -ExecutionPolicy Bypass -File scripts/validate.ps1",
     "validate:quick": "powershell -ExecutionPolicy Bypass -File scripts/validate-quick.ps1",
+    "gateway:start": "tsx src/gateway.ts",
+    "gateway:build": "tsc src/gateway.ts --outDir dist --module commonjs --target es2020",
     "mcp:start": "node dist/mcp/cli.js",
     "mcp:dev": "tsx src/mcp/cli.ts",
     "mcp:test": "node dist/mcp/cli.js --test",
@@ -28,6 +30,8 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.25.3",
+    "axios": "^1.13.4",
+    "cheerio": "^1.2.0",
     "clsx": "^2.1.1",
     "framer-motion": "^12.27.5",
     "lucide-react": "^0.562.0",
