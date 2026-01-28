@@ -11,6 +11,7 @@
 import { getGatewayClient } from './lib/gateway-client.js';
 import { researcher } from './skills/researcher.js';
 import { fileSystem } from './skills/file-system.js';
+import { fixer } from './skills/fixer.js';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 
@@ -27,6 +28,7 @@ type Command =
   | 'ask' 
   | 'edit'
   | 'read'
+  | 'fix'
   | 'gateway:start' 
   | 'gateway:stop' 
   | 'help';
@@ -59,6 +61,7 @@ Commands:
   ask <query>       Ask a question and get web research results
   edit              Edit files with automatic Git backups
   read              Read file content
+  fix               Autonomously fix errors in commands
   gateway:start     Start Gateway server
   gateway:stop      Stop Gateway server
   help              Show this help message
@@ -67,6 +70,11 @@ File Operations:
   ag-os edit --file <path> --content <content>     Write file
   ag-os edit --file <path> --search <old> --replace <new>  Patch file
   ag-os read --file <path>                          Read file
+
+Autonomous Fixing:
+  ag-os fix "<command>"                             Fix errors autonomously
+  ag-os fix "npx tsx broken.ts"                     Example: Fix TypeScript file
+  ag-os fix "npm test"                              Example: Fix failing tests
 
 Gateway Integration:
   - Commands automatically use Gateway for 97% faster execution
@@ -383,6 +391,55 @@ async function executeRead(args: string[]): Promise<void> {
 }
 
 /**
+ * Autonomously fix errors in command
+ */
+async function executeFix(args: string[]): Promise<void> {
+  // Extract command (everything after "fix")
+  const command = args.join(' ');
+
+  if (!command || command.trim().length === 0) {
+    console.error('❌ Error: Command is required');
+    console.log('Usage: ag-os fix "<command>"');
+    console.log('Example: ag-os fix "npx tsx broken.ts"');
+    console.log('Example: ag-os fix "npm test"');
+    process.exit(1);
+  }
+
+  try {
+    const result = await fixer.execute({
+      command,
+      maxAttempts: 3,
+      timeout: 60000,
+    });
+
+    if (result.success) {
+      console.log(`\n${'═'.repeat(60)}`);
+      console.log(`✅ SUCCESS! Fixed in ${result.attempts} attempt(s)`);
+      console.log(`${'═'.repeat(60)}\n`);
+      console.log(`Final Output:\n${result.finalOutput}`);
+    } else {
+      console.log(`\n${'═'.repeat(60)}`);
+      console.log(`❌ FAILED after ${result.attempts} attempts`);
+      console.log(`${'═'.repeat(60)}\n`);
+      console.log(`Attempted Fixes:`);
+      result.fixes.forEach((fix, i) => {
+        console.log(`\n${i + 1}. ${fix.errorAnalysis.type}: ${fix.errorAnalysis.message}`);
+        if (fix.patch) {
+          console.log(`   Patch: ${fix.patch.file}`);
+          console.log(`   Backup: ${fix.patch.backup}`);
+        } else {
+          console.log(`   No automatic fix generated`);
+        }
+      });
+      process.exit(1);
+    }
+  } catch (error) {
+    console.error('❌ Fixer failed:', error instanceof Error ? error.message : String(error));
+    process.exit(1);
+  }
+}
+
+/**
  * Main CLI entry point
  */
 async function main(): Promise<void> {
@@ -416,6 +473,10 @@ async function main(): Promise<void> {
 
       case 'read':
         await executeRead(args);
+        break;
+
+      case 'fix':
+        await executeFix(args);
         break;
 
       case 'gateway:start':

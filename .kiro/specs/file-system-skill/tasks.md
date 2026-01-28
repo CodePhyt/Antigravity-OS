@@ -44,7 +44,7 @@
 
 ### Phase 2: CLI Integration
 
-- [-] 6. Add CLI commands
+- [x] 6. Add CLI commands
   - [ ] 6.1 Add 'edit' command type
   - [ ] 6.2 Add 'read' command type
   - [ ] 6.3 Implement executeEdit() function
