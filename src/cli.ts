@@ -29,6 +29,7 @@ type Command =
   | 'edit'
   | 'read'
   | 'fix'
+  | 'dashboard'
   | 'gateway:start' 
   | 'gateway:stop' 
   | 'help';
@@ -62,6 +63,7 @@ Commands:
   edit              Edit files with automatic Git backups
   read              Read file content
   fix               Autonomously fix errors in commands
+  dashboard         Open Visual Dashboard (Observer Console)
   gateway:start     Start Gateway server
   gateway:stop      Stop Gateway server
   help              Show this help message
@@ -76,6 +78,13 @@ Autonomous Fixing:
   ag-os fix "npx tsx broken.ts"                     Example: Fix TypeScript file
   ag-os fix "npm test"                              Example: Fix failing tests
 
+Visual Dashboard:
+  ag-os dashboard                                   Open Observer Console
+  - Real-time task monitoring
+  - Ralph's Brain View (execution state)
+  - System health metrics
+  - Live error tracking
+
 Gateway Integration:
   - Commands automatically use Gateway for 97% faster execution
   - Falls back to direct execution if Gateway unavailable
@@ -84,6 +93,7 @@ Gateway Integration:
 Examples:
   ag-os test:quick                    # Run tests in 2.8s (vs 106.95s)
   ag-os status                        # Check system health
+  ag-os dashboard                     # Open Visual Dashboard
   ag-os ask "How to install cheerio"  # Research a question
   ag-os edit --file test.txt --content "Hello World"  # Write file
   ag-os read --file test.txt          # Read file
@@ -440,6 +450,40 @@ async function executeFix(args: string[]): Promise<void> {
 }
 
 /**
+ * Open Visual Dashboard (Observer Console)
+ */
+async function openDashboard(): Promise<void> {
+  const dashboardUrl = 'http://localhost:3001/observer';
+  
+  console.log('🎯 Opening Visual Dashboard...');
+  console.log(`   URL: ${dashboardUrl}`);
+  console.log('');
+  console.log('📊 Observer Console Features:');
+  console.log('   - Real-time task monitoring');
+  console.log('   - Ralph\'s Brain View (execution state)');
+  console.log('   - System health metrics');
+  console.log('   - Live error tracking');
+  console.log('');
+  console.log('💡 Tip: Run "npm run dev" first to start the dashboard server');
+  console.log('');
+
+  try {
+    // Open browser based on platform
+    const command = process.platform === 'win32' 
+      ? `start ${dashboardUrl}`
+      : process.platform === 'darwin'
+      ? `open ${dashboardUrl}`
+      : `xdg-open ${dashboardUrl}`;
+
+    await execAsync(command);
+    console.log('✅ Dashboard opened in browser');
+  } catch (error) {
+    console.log('⚠️  Could not open browser automatically');
+    console.log(`   Please visit: ${dashboardUrl}`);
+  }
+}
+
+/**
  * Main CLI entry point
  */
 async function main(): Promise<void> {
@@ -477,6 +521,10 @@ async function main(): Promise<void> {
 
       case 'fix':
         await executeFix(args);
+        break;
+
+      case 'dashboard':
+        await openDashboard();
         break;
 
       case 'gateway:start':

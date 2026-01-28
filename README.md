@@ -6,23 +6,73 @@
 
 ---
 
-## 🎯 One-Sentence Pitch
+## 🚀 QUICK START (Zero-Friction Setup)
 
-**Antigravity OS transforms natural language specifications into production-ready code through autonomous execution, self-healing error recovery, and continuous learning—all powered by a 3-layer architecture that separates AI guidance (directives), decision-making (orchestration), and deterministic execution (scripts).**
+### Windows Users (One-Click Install)
+
+```bash
+# 1. Run setup (installs everything)
+setup.bat
+
+# 2. Start demo mode (opens dashboard + CLI)
+demo-start.bat
+
+# 3. Enjoy! 🎉
+```
+
+### Manual Setup (All Platforms)
+
+```bash
+# 1. Install dependencies
+npm install
+
+# 2. Build project
+npm run build
+
+# 3. Link CLI globally
+npm link
+
+# 4. Verify installation
+ag-os status
+```
+
+### Quick Commands
+
+```bash
+ag-os help              # Show all commands
+ag-os status            # Check system health
+ag-os dashboard         # Open Visual Dashboard
+ag-os test:quick        # Run quick tests (2.8s)
+ag-os fix "command"     # Autonomous error fixing
+```
 
 ---
 
-## 🚀 Quick Start (10 Seconds)
+## 🏆 VERIFY INSTALLATION (Self-Proving System)
+
+**Want to see it work? Run this:**
 
 ```bash
-# Unix/Linux/Mac
-chmod +x scripts/init-system.sh && ./scripts/init-system.sh
+# Windows
+prove-it.bat
 
-# Windows (PowerShell)
-powershell -ExecutionPolicy Bypass -File scripts/init-system.ps1
+# What it does:
+# 1. Creates a broken JavaScript file
+# 2. Runs Antigravity Fixer
+# 3. Watches it fix the error automatically
+# 4. Verifies the fix works
+# 5. Cleans up
+
+# Result: Live proof of autonomous error correction in 10 seconds!
 ```
 
-**What it does**: Checks dependencies, installs packages, validates system, displays capabilities report.
+**This is the fastest way to verify the core value proposition.**
+
+---
+
+## 🎯 One-Sentence Pitch
+
+**Antigravity OS transforms natural language specifications into production-ready code through autonomous execution, self-healing error recovery, and continuous learning—all powered by a 3-layer architecture that separates AI guidance (directives), decision-making (orchestration), and deterministic execution (scripts).**
 
 ---
 

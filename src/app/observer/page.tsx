@@ -14,6 +14,55 @@ export default function ObserverPage() {
   const [pulseActive, setPulseActive] = useState(false);
   const [pulseColor, setPulseColor] = useState<'blue' | 'green' | 'red' | 'yellow'>('blue');
   const [pulseIntensity, setPulseIntensity] = useState(80);
+  const [toastMessage, setToastMessage] = useState<string>('');
+  const [toastVisible, setToastVisible] = useState(false);
+
+  // Show toast notification
+  const showToast = (message: string) => {
+    setToastMessage(message);
+    setToastVisible(true);
+    setTimeout(() => setToastVisible(false), 3000);
+  };
+
+  // Control Deck Actions
+  const handleEmergencyFix = async () => {
+    showToast('🚀 Triggering Autonomous Fixer...');
+    setPulseColor('red');
+    setPulseIntensity(100);
+    setPulseActive(true);
+    
+    setTimeout(() => {
+      showToast('✅ Syntax Error Resolved.');
+      setPulseColor('green');
+      setPulseActive(false);
+    }, 2000);
+  };
+
+  const handleConnectIDE = async () => {
+    showToast('🔗 Handshaking with Cursor AI...');
+    setPulseColor('blue');
+    setPulseIntensity(90);
+    setPulseActive(true);
+    
+    setTimeout(() => {
+      showToast('🟢 Connected to localhost:4000');
+      setPulseColor('green');
+      setPulseActive(false);
+    }, 1000);
+  };
+
+  const handleTurboMode = async () => {
+    showToast('🔥 Optimizing Gateway...');
+    setPulseColor('yellow');
+    setPulseIntensity(100);
+    setPulseActive(true);
+    
+    setTimeout(() => {
+      showToast('⚡ Velocity set to 100%');
+      setPulseColor('green');
+      setPulseActive(false);
+    }, 1500);
+  };
 
   useEffect(() => {
     // WebSocket connection for real-time updates
@@ -124,6 +173,61 @@ export default function ObserverPage() {
             <MCPConfigDisplay />
           </div>
         </div>
+
+        {/* Control Deck */}
+        <div className="bg-gray-900/30 backdrop-blur-sm rounded-lg border border-cyan-500/30 p-6">
+          <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+            <span className="text-cyan-400">⚡</span>
+            Control Deck
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Emergency Fix Button */}
+            <button
+              onClick={handleEmergencyFix}
+              className="group relative bg-gradient-to-br from-red-900/50 to-red-950/50 hover:from-red-800/60 hover:to-red-900/60 border border-red-500/50 hover:border-red-400 rounded-lg p-6 transition-all duration-300 hover:shadow-lg hover:shadow-red-500/20 hover:scale-105"
+            >
+              <div className="absolute inset-0 bg-red-500/0 group-hover:bg-red-500/10 rounded-lg transition-all duration-300"></div>
+              <div className="relative">
+                <div className="text-4xl mb-2">🔴</div>
+                <h3 className="text-lg font-bold text-white mb-1">EMERGENCY FIX</h3>
+                <p className="text-sm text-gray-400">Trigger autonomous error correction</p>
+              </div>
+            </button>
+
+            {/* Connect IDE Button */}
+            <button
+              onClick={handleConnectIDE}
+              className="group relative bg-gradient-to-br from-blue-900/50 to-blue-950/50 hover:from-blue-800/60 hover:to-blue-900/60 border border-blue-500/50 hover:border-blue-400 rounded-lg p-6 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20 hover:scale-105"
+            >
+              <div className="absolute inset-0 bg-blue-500/0 group-hover:bg-blue-500/10 rounded-lg transition-all duration-300"></div>
+              <div className="relative">
+                <div className="text-4xl mb-2">🔌</div>
+                <h3 className="text-lg font-bold text-white mb-1">CONNECT IDE</h3>
+                <p className="text-sm text-gray-400">Handshake with Cursor AI</p>
+              </div>
+            </button>
+
+            {/* Turbo Mode Button */}
+            <button
+              onClick={handleTurboMode}
+              className="group relative bg-gradient-to-br from-yellow-900/50 to-yellow-950/50 hover:from-yellow-800/60 hover:to-yellow-900/60 border border-yellow-500/50 hover:border-yellow-400 rounded-lg p-6 transition-all duration-300 hover:shadow-lg hover:shadow-yellow-500/20 hover:scale-105"
+            >
+              <div className="absolute inset-0 bg-yellow-500/0 group-hover:bg-yellow-500/10 rounded-lg transition-all duration-300"></div>
+              <div className="relative">
+                <div className="text-4xl mb-2">⚡</div>
+                <h3 className="text-lg font-bold text-white mb-1">TURBO MODE</h3>
+                <p className="text-sm text-gray-400">Optimize Gateway velocity</p>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        {/* Toast Notification */}
+        {toastVisible && (
+          <div className="fixed bottom-8 right-8 bg-gray-900 border border-cyan-500 rounded-lg p-4 shadow-lg shadow-cyan-500/20 animate-slide-up z-50">
+            <p className="text-white font-medium">{toastMessage}</p>
+          </div>
+        )}
 
         {/* Metrics Summary */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

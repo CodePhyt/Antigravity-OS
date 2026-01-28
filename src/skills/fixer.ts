@@ -403,11 +403,187 @@ export class FixerSkill implements ISkill<FixerInput, FixerOutput> {
 
   /**
    * Generate fix based on error analysis
+   * 
+   * HYBRID INTELLIGENCE: Try heuristics first (instant), fallback to research
    */
   private generateFix(
     analysis: ErrorAnalysis,
     problemLine: string,
     _solution: string
+  ): { search: string; replace: string } | null {
+    // Try heuristic fixes first (Demo God Mode)
+    const heuristicFix = this.generateHeuristicFix(analysis, problemLine);
+    if (heuristicFix) {
+      console.log(`   💡 Applied heuristic fix (no research needed)`);
+      return heuristicFix;
+    }
+
+    // Fallback to generic fixes
+    return this.generateGenericFix(analysis, problemLine);
+  }
+
+  /**
+   * Generate heuristic fix based on common patterns
+   * 
+   * DEMO GOD MODE: Handles common errors instantly without web research
+   */
+  private generateHeuristicFix(
+    analysis: ErrorAnalysis,
+    problemLine: string
+  ): { search: string; replace: string } | null {
+    const message = analysis.message.toLowerCase();
+    const trimmedLine = problemLine.trim();
+
+    // SCENARIO A: Missing closing parenthesis
+    // Pattern: console.log("text" or function(arg
+    if (
+      (message.includes('missing )') || 
+       message.includes('expression expected') ||
+       message.includes('expected )')) &&
+      (trimmedLine.includes('console.log(') || 
+       trimmedLine.includes('function(') ||
+       trimmedLine.match(/\w+\(/))
+    ) {
+      // Count opening and closing parens
+      const openCount = (trimmedLine.match(/\(/g) || []).length;
+      const closeCount = (trimmedLine.match(/\)/g) || []).length;
+      
+      if (openCount > closeCount) {
+        const missingParens = ')'.repeat(openCount - closeCount);
+        return {
+          search: problemLine,
+          replace: problemLine.trimEnd() + missingParens,
+        };
+      }
+    }
+
+    // SCENARIO B: Missing semicolon
+    // Pattern: const x = 5 (no semicolon)
+    if (
+      message.includes('expected ;') ||
+      message.includes('missing ;') ||
+      message.includes('semicolon')
+    ) {
+      if (!trimmedLine.endsWith(';') && !trimmedLine.endsWith('{') && !trimmedLine.endsWith('}')) {
+        return {
+          search: problemLine,
+          replace: problemLine.trimEnd() + ';',
+        };
+      }
+    }
+
+    // SCENARIO C: Missing closing quote
+    // Pattern: const x = "text (no closing quote)
+    if (
+      message.includes('unterminated string') ||
+      message.includes('missing "') ||
+      message.includes('missing \'')
+    ) {
+      // Check for unmatched quotes
+      const doubleQuotes = (trimmedLine.match(/"/g) || []).length;
+      const singleQuotes = (trimmedLine.match(/'/g) || []).length;
+      
+      if (doubleQuotes % 2 === 1) {
+        return {
+          search: problemLine,
+          replace: problemLine.trimEnd() + '"',
+        };
+      }
+      
+      if (singleQuotes % 2 === 1) {
+        return {
+          search: problemLine,
+          replace: problemLine.trimEnd() + "'",
+        };
+      }
+    }
+
+    // SCENARIO D: Missing closing brace
+    // Pattern: function test() { (no closing brace)
+    if (
+      message.includes('expected }') ||
+      message.includes('missing }')
+    ) {
+      const openBraces = (trimmedLine.match(/{/g) || []).length;
+      const closeBraces = (trimmedLine.match(/}/g) || []).length;
+      
+      if (openBraces > closeBraces) {
+        const missingBraces = '}'.repeat(openBraces - closeBraces);
+        return {
+          search: problemLine,
+          replace: problemLine.trimEnd() + missingBraces,
+        };
+      }
+    }
+
+    // SCENARIO E: Variable not defined
+    // Pattern: x is not defined
+    if (
+      message.includes('is not defined') ||
+      message.includes('cannot find name')
+    ) {
+      const varMatch = analysis.message.match(/['"]?(\w+)['"]?\s+is not defined/i) ||
+                      analysis.message.match(/cannot find name ['"](\w+)['"]/i);
+      
+      if (varMatch && varMatch[1]) {
+        const varName = varMatch[1];
+        return {
+          search: problemLine,
+          replace: `const ${varName} = undefined; // Auto-fixed: variable declaration\n${problemLine}`,
+        };
+      }
+    }
+
+    // SCENARIO F: Unexpected token (incomplete statement)
+    // Pattern: const x = ; (missing value)
+    if (
+      message.includes('unexpected token') &&
+      trimmedLine.includes('= ;')
+    ) {
+      return {
+        search: problemLine,
+        replace: problemLine.replace('= ;', '= null;'),
+      };
+    }
+
+    // SCENARIO G: Missing import/require
+    // Pattern: Cannot find module 'xyz'
+    if (
+      message.includes('cannot find module') ||
+      message.includes('module not found')
+    ) {
+      const moduleMatch = analysis.message.match(/module ['"](.+?)['"]/i);
+      if (moduleMatch && moduleMatch[1]) {
+        const moduleName = moduleMatch[1];
+        return {
+          search: problemLine,
+          replace: `// TODO: Run 'npm install ${moduleName}' to fix this error\n${problemLine}`,
+        };
+      }
+    }
+
+    // SCENARIO H: Syntax Error with incomplete expression
+    // Pattern: const x = (no value)
+    if (
+      message.includes('syntax error') &&
+      trimmedLine.match(/const\s+\w+\s*=\s*$/)
+    ) {
+      return {
+        search: problemLine,
+        replace: problemLine.trimEnd() + ' null;',
+      };
+    }
+
+    // No heuristic match found
+    return null;
+  }
+
+  /**
+   * Generate generic fix as last resort
+   */
+  private generateGenericFix(
+    analysis: ErrorAnalysis,
+    problemLine: string
   ): { search: string; replace: string } | null {
     // Syntax Error: Unexpected token ';'
     if (analysis.type === 'SyntaxError' && analysis.message.includes('Unexpected token')) {

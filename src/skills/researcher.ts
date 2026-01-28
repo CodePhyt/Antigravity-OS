@@ -90,7 +90,14 @@ export class ResearcherSkill implements ISkill<ResearcherInput, ResearcherOutput
       // Validate input
       this.validateInput(input);
 
-      // Perform Google search
+      // Try offline knowledge base first (Demo God Mode)
+      const offlineResult = this.tryOfflineKnowledge(input.query);
+      if (offlineResult) {
+        console.log(`   💡 Using offline knowledge (no internet needed)`);
+        return offlineResult;
+      }
+
+      // Fallback to Google search
       const results = await this.performGoogleSearch(input);
 
       return results;
@@ -115,6 +122,105 @@ export class ResearcherSkill implements ISkill<ResearcherInput, ResearcherOutput
     if (!input.depth || input.depth < 1 || input.depth > 3) {
       throw new Error('Depth must be between 1 and 3');
     }
+  }
+
+  /**
+   * Try offline knowledge base first (Demo God Mode)
+   * 
+   * Returns instant answers for common queries without internet
+   */
+  private tryOfflineKnowledge(query: string): ResearcherOutput | null {
+    const lowerQuery = query.toLowerCase();
+
+    // Knowledge Base: Package Installation
+    if (lowerQuery.includes('how to install') || lowerQuery.includes('npm install')) {
+      const packageMatch = query.match(/install\s+([a-z0-9-]+)/i);
+      const packageName = packageMatch ? packageMatch[1] : '<package>';
+      
+      return {
+        query,
+        results: [{
+          title: 'NPM Package Installation Guide',
+          url: 'https://docs.npmjs.com/cli/install',
+          snippet: `To install a package, use: npm install ${packageName}`,
+          relevance: 100,
+        }],
+        summary: `To install ${packageName}, run:\n\`\`\`bash\nnpm install ${packageName}\n\`\`\`\n\nFor development dependencies:\n\`\`\`bash\nnpm install --save-dev ${packageName}\n\`\`\``,
+        sources: ['https://docs.npmjs.com/cli/install'],
+        depth: 1,
+      };
+    }
+
+    // Knowledge Base: File Operations
+    if (lowerQuery.includes('list files') || lowerQuery.includes('ls') || lowerQuery.includes('dir')) {
+      return {
+        query,
+        results: [{
+          title: 'File Listing Commands',
+          url: 'https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/dir',
+          snippet: 'Use `ls` on Unix/Mac or `dir` on Windows to list files',
+          relevance: 100,
+        }],
+        summary: `To list files:\n\n**Windows:**\n\`\`\`bash\ndir\n\`\`\`\n\n**Unix/Mac:**\n\`\`\`bash\nls\nls -la  # detailed listing\n\`\`\``,
+        sources: ['https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/dir'],
+        depth: 1,
+      };
+    }
+
+    // Knowledge Base: TypeScript Errors
+    if (lowerQuery.includes('typescript') && (lowerQuery.includes('error') || lowerQuery.includes('fix'))) {
+      return {
+        query,
+        results: [{
+          title: 'Common TypeScript Errors and Fixes',
+          url: 'https://www.typescriptlang.org/docs/handbook/intro.html',
+          snippet: 'TypeScript errors can often be fixed by adding type annotations or fixing syntax',
+          relevance: 95,
+        }],
+        summary: 'Common TypeScript fixes:\n\n' +
+          '1. Missing semicolon: Add ; at end of line\n' +
+          '2. Missing parenthesis: Add ) to close function calls\n' +
+          '3. Variable not defined: Add const or let declaration\n' +
+          '4. Type errors: Add type annotations or use any (not recommended)',
+        sources: ['https://www.typescriptlang.org/docs/handbook/intro.html'],
+        depth: 1,
+      };
+    }
+
+    // Knowledge Base: Git Commands
+    if (lowerQuery.includes('git') && (lowerQuery.includes('commit') || lowerQuery.includes('push'))) {
+      return {
+        query,
+        results: [{
+          title: 'Git Basics',
+          url: 'https://git-scm.com/docs',
+          snippet: 'Basic Git workflow: add, commit, push',
+          relevance: 100,
+        }],
+        summary: `Basic Git workflow:\n\n\`\`\`bash\ngit add .\ngit commit -m "Your message"\ngit push\n\`\`\``,
+        sources: ['https://git-scm.com/docs'],
+        depth: 1,
+      };
+    }
+
+    // Knowledge Base: Node.js Basics
+    if (lowerQuery.includes('node') && (lowerQuery.includes('run') || lowerQuery.includes('execute'))) {
+      return {
+        query,
+        results: [{
+          title: 'Running Node.js Scripts',
+          url: 'https://nodejs.org/en/docs/',
+          snippet: 'Use `node filename.js` to run JavaScript files',
+          relevance: 100,
+        }],
+        summary: `To run a Node.js script:\n\n\`\`\`bash\nnode filename.js\n\`\`\`\n\nFor TypeScript:\n\`\`\`bash\nnpx tsx filename.ts\n\`\`\``,
+        sources: ['https://nodejs.org/en/docs/'],
+        depth: 1,
+      };
+    }
+
+    // No offline knowledge match
+    return null;
   }
 
   /**
